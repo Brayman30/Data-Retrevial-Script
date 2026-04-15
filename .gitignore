@@ -1,10 +1,13 @@
-# Python
 __pycache__/
-*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.Python
 *.egg-info/
-
-# uv / virtual environment
+dist/
+build/
 .venv/
-
-# Script output
-out/
+venv/
+.env
+*.csv
+raw_releases/
