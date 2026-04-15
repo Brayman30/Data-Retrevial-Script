@@ -1,0 +1,5 @@
+# GenBank release-note URLs — one per line.
+# Lines starting with '#' and blank lines are ignored.
+https://www.ncbi.nlm.nih.gov/genbank/release/261/
+https://www.ncbi.nlm.nih.gov/genbank/release/260/
+https://www.ncbi.nlm.nih.gov/genbank/release/259/
