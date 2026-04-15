@@ -1,12 +1,10 @@
 [project]
-name = "data-retrevial-script"
+name = "data-retrieval-script"
 version = "0.1.0"
 description = "Fetch and parse GenBank release notes into structured CSV output"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "beautifulsoup4>=4.12",
-    "requests>=2.32",
 ]
 
 [project.scripts]
