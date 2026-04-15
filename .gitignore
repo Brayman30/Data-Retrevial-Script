@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# uv / virtual environments
+.venv/
+.uv/
+
+# Output files (generated at runtime)
+raw/
+results.csv
+
+# Distribution / packaging
+dist/
+*.egg-info/
