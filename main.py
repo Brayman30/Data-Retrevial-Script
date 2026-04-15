@@ -14,64 +14,29 @@ import csv
 import hashlib
 import re
 import sys
-import urllib.error
-import urllib.request
 from datetime import datetime
-from html.parser import HTMLParser
 from pathlib import Path
 
-
-class PreBlockExtractor(HTMLParser):
-    """Extract the text content of the first <pre> block from an HTML page."""
-
-    def __init__(self) -> None:
-        super().__init__(convert_charrefs=True)
-        self._in_pre: bool = False
-        self._depth: int = 0
-        self._buf: list[str] = []
-        self.pre_content: str | None = None
-
-    def handle_starttag(self, tag: str, attrs) -> None:
-        if tag.lower() == "pre":
-            if not self._in_pre:
-                self._in_pre = True
-                self._depth = 1
-                self._buf = []
-            else:
-                self._depth += 1
-
-    def handle_endtag(self, tag: str) -> None:
-        if tag.lower() == "pre" and self._in_pre:
-            self._depth -= 1
-            if self._depth == 0:
-                self._in_pre = False
-                if self.pre_content is None:
-                    self.pre_content = "".join(self._buf)
-
-    def handle_data(self, data: str) -> None:
-        if self._in_pre:
-            self._buf.append(data)
+import requests
+from bs4 import BeautifulSoup
 
 
 def fetch_url(url: str, timeout: int = 30) -> str:
     """Fetch *url* and return the response body decoded as text."""
-    req = urllib.request.Request(
+    resp = requests.get(
         url,
         headers={"User-Agent": "GenBankReleaseNoteParser/1.0"},
+        timeout=timeout,
     )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        charset = "utf-8"
-        content_type = resp.headers.get("Content-Type", "")
-        if "charset=" in content_type:
-            charset = content_type.split("charset=")[-1].strip()
-        return resp.read().decode(charset, errors="replace")
+    resp.raise_for_status()
+    return resp.text
 
 
 def extract_pre_block(html: str) -> str | None:
     """Return the content of the first ``<pre>`` block, or *None* if absent."""
-    parser = PreBlockExtractor()
-    parser.feed(html)
-    return parser.pre_content
+    soup = BeautifulSoup(html, "html.parser")
+    pre = soup.find("pre")
+    return pre.get_text() if pre else None
 
 
 def save_raw_text(text: str, url: str, output_dir: Path) -> Path:
@@ -103,28 +68,29 @@ def parse_release_number(text: str) -> str | None:
 def parse_release_date(text: str) -> str | None:
     """Return the release date in ISO 8601 format (``YYYY-MM-DD``), or *None*."""
     months = {
-        "january": 1,
-        "february": 2,
-        "march": 3,
-        "april": 4,
+        "january": 1, "jan": 1,
+        "february": 2, "feb": 2,
+        "march": 3, "mar": 3,
+        "april": 4, "apr": 4,
         "may": 5,
-        "june": 6,
-        "july": 7,
-        "august": 8,
-        "september": 9,
-        "october": 10,
-        "november": 11,
-        "december": 12,
+        "june": 6, "jun": 6,
+        "july": 7, "jul": 7,
+        "august": 8, "aug": 8,
+        "september": 9, "sep": 9,
+        "october": 10, "oct": 10,
+        "november": 11, "nov": 11,
+        "december": 12, "dec": 12,
     }
     match = re.search(
-        r"(January|February|March|April|May|June|July|August"
-        r"|September|October|November|December)"
-        r"\s+(\d{1,2}),?\s+(\d{4})",
+        r"(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May"
+        r"|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?"
+        r"|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
+        r"\.?\s+(\d{1,2}),?\s+(\d{4})",
         text,
         re.IGNORECASE,
     )
     if match:
-        month = months.get(match.group(1).lower())
+        month = months.get(match.group(1).lower().rstrip("."))
         if month:
             try:
                 return datetime(
@@ -227,8 +193,8 @@ def process_url(url: str, output_dir: Path) -> dict:
         save_raw_text(pre_text, url, output_dir)
         parsed = parse_release_note(pre_text)
         record.update({k: (v or "") for k, v in parsed.items()})
-    except urllib.error.URLError as exc:
-        record["error"] = f"URLError: {exc.reason}"
+    except requests.exceptions.RequestException as exc:
+        record["error"] = f"RequestError: {exc}"
     except Exception as exc:  # noqa: BLE001
         record["error"] = f"{type(exc).__name__}: {exc}"
     return record
