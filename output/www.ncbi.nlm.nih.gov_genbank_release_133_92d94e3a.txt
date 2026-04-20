@@ -1,0 +1,3405 @@
+GBREL.TXT          Genetic Sequence Data Bank
+                         December 15 2002
+
+               NCBI-GenBank Flat File Release 133.0
+
+                    Distribution Release Notes
+
+ 22318883 loci, 28507990166 bases, from 22318883 reported sequences
+
+  This document describes the format and content of the flat files that
+comprise releases of the GenBank database. If you have any questions or
+comments about GenBank or this document, please contact NCBI via email
+at info@ncbi.nlm.nih.gov or:
+
+   GenBank
+   National Center for Biotechnology Information
+   National Library of Medicine, 38A, 8N805
+   8600 Rockville Pike
+   Bethesda, MD  20894
+   USA
+   Phone:  (301) 496-2475
+   Fax:    (301) 480-9241
+
+==========================================================================
+TABLE OF CONTENTS
+==========================================================================
+
+1. INTRODUCTION
+
+1.1 Release 133.0
+1.2 Cutoff Date
+1.3 Important Changes in Release 133.0
+1.4 Upcoming Changes
+1.5 Request for Direct Submission of Sequence Data
+1.6 Organization of This Document
+
+2. ORGANIZATION OF DATA FILES
+
+2.1 Overview
+2.2 Files
+     2.2.1 File Descriptions
+     2.2.5 File Sizes
+     2.2.6 Per-Division Statistics 
+     2.2.7 Selected Per-Organism Statistics 
+     2.2.8 Growth of GenBank
+
+3. FILE FORMATS
+
+3.1 File Header Information
+3.2 Directory Files
+     3.2.1 Short Directory File
+3.3 Index Files
+     3.3.1 Accession Number Index File
+     3.3.2 Keyword Phrase Index File
+     3.3.3 Author Name Index File
+     3.3.4 Journal Citation Index File
+     3.3.5 Gene Name Index
+3.4 Sequence Entry Files
+     3.4.1 File Organization
+     3.4.2  Entry Organization
+     3.4.3 Sample Sequence Data File
+     3.4.4 LOCUS Format
+     3.4.5 DEFINITION Format
+          3.4.5.1 DEFINITION Format for NLM Entries
+     3.4.6 ACCESSION Format
+     3.4.7 VERSION Format
+     3.4.8 KEYWORDS Format
+     3.4.9 SEGMENT Format
+     3.4.10 SOURCE Format
+     3.4.11 REFERENCE Format
+     3.4.12 FEATURES Format
+          3.4.12.1 Feature Key Names
+          3.4.12.2 Feature Location
+          3.4.12.3  Feature Qualifiers
+          3.4.12.4 Cross-Reference Information
+          3.4.12.5 Feature Table Examples
+     3.4.13 ORIGIN Format
+     3.4.14 SEQUENCE Format
+
+4. ALTERNATE RELEASES
+
+5. KNOWN PROBLEMS OF THE GENBANK DATABASE
+
+5.1 Incorrect Gene Symbols in Entries and Index
+
+6. GENBANK ADMINISTRATION 
+
+6.1 Registered Trademark Notice
+6.2 Citing GenBank
+6.3 GenBank Distribution Formats and Media
+6.4 Other Methods of Accessing GenBank Data
+6.5 Request for Corrections and Comments
+6.6 Credits and Acknowledgments
+6.7 Disclaimer
+
+==========================================================================
+
+1. INTRODUCTION
+
+1.1 Release 133.0
+
+  The National Center for Biotechnology Information (NCBI) at the National
+Library of Medicine (NLM), National Institutes of Health (NIH) is responsible
+for producing and distributing the GenBank Sequence Database.  NCBI handles
+all GenBank direct submissions and authors are advised to use the address
+below.  Submitters are encouraged to use the free Sequin software package
+for sending sequence data, or the newly developed World Wide Web submission
+form.  See Section 1.5 below for details.
+
+*****************************************************************************
+
+The address for direct submissions to GenBank is:
+
+       GenBank Submissions
+       National Center for Biotechnology Information
+       Bldg 38A, Rm. 8N-803
+       8600 Rockville Pike
+       Bethesda, MD 20894
+
+       E-MAIL:  gb-sub@ncbi.nlm.nih.gov
+
+Updates and changes to existing GenBank records:
+
+       E-MAIL:  update@ncbi.nlm.nih.gov
+
+URL for the new GenBank submission tool - BankIt - on the World Wide Web:
+
+       http://www.ncbi.nlm.nih.gov/
+
+(see Section 1.5 for additional details about submitting data to GenBank.)
+
+*****************************************************************************
+
+  GenBank Release 133.0 is a release of sequence data by NCBI in the GenBank
+flatfile format.  GenBank is a component of a tri-partite, international
+collaboration of sequence databases in the U.S., Europe, and Japan.  The
+collaborating databases in Europe are the European Molecular Biology Laboratory
+(EMBL) at Hinxton Hall, UK, and the DNA Database of Japan (DDBJ) in Mishima,
+Japan.  Patent sequences are incorporated through arrangements with the
+U.S. Patent and Trademark Office, and via the collaborating international
+databases from other international patent offices.  The database is converted
+to various output formats, including the Flat File and Abstract Syntax Notation 1
+(ASN.1) versions.  The ASN.1 and Flat File forms of the data are available at
+NCBI's anonymous FTP server: ftp.ncbi.nih.gov .
+
+1.2 Cutoff Date
+
+  This full release, 133.0, incorporates data available to the collaborating
+databases as of December 31, 2002.  For more recent data, users are advised to:
+
+  o Download the GenBank Update files by anonymous FTP to 'ftp.ncbi.nih.gov':
+
+	ftp://ftp.ncbi.nih.gov/ncbi-asn1 (ASN.1 format)
+	ftp://ftp.ncbi.nih.gov/genbank   (flatfile format)
+
+    Mirrors of the GenBank FTP site at the NCBI are available from the San Diego
+    Supercomputer Center and the University of Indiana:
+
+	ftp://genbank.sdsc.edu/pub
+	ftp://bio-mirror.net/biomirror/genbank/
+
+    Some users who experience slow FTP transfers of large files (entire releases,
+    the GenBank Cumulative Update, etc) might realize an improvement in transfer
+    rates from these alternate sites when traffic at the NCBI is high.
+
+  o Use the interactive Network-Entrez or Web-Entrez applications to query
+    the 'Entrez: Nucleotides' database (see Section 6.4 of this document).
+
+1.3 Important Changes in Release 133.0
+
+1.3.1 Organizational changes
+
+  The total number of sequence data files increased by 55 with this release:
+
+  - the EST division is now comprised of 235 files
+  - the GSS division is now comprised of 63 files
+  - the HTC division is now comprised of 3 files
+  - the HTG division is now comprised of 57 files
+  - the PAT division is now comprised of 7 files
+  - the PLN division is now comprised of 7 files
+  - the PRI division is now comprised of 24 files
+  - the ROD division is now comprised of 6 files
+
+  However, note that there was a special supplemental file (gbsup.seq) for
+  full-length-insert cDNA sequences in Release 132.0.
+
+  The fli-cDNA sequences *should* have been present in the standard
+  divisional files. The problem that required the use of the supplemental
+  file has been corrected, so this release does not include gbsup.seq .
+
+  If the removal of gbsup.seq is taken into account, the total number of
+  sequence data files increased by 54 .
+  
+1.3.2 New SET Data File For The ASN.1 Representation
+
+  Some phylogenetic and mutational studies involve sequences from more
+than one of the 'taxonomic' divisions of GenBank. For example, a phylogenetic
+study might involve sequences obtained from human (PRI) and non-primate
+mammalian (MAM) sources.
+
+  Such studies, often with associated sequence alignments, are maintained
+and edited as a single unit in the underlying data representation (ASN.1)
+utilized by the NCBI.
+
+  When generating GenBank flatfiles from such studies, the component
+sequences are processed in such a way that they are individually directed
+to an appropriate divisional file. For example, the human sequences to a
+PRI division file, the other mammalian sequences to the MAM division file.
+
+  In the past, we have mimicked this behavior for the ASN.1 version of
+GenBank releases by splitting the studies into their components, and 
+splicing them into an appropriate divisional ASN.1 file (eg, gbpri1.aso
+and gbmam.aso) .
+
+  This practice has clear disadvantages: the components of the studies
+really should *not* be separated; and the post-processing of these special
+studies adds considerable overhead to release processing.
+
+  Starting with this December 2002 release, we have ceased this practice
+and have introduced a new ASN.1 data file for such multi-divisional
+studies at ftp://ftp.ncbi.nih.gov/ncbi-asn1 . The new file is :
+
+	gbset.aso
+
+1.3.3 Reduction In The Number Of ASN.1 Data Files
+
+  The sizes of many of the files for the ASN.1 version of GenBank releases
+(see ftp://ftp.ncbi.nih.gov/ncbi-asn1 ) used to be well below the 250 MB utilized
+for the GenBank flatfile version. For example, the PRI division ASN.1 files
+were about 140 MB apiece, and the HTG division files are about 190 MB apiece,
+for GenBank Release 132.0 .
+
+  This was due to the fact that the ASN.1 representation was originally
+used to create the flatfile version, on a file-by-file basis, during release
+generation. Since the ASN.1 version is more compact than the flatfile version,
+the ASN.1 file sizes had to be less than 250 MB to yield 250 MB flatfiles.
+
+  Now that the ASN.1 and flatfile versions are created independently, the
+sizes of the ASN.1 files can be increased without consequences for the
+flatfiles.
+
+  Starting with this December 2002 release, the file size limit for all
+ASN.1 files has been increased to 250MB, and as a result, the total number of
+ASN.1 files has been significantly reduced.
+
+1.3.4 GSS File Header Problem
+
+  GSS sequences at GenBank are maintained in one of two different systems,
+depending on their origin. One recent change to release processing involves
+the parallelization of the dumps from those systems. Because the second dump
+(for example) has no prior knowledge of exactly how many GSS files will be
+dumped from the first, it doesn't know how to number it's own output files.
+
+  There is thus a discrepancy between the filenames and file headers of nine
+GSS flatfiles in Release 133.0. Consider the gbgss55.seq file:
+
+GBGSS1.SEQ           Genetic Sequence Data Bank
+                          December 15 2002
+
+                NCBI-GenBank Flat File Release 133.0
+
+                           GSS Sequences (Part 1)
+
+   88062 loci,    66597557 bases, from    88062 reported sequences
+
+  Here, the filename and part number in the header is "1", though the file
+has been renamed as "55" based on the files dumped from the other system.
+
+  We will work to resolve this discrepancy in future releases, but the
+priority is certainly much lower than many other tasks.
+
+1.4 Upcoming Changes
+
+1.4.1 * * Cumulative GenBank Update Products To Be Discontinued * *
+
+  As of GenBank Release 134.0 in February of 2002, the cumulative
+GenBank Update (GBCU) products will be discontinued:
+
+	ftp://ftp.ncbi.nih.gov/ncbi-asn1/daily/gbcu.aso.gz
+	ftp://ftp.ncbi.nih.gov/genbank/daily/gbcu.flat.gz
+	ftp://ftp.ncbi.nih.gov/genbank/daily/gbcu.fsa_nt.gz
+	ftp://ftp.ncbi.nih.gov/genbank/daily/gbcu.gnp.gz
+	ftp://ftp.ncbi.nih.gov/genbank/daily/gbcu.qscore.gz
+	ftp://ftp.ncbi.nih.gov/genbank/daily/gpcu.fsa.gz
+
+  In the eight weeks between typical GenBank Releases, it is not uncommon
+for GBCU products to approach 20% of the total database size. The flatfile
+version, for example, has reached sizes in excess of 17 GB in recent weeks.
+
+  From a user perspective, repeatedly obtaining and processing such a
+large update product makes inefficient use of both bandwidth and local
+resources, compared to the much smaller incremental GbUpdate products.
+
+  And in order to reliably generate the GBCU in the face of such explosive
+growth, NCBI would have to invest significant resources to increase the 
+performance of a large body of software.
+
+  Given these factors, plus the questionable value of an "update" product,
+generated daily, which will soon approach 20GB in size, we have decided
+that the GBCU should be discontinued. We will analyze FTP logs and 
+proactively contact the larger centers which utilize the GBCU, to suggest
+alternate processing strategies.
+
+  If large numbers of users are unable to switch to processing incremental
+updates by February 2002, there is a possibility that the date for
+discontinuing the GBCU might be pushed back to April.
+
+  We will keep users informed of the timetable for this important change
+via these release notes and the GenBank newsgroup. And of course, we 
+welcome discussions of this change via the newsgroup.
+
+1.4.2 New /mol_type qualifier
+
+  As of the April 2003 GenBank Release (134.0), a new source feature
+  qualifier called /mol_type will begin to be used for source features.
+
+  This qualifier will be used to indicate the in-vivo biological state
+  of the sequence presented in a database record.
+
+  The preliminary definition for /segment is :
+        Qualifier       /mol_type=
+        Definition      in vivo molecule type  
+        Value format    "text"
+        Example         /mol_type="genomic DNA", 
+
+        Comment         text limited to "genomic DNA", "genomic RNA", "mRNA" (incl EST), 
+                        "tRNA", "rRNA", "snoRNA", "snRNA", "scRNA", "pre-mRNA",        
+                        "other RNA" (incl. synthetic), "other DNA" (incl. synthetic),
+                        "unassigned DNA" (incl. unknown),"unassigned RNA" (incl. unknown)
+
+  In-vivo molecule type information is already presented on the LOCUS
+  line of the GenBank flatfile format. However, introducing /mol_type
+  in the Feature Table will make the exchange of this information among
+  DDBJ, EMBL, and GenBank more complete and accurate.
+
+  NOTE: /mol_type will eventually be a mandatory qualifier for the source feature,
+  probably by June 2003.
+
+1.4.3 New /segment qualifier
+
+  As of the April 2003 GenBank Release (134.0), a new source feature
+  qualifier called /segment will begin to be used for source features.
+
+  In the absence of a more suitable way to annotate viral segments, this 
+  information had either not been included in database entries, or had been 
+  annotated incorrectly (e.g. using /chromosome, /map etc). This new
+  qualifier addresses that lack.
+
+  The preliminary definition for /segment is :
+
+        Qualifier       /segment=    
+        Definition      name of viral or phage segment sequenced
+        Value format    "text"
+        Example         /segment="6"
+
+1.4.4 New /locus_tag qualifier
+
+  As of the April 2003 GenBank Release (134.0), a new source feature
+  qualifier called /locus_tag will begin to be used.
+
+  Many complete-genome sequencing projects use solely computational
+  methods to predict coding regions and genes. The /locus_tag qualifier
+  provides a method for identifying and tracking the results of such
+  computations, without utilizing existing qualifiers such as /gene .
+
+  These 'locus tags' are systematically assigned, and do not necessarily
+  reflect gene name/symbol conventions in experimental literature. Hence
+  the introduction of a new qualifier.
+
+  The preliminary definition for /locus_tag is :
+
+        Qualifier:      /locus_tag
+        Definition:     feature tag assigned for tracking purposes 
+        Value Format:   "text" (single token)
+        Example:        /locus_tag="RSc0382"
+                        /locus_tag="YPO0002"
+        Comment:        /locus_tag can be used with any feature where /gene 
+                        is valid;
+
+1.4.5 Third-Party Annotation and Consensus Sequences (TPA)
+
+  Pursuant to agreements made at the 2002 Collaborative Meeting, DDBJ/EMBL/GenBank
+  have undertaken the collection of a new class of sequence data : Third-Party
+  Annotation and Consensus Sequences (TPA).
+
+  The TPA data-collection will complement the existing DDBJ/EMBL/GenBank
+  comprehensive database of primary nucleotide sequences, which typically result
+  from direct sequencing of cDNAs, ESTs, genomic DNAs, etc.
+
+  'Primary data' are defined to be data for which the submitting group has done
+  the sequencing and annotation, and as 'owner' of these data has privileges to
+  update/correct the associated sequence records.
+
+  In contrast, non-primary (TPA) sequences are defined as sequences which:
+
+  a) consist exclusively of sequence data from one, or several,
+     previously-existing entries 'owned' by other groups, or
+
+  b) consist of a mixture of new & previously-existing sequences
+
+  TPA categories and requirements  
+  -------------------------------
+
+  Users can submit re-annotations/re-assemblies of sequences already 
+  present in DDBJ/EMBL/GenBank and owned by other groups to be 
+  included in the Third Party Annotation (TPA) data-collection. 
+
+  Categories of data submissions accepted for TPA include:
+
+     1. re-annotation/analysis of sequence(s) from DDBJ/EMBL/GenBank
+     2. mixtures of primary/non-primary sequences, including regions of 
+        new and existing sequence (e.g. filling gaps in a sequence
+	with data from HTG or EST projects, or newly sequenced data)
+     3. TPA sequences based on NCBI/Ensembl trace archive data
+     4. TPA sequences based on Whole Genome Shotgun (WGS) sequences
+
+  Consensus sequences from multiple organisms are not accepted.
+ 
+  The TPA dataset is primarily intended as a means to present sequence
+  and annotation in support of actual biological discoveries, published
+  in the scientific literature, without requiring that every basepair
+  has actually been sequenced by the authors/submittors. 
+  
+  In order to assure that the sequence annotation is of high quality, 
+  it is required that TPA records be associated with a study published
+  in a peer-reviewed journal before the data is released to the public.
+
+  Third Party Annotation (TPA) records include a mandatory 'TPA-block'
+  which documents the relationships between spans of the TPA sequence
+  and the primary (non-TPA) sequences that contributed to it. The
+  elements of the TPA-block are:
+     
+  a) TPA-SPAN             base span on TPA sequence  
+  b) PRIMARY_IDENTIFIER   acc.version of contributing sequence(s) 
+  c) PRIMARY_SPAN         base span on contributing primary sequence
+  d) COMP                 'c' is used to indicate that contributing 
+                          sequence is originating from complementary 
+                          strand in primary sequence entry
+  Example:
+
+  TPA_SPAN       PRIMARY_IDENTIFIER     PRIMARY_SPAN     COMP
+  1-426          AC004528.1             18665-19090         
+  427-526        AC001234.2             1-100            c
+
+  Preliminary exchange of TPA records among DDBJ/EMBL/GenBank are
+  underway. Within two months, data products will be made available at
+  the GenBank FTP site for TPA sequences. Details about those products,
+  sample records, and instructions for submission of TPA data, will
+  be communicated via the GenBank newsgroup:
+
+          http://net.bio.net/hypermail/genbankb/
+
+1.5 Request for Direct Submission of Sequence Data
+
+  A successful GenBank requires that sequence data enter the database as
+soon as possible after publication, that the annotations be as complete as
+possible, and that the sequence and annotation data be accurate. All
+three of these requirements are best met if authors of sequence data
+submit their data directly to GenBank in a usable form. It is especially
+important that these submissions be in computer-readable form.
+
+  GenBank must rely on direct author submission of data to ensure that
+it achieves its goals of completeness, accuracy, and timeliness. To
+assist researchers in entering their own sequence data, GenBank
+provides a WWW submission tool called BankIt, as well as a stand-alone
+software package called Sequin. BankIt and Sequin are both easy-to-use
+programs that enable authors to enter a sequence, annotate it, and
+submit it to GenBank.  Through the international collaboration of DNA
+sequence databases, GenBank submissions are forwarded daily for inclusion
+in the EMBL and DDBJ databases.
+
+  SEQUIN.  Sequin is an interactive, graphically-oriented program based
+on screen forms and controlled vocabularies that guides you through the
+process of entering your sequence and providing biological and
+bibliographic annotation.  Sequin is designed to simplify the sequence submission
+process, and to provide increased data handling capabilities to accomodate
+very long sequences, complex annotations, and robust error checking.  E-mail
+the completed submission file to : gb-sub@ncbi.nlm.nih.gov
+
+  Sequin is provided for Macintosh, PC/Windows, UNIX and VMS computers.
+It is available by annonymous ftp from ftp.ncbi.nih.gov; login as
+anonymous and use your e-mail address as the password. It is located in
+the sequin directory. Or direct your web browser to this URL:
+
+	ftp://ftp.ncbi.nih.gov/sequin
+
+  BANKIT.  BankIt provides a simple forms approach for submitting your
+sequence and descriptive information to GenBank.  Your submission will
+be submitted directly to GenBank via the World Wide Web, and
+immediately forwarded for inclusion in the EMBL and DDBJ databases.
+BankIt may be used with Netscape, Internet Explorer, and other common
+WWW clients. You can access BankIt from GenBank's home page:   
+
+	http://www.ncbi.nlm.nih.gov/
+
+  AUTHORIN.  Authorin sequence submissions are no longer accepted by
+GenBank, and the Authorin application is no longer distributed by NCBI.  
+
+  If you have questions about GenBank submissions or any of the data
+submission tools, contact NCBI at: info@ncbi.nlm.nih.gov or 301-496-2475.
+
+1.6 Organization of This Document
+
+  The second section describes the contents of GenBank releases. The third
+section illustrates the formats of the flat files.  The fourth section
+describes other versions of the data, the fifth section identifies known prob-
+lems, and the sixth contains administrative details.
+
+2. ORGANIZATION OF DATA FILES
+
+2.1 Overview
+
+  GenBank releases consist of a set of ASCII text files, most of which
+contain sequence data. A few supplemental "index" files are also supplied,
+containing comprehensive lists of author names, journal citations,
+gene names, and keywords, along with the accession numbers of the records
+in which they can be found (see Section 3.3). The line-lengths of
+these files is variable.
+
+2.2 Files
+
+  This GenBank flat file release consists of 449 files. The lists
+that follow describe each of the files included in the distribution.
+Their sizes and base pair content are also summarized.
+
+2.2.1 File Descriptions
+
+1.  gbrel.txt	- Release notes (this document).
+2.  gbsdr.txt 	- Short directory of the data bank.
+3.  gbacc.idx 	- Index of the entries according to accession number.
+4.  gbkey.idx 	- Index of the entries according to keyword phrase.
+5.  gbaut1.idx 	- Index of the entries according to author, part 1.
+6.  gbaut2.idx 	- Index of the entries according to author, part 2.
+7.  gbaut3.idx 	- Index of the entries according to author, part 3.
+8.  gbaut4.idx 	- Index of the entries according to author, part 4.
+9.  gbaut5.idx 	- Index of the entries according to author, part 5.
+10. gbaut6.idx 	- Index of the entries according to author, part 6.
+11. gbaut7.idx 	- Index of the entries according to author, part 7.
+12. gbaut8.idx 	- Index of the entries according to author, part 8.
+13. gbaut9.idx 	- Index of the entries according to author, part 9.
+14. gbaut10.idx - Index of the entries according to author, part 10.
+15. gbaut11.idx - Index of the entries according to author, part 11.
+16. gbaut12.idx - Index of the entries according to author, part 12.
+17. gbaut13.idx - Index of the entries according to author, part 13.
+18. gbaut14.idx - Index of the entries according to author, part 14.
+19. gbaut15.idx - Index of the entries according to author, part 15.
+20. gbaut16.idx - Index of the entries according to author, part 16.
+21. gbaut17.idx - Index of the entries according to author, part 17.
+22. gbaut18.idx - Index of the entries according to author, part 18.
+23. gbjou.idx 	- Index of the entries according to journal citation.
+24. gbgen.idx 	- Index of the entries according to gene names.
+25. gbsec.idx	- Index of the entries according to secondary accession number.
+26. gbpri1.seq 	- Primate sequence entries, part 1.
+27. gbpri2.seq 	- Primate sequence entries, part 2.
+28. gbpri3.seq 	- Primate sequence entries, part 3.
+29. gbpri4.seq 	- Primate sequence entries, part 4.
+30. gbpri5.seq 	- Primate sequence entries, part 5.
+31. gbpri6.seq 	- Primate sequence entries, part 6.
+32. gbpri7.seq 	- Primate sequence entries, part 7.
+33. gbpri8.seq 	- Primate sequence entries, part 8.
+34. gbpri9.seq 	- Primate sequence entries, part 9.
+35. gbpri10.seq	- Primate sequence entries, part 10.
+36. gbpri11.seq	- Primate sequence entries, part 11.
+37. gbpri12.seq	- Primate sequence entries, part 12.
+38. gbpri13.seq	- Primate sequence entries, part 13.
+39. gbpri14.seq	- Primate sequence entries, part 14.
+40. gbpri15.seq	- Primate sequence entries, part 15.
+41. gbpri16.seq	- Primate sequence entries, part 16.
+42. gbpri17.seq	- Primate sequence entries, part 17.
+43. gbpri18.seq	- Primate sequence entries, part 18.
+44. gbpri19.seq	- Primate sequence entries, part 19.
+45. gbpri20.seq	- Primate sequence entries, part 20.
+46. gbpri21.seq	- Primate sequence entries, part 21.
+47. gbpri22.seq	- Primate sequence entries, part 22.
+48. gbpri23.seq	- Primate sequence entries, part 23.
+49. gbpri24.seq	- Primate sequence entries, part 24.
+50. gbrod1.seq 	- Rodent sequence entries, part 1.
+51. gbrod2.seq 	- Rodent sequence entries, part 2.
+52. gbrod3.seq 	- Rodent sequence entries, part 3.
+53. gbrod4.seq 	- Rodent sequence entries, part 4.
+54. gbrod5.seq 	- Rodent sequence entries, part 5.
+55. gbrod6.seq 	- Rodent sequence entries, part 6.
+56. gbmam.seq 	- Other mammalian sequence entries.
+57. gbvrt1.seq 	- Other vertebrate sequence entries, part 1.
+58. gbvrt2.seq 	- Other vertebrate sequence entries, part 2.
+59. gbinv1.seq 	- Invertebrate sequence entries, part 1.
+60. gbinv2.seq 	- Invertebrate sequence entries, part 2.
+61. gbinv3.seq 	- Invertebrate sequence entries, part 3.
+62. gbinv4.seq 	- Invertebrate sequence entries, part 4.
+63. gbinv5.seq 	- Invertebrate sequence entries, part 5.
+64. gbpln1.seq 	- Plant sequence entries (including fungi and algae), part 1.
+65. gbpln2.seq 	- Plant sequence entries (including fungi and algae), part 2.
+66. gbpln3.seq 	- Plant sequence entries (including fungi and algae), part 3.
+67. gbpln4.seq 	- Plant sequence entries (including fungi and algae), part 4.
+68. gbpln5.seq 	- Plant sequence entries (including fungi and algae), part 5.
+69. gbpln6.seq 	- Plant sequence entries (including fungi and algae), part 6.
+70. gbpln7.seq 	- Plant sequence entries (including fungi and algae), part 7.
+71. gbbct1.seq 	- Bacterial sequence entries, part 1.
+72. gbbct2.seq 	- Bacterial sequence entries, part 2.
+73. gbbct3.seq 	- Bacterial sequence entries, part 3.
+74. gbbct4.seq 	- Bacterial sequence entries, part 4.
+75. gbbct5.seq 	- Bacterial sequence entries, part 5.
+76. gbbct6.seq 	- Bacterial sequence entries, part 6.
+77. gbvrl1.seq 	- Viral sequence entries, part 1.
+78. gbvrl2.seq 	- Viral sequence entries, part 2.
+79. gbvrl3.seq 	- Viral sequence entries, part 3.
+80. gbphg.seq 	- Phage sequence entries.
+81. gbsyn.seq 	- Synthetic and chimeric sequence entries.
+82. gbuna.seq 	- Unannotated sequence entries.
+83. gbest1.seq  - EST (expressed sequence tag) sequence entries, part 1.
+84. gbest2.seq  - EST (expressed sequence tag) sequence entries, part 2.
+85. gbest3.seq  - EST (expressed sequence tag) sequence entries, part 3.
+86. gbest4.seq  - EST (expressed sequence tag) sequence entries, part 4.
+87. gbest5.seq  - EST (expressed sequence tag) sequence entries, part 5.
+88. gbest6.seq  - EST (expressed sequence tag) sequence entries, part 6.
+89. gbest7.seq  - EST (expressed sequence tag) sequence entries, part 7.
+90. gbest8.seq  - EST (expressed sequence tag) sequence entries, part 8.
+91. gbest9.seq  - EST (expressed sequence tag) sequence entries, part 9.
+92. gbest10.seq - EST (expressed sequence tag) sequence entries, part 10.
+93. gbest11.seq - EST (expressed sequence tag) sequence entries, part 11.
+94. gbest12.seq - EST (expressed sequence tag) sequence entries, part 12.
+95. gbest13.seq - EST (expressed sequence tag) sequence entries, part 13.
+96. gbest14.seq - EST (expressed sequence tag) sequence entries, part 14.
+97. gbest15.seq - EST (expressed sequence tag) sequence entries, part 15.
+98. gbest16.seq - EST (expressed sequence tag) sequence entries, part 16.
+99. gbest17.seq - EST (expressed sequence tag) sequence entries, part 17.
+100. gbest18.seq - EST (expressed sequence tag) sequence entries, part 18.
+101. gbest19.seq - EST (expressed sequence tag) sequence entries, part 19.
+102. gbest20.seq - EST (expressed sequence tag) sequence entries, part 20.
+103. gbest21.seq - EST (expressed sequence tag) sequence entries, part 21.
+104. gbest22.seq - EST (expressed sequence tag) sequence entries, part 22.
+105. gbest23.seq - EST (expressed sequence tag) sequence entries, part 23.
+106. gbest24.seq - EST (expressed sequence tag) sequence entries, part 24.
+107. gbest25.seq - EST (expressed sequence tag) sequence entries, part 25.
+108. gbest26.seq - EST (expressed sequence tag) sequence entries, part 26.
+109. gbest27.seq - EST (expressed sequence tag) sequence entries, part 27.
+110. gbest28.seq - EST (expressed sequence tag) sequence entries, part 28.
+111. gbest29.seq - EST (expressed sequence tag) sequence entries, part 29.
+112. gbest30.seq - EST (expressed sequence tag) sequence entries, part 30.
+113. gbest31.seq - EST (expressed sequence tag) sequence entries, part 31.
+114. gbest32.seq - EST (expressed sequence tag) sequence entries, part 32.
+115. gbest33.seq - EST (expressed sequence tag) sequence entries, part 33.
+116. gbest34.seq - EST (expressed sequence tag) sequence entries, part 34.
+117. gbest35.seq - EST (expressed sequence tag) sequence entries, part 35.
+118. gbest36.seq - EST (expressed sequence tag) sequence entries, part 36.
+119. gbest37.seq - EST (expressed sequence tag) sequence entries, part 37.
+120. gbest38.seq - EST (expressed sequence tag) sequence entries, part 38.
+121. gbest39.seq - EST (expressed sequence tag) sequence entries, part 39.
+122. gbest40.seq - EST (expressed sequence tag) sequence entries, part 40.
+123. gbest41.seq - EST (expressed sequence tag) sequence entries, part 41.
+124. gbest42.seq - EST (expressed sequence tag) sequence entries, part 42.
+125. gbest43.seq - EST (expressed sequence tag) sequence entries, part 43.
+126. gbest44.seq - EST (expressed sequence tag) sequence entries, part 44.
+127. gbest45.seq - EST (expressed sequence tag) sequence entries, part 45.
+128. gbest46.seq - EST (expressed sequence tag) sequence entries, part 46.
+129. gbest47.seq - EST (expressed sequence tag) sequence entries, part 47.
+130. gbest48.seq - EST (expressed sequence tag) sequence entries, part 48.
+131. gbest49.seq - EST (expressed sequence tag) sequence entries, part 49.
+132. gbest50.seq - EST (expressed sequence tag) sequence entries, part 50.
+133. gbest51.seq - EST (expressed sequence tag) sequence entries, part 51.
+134. gbest52.seq - EST (expressed sequence tag) sequence entries, part 52.
+135. gbest53.seq - EST (expressed sequence tag) sequence entries, part 53.
+136. gbest54.seq - EST (expressed sequence tag) sequence entries, part 54.
+137. gbest55.seq - EST (expressed sequence tag) sequence entries, part 55.
+138. gbest56.seq - EST (expressed sequence tag) sequence entries, part 56.
+139. gbest57.seq - EST (expressed sequence tag) sequence entries, part 57.
+140. gbest58.seq - EST (expressed sequence tag) sequence entries, part 58.
+141. gbest59.seq - EST (expressed sequence tag) sequence entries, part 59.
+142. gbest60.seq - EST (expressed sequence tag) sequence entries, part 60.
+143. gbest61.seq - EST (expressed sequence tag) sequence entries, part 61.
+144. gbest62.seq - EST (expressed sequence tag) sequence entries, part 62.
+145. gbest63.seq - EST (expressed sequence tag) sequence entries, part 63.
+146. gbest64.seq - EST (expressed sequence tag) sequence entries, part 64.
+147. gbest65.seq - EST (expressed sequence tag) sequence entries, part 65.
+148. gbest66.seq - EST (expressed sequence tag) sequence entries, part 66.
+149. gbest67.seq - EST (expressed sequence tag) sequence entries, part 67.
+150. gbest68.seq - EST (expressed sequence tag) sequence entries, part 68.
+151. gbest69.seq - EST (expressed sequence tag) sequence entries, part 69.
+152. gbest70.seq - EST (expressed sequence tag) sequence entries, part 70.
+153. gbest71.seq - EST (expressed sequence tag) sequence entries, part 71.
+154. gbest72.seq - EST (expressed sequence tag) sequence entries, part 72.
+155. gbest73.seq - EST (expressed sequence tag) sequence entries, part 73.
+156. gbest74.seq - EST (expressed sequence tag) sequence entries, part 74.
+157. gbest75.seq - EST (expressed sequence tag) sequence entries, part 75.
+158. gbest76.seq - EST (expressed sequence tag) sequence entries, part 76.
+159. gbest77.seq - EST (expressed sequence tag) sequence entries, part 77.
+160. gbest78.seq - EST (expressed sequence tag) sequence entries, part 78.
+161. gbest79.seq - EST (expressed sequence tag) sequence entries, part 79.
+162. gbest80.seq - EST (expressed sequence tag) sequence entries, part 80.
+163. gbest81.seq - EST (expressed sequence tag) sequence entries, part 81.
+164. gbest82.seq - EST (expressed sequence tag) sequence entries, part 82.
+165. gbest83.seq - EST (expressed sequence tag) sequence entries, part 83.
+166. gbest84.seq - EST (expressed sequence tag) sequence entries, part 84.
+167. gbest85.seq - EST (expressed sequence tag) sequence entries, part 85.
+168. gbest86.seq - EST (expressed sequence tag) sequence entries, part 86.
+169. gbest87.seq - EST (expressed sequence tag) sequence entries, part 87.
+170. gbest88.seq - EST (expressed sequence tag) sequence entries, part 88.
+171. gbest89.seq - EST (expressed sequence tag) sequence entries, part 89
+172. gbest90.seq - EST (expressed sequence tag) sequence entries, part 90.
+173. gbest91.seq - EST (expressed sequence tag) sequence entries, part 91.
+174. gbest92.seq - EST (expressed sequence tag) sequence entries, part 92.
+175. gbest93.seq - EST (expressed sequence tag) sequence entries, part 93.
+176. gbest94.seq - EST (expressed sequence tag) sequence entries, part 94.
+177. gbest95.seq - EST (expressed sequence tag) sequence entries, part 95.
+178. gbest96.seq - EST (expressed sequence tag) sequence entries, part 96.
+179. gbest97.seq - EST (expressed sequence tag) sequence entries, part 97.
+180. gbest98.seq - EST (expressed sequence tag) sequence entries, part 98.
+181. gbest99.seq - EST (expressed sequence tag) sequence entries, part 99.
+182. gbest100.seq - EST (expressed sequence tag) sequence entries, part 100.
+183. gbest101.seq - EST (expressed sequence tag) sequence entries, part 101.
+184. gbest102.seq - EST (expressed sequence tag) sequence entries, part 102.
+185. gbest103.seq - EST (expressed sequence tag) sequence entries, part 103.
+186. gbest104.seq - EST (expressed sequence tag) sequence entries, part 104.
+187. gbest105.seq - EST (expressed sequence tag) sequence entries, part 105.
+188. gbest106.seq - EST (expressed sequence tag) sequence entries, part 106.
+189. gbest107.seq - EST (expressed sequence tag) sequence entries, part 107.
+190. gbest108.seq - EST (expressed sequence tag) sequence entries, part 108.
+191. gbest109.seq - EST (expressed sequence tag) sequence entries, part 109.
+192. gbest110.seq - EST (expressed sequence tag) sequence entries, part 110.
+193. gbest111.seq - EST (expressed sequence tag) sequence entries, part 111.
+194. gbest112.seq - EST (expressed sequence tag) sequence entries, part 112.
+195. gbest113.seq - EST (expressed sequence tag) sequence entries, part 113.
+196. gbest114.seq - EST (expressed sequence tag) sequence entries, part 114.
+197. gbest115.seq - EST (expressed sequence tag) sequence entries, part 115.
+198. gbest116.seq - EST (expressed sequence tag) sequence entries, part 116.
+199. gbest117.seq - EST (expressed sequence tag) sequence entries, part 117.
+200. gbest118.seq - EST (expressed sequence tag) sequence entries, part 118.
+201. gbest119.seq - EST (expressed sequence tag) sequence entries, part 119.
+202. gbest120.seq - EST (expressed sequence tag) sequence entries, part 120.
+203. gbest121.seq - EST (expressed sequence tag) sequence entries, part 121.
+204. gbest122.seq - EST (expressed sequence tag) sequence entries, part 122.
+205. gbest123.seq - EST (expressed sequence tag) sequence entries, part 123.
+206. gbest124.seq - EST (expressed sequence tag) sequence entries, part 124.
+207. gbest125.seq - EST (expressed sequence tag) sequence entries, part 125.
+208. gbest126.seq - EST (expressed sequence tag) sequence entries, part 126.
+209. gbest127.seq - EST (expressed sequence tag) sequence entries, part 127.
+210. gbest128.seq - EST (expressed sequence tag) sequence entries, part 128.
+211. gbest129.seq - EST (expressed sequence tag) sequence entries, part 129.
+212. gbest130.seq - EST (expressed sequence tag) sequence entries, part 130.
+213. gbest131.seq - EST (expressed sequence tag) sequence entries, part 131.
+214. gbest132.seq - EST (expressed sequence tag) sequence entries, part 132.
+215. gbest133.seq - EST (expressed sequence tag) sequence entries, part 133.
+216. gbest134.seq - EST (expressed sequence tag) sequence entries, part 134.
+217. gbest135.seq - EST (expressed sequence tag) sequence entries, part 135.
+218. gbest136.seq - EST (expressed sequence tag) sequence entries, part 136.
+219. gbest137.seq - EST (expressed sequence tag) sequence entries, part 137.
+220. gbest138.seq - EST (expressed sequence tag) sequence entries, part 138.
+221. gbest139.seq - EST (expressed sequence tag) sequence entries, part 139.
+222. gbest140.seq - EST (expressed sequence tag) sequence entries, part 140.
+223. gbest141.seq - EST (expressed sequence tag) sequence entries, part 141.
+224. gbest142.seq - EST (expressed sequence tag) sequence entries, part 142.
+225. gbest143.seq - EST (expressed sequence tag) sequence entries, part 143.
+226. gbest144.seq - EST (expressed sequence tag) sequence entries, part 144.
+227. gbest145.seq - EST (expressed sequence tag) sequence entries, part 145.
+228. gbest146.seq - EST (expressed sequence tag) sequence entries, part 146.
+229. gbest147.seq - EST (expressed sequence tag) sequence entries, part 147.
+230. gbest148.seq - EST (expressed sequence tag) sequence entries, part 148.
+231. gbest149.seq - EST (expressed sequence tag) sequence entries, part 149.
+232. gbest150.seq - EST (expressed sequence tag) sequence entries, part 150.
+233. gbest151.seq - EST (expressed sequence tag) sequence entries, part 151.
+234. gbest152.seq - EST (expressed sequence tag) sequence entries, part 152.
+235. gbest153.seq - EST (expressed sequence tag) sequence entries, part 153.
+236. gbest154.seq - EST (expressed sequence tag) sequence entries, part 154.
+237. gbest155.seq - EST (expressed sequence tag) sequence entries, part 155.
+238. gbest156.seq - EST (expressed sequence tag) sequence entries, part 156.
+239. gbest157.seq - EST (expressed sequence tag) sequence entries, part 157.
+240. gbest158.seq - EST (expressed sequence tag) sequence entries, part 158.
+241. gbest159.seq - EST (expressed sequence tag) sequence entries, part 159.
+242. gbest160.seq - EST (expressed sequence tag) sequence entries, part 160.
+243. gbest161.seq - EST (expressed sequence tag) sequence entries, part 161.
+244. gbest162.seq - EST (expressed sequence tag) sequence entries, part 162.
+245. gbest163.seq - EST (expressed sequence tag) sequence entries, part 163.
+246. gbest164.seq - EST (expressed sequence tag) sequence entries, part 164.
+247. gbest165.seq - EST (expressed sequence tag) sequence entries, part 165.
+248. gbest166.seq - EST (expressed sequence tag) sequence entries, part 166.
+249. gbest167.seq - EST (expressed sequence tag) sequence entries, part 167.
+250. gbest168.seq - EST (expressed sequence tag) sequence entries, part 168.
+251. gbest169.seq - EST (expressed sequence tag) sequence entries, part 169.
+252. gbest170.seq - EST (expressed sequence tag) sequence entries, part 170.
+253. gbest171.seq - EST (expressed sequence tag) sequence entries, part 171.
+254. gbest172.seq - EST (expressed sequence tag) sequence entries, part 172.
+255. gbest173.seq - EST (expressed sequence tag) sequence entries, part 173.
+256. gbest174.seq - EST (expressed sequence tag) sequence entries, part 174.
+257. gbest175.seq - EST (expressed sequence tag) sequence entries, part 175.
+258. gbest176.seq - EST (expressed sequence tag) sequence entries, part 176.
+259. gbest177.seq - EST (expressed sequence tag) sequence entries, part 177.
+260. gbest178.seq - EST (expressed sequence tag) sequence entries, part 178.
+261. gbest179.seq - EST (expressed sequence tag) sequence entries, part 179.
+262. gbest180.seq - EST (expressed sequence tag) sequence entries, part 180.
+263. gbest181.seq - EST (expressed sequence tag) sequence entries, part 181.
+264. gbest182.seq - EST (expressed sequence tag) sequence entries, part 182.
+265. gbest183.seq - EST (expressed sequence tag) sequence entries, part 183.
+266. gbest184.seq - EST (expressed sequence tag) sequence entries, part 184.
+267. gbest185.seq - EST (expressed sequence tag) sequence entries, part 185.
+268. gbest186.seq - EST (expressed sequence tag) sequence entries, part 186.
+269. gbest187.seq - EST (expressed sequence tag) sequence entries, part 187.
+270. gbest188.seq - EST (expressed sequence tag) sequence entries, part 188.
+271. gbest189.seq - EST (expressed sequence tag) sequence entries, part 189.
+272. gbest190.seq - EST (expressed sequence tag) sequence entries, part 190.
+273. gbest191.seq - EST (expressed sequence tag) sequence entries, part 191.
+274. gbest192.seq - EST (expressed sequence tag) sequence entries, part 192.
+275. gbest193.seq - EST (expressed sequence tag) sequence entries, part 193.
+276. gbest194.seq - EST (expressed sequence tag) sequence entries, part 194.
+277. gbest195.seq - EST (expressed sequence tag) sequence entries, part 195.
+278. gbest196.seq - EST (expressed sequence tag) sequence entries, part 196.
+279. gbest197.seq - EST (expressed sequence tag) sequence entries, part 197.
+280. gbest198.seq - EST (expressed sequence tag) sequence entries, part 198.
+281. gbest199.seq - EST (expressed sequence tag) sequence entries, part 199.
+282. gbest200.seq - EST (expressed sequence tag) sequence entries, part 200.
+283. gbest201.seq - EST (expressed sequence tag) sequence entries, part 201.
+284. gbest202.seq - EST (expressed sequence tag) sequence entries, part 202.
+285. gbest203.seq - EST (expressed sequence tag) sequence entries, part 203.
+286. gbest204.seq - EST (expressed sequence tag) sequence entries, part 204.
+287. gbest205.seq - EST (expressed sequence tag) sequence entries, part 205.
+288. gbest206.seq - EST (expressed sequence tag) sequence entries, part 206.
+289. gbest207.seq - EST (expressed sequence tag) sequence entries, part 207.
+290. gbest208.seq - EST (expressed sequence tag) sequence entries, part 208.
+291. gbest209.seq - EST (expressed sequence tag) sequence entries, part 209.
+292. gbest210.seq - EST (expressed sequence tag) sequence entries, part 210.
+293. gbest211.seq - EST (expressed sequence tag) sequence entries, part 211.
+294. gbest212.seq - EST (expressed sequence tag) sequence entries, part 212.
+295. gbest213.seq - EST (expressed sequence tag) sequence entries, part 213.
+296. gbest214.seq - EST (expressed sequence tag) sequence entries, part 214.
+297. gbest215.seq - EST (expressed sequence tag) sequence entries, part 215.
+298. gbest216.seq - EST (expressed sequence tag) sequence entries, part 216.
+299. gbest217.seq - EST (expressed sequence tag) sequence entries, part 217.
+300. gbest218.seq - EST (expressed sequence tag) sequence entries, part 218.
+301. gbest219.seq - EST (expressed sequence tag) sequence entries, part 219.
+302. gbest220.seq - EST (expressed sequence tag) sequence entries, part 220.
+303. gbest221.seq - EST (expressed sequence tag) sequence entries, part 221.
+304. gbest222.seq - EST (expressed sequence tag) sequence entries, part 222.
+305. gbest223.seq - EST (expressed sequence tag) sequence entries, part 223.
+306. gbest224.seq - EST (expressed sequence tag) sequence entries, part 224.
+307. gbest225.seq - EST (expressed sequence tag) sequence entries, part 225.
+308. gbest226.seq - EST (expressed sequence tag) sequence entries, part 226.
+309. gbest227.seq - EST (expressed sequence tag) sequence entries, part 227.
+310. gbest228.seq - EST (expressed sequence tag) sequence entries, part 228.
+311. gbest229.seq - EST (expressed sequence tag) sequence entries, part 229.
+312. gbest230.seq - EST (expressed sequence tag) sequence entries, part 230.
+313. gbest231.seq - EST (expressed sequence tag) sequence entries, part 231.
+314. gbest232.seq - EST (expressed sequence tag) sequence entries, part 232.
+315. gbest233.seq - EST (expressed sequence tag) sequence entries, part 233.
+316. gbest234.seq - EST (expressed sequence tag) sequence entries, part 234.
+317. gbest235.seq - EST (expressed sequence tag) sequence entries, part 235.
+318. gbpat1.seq  - Patent sequence entries, part 1.
+319. gbpat2.seq  - Patent sequence entries, part 2.
+320. gbpat3.seq  - Patent sequence entries, part 3.
+321. gbpat4.seq  - Patent sequence entries, part 4.
+322. gbpat5.seq  - Patent sequence entries, part 5.
+323. gbpat6.seq  - Patent sequence entries, part 6.
+324. gbpat7.seq  - Patent sequence entries, part 7.
+325. gbsts1.seq  - STS (sequence tagged site) sequence entries, part 1.
+326. gbsts2.seq  - STS (sequence tagged site) sequence entries, part 2.
+327. gbgss1.seq  - GSS (genome survey sequence) sequence entries, part 1.
+328. gbgss2.seq  - GSS (genome survey sequence) sequence entries, part 2.
+329. gbgss3.seq  - GSS (genome survey sequence) sequence entries, part 3.
+330. gbgss4.seq  - GSS (genome survey sequence) sequence entries, part 4.
+331. gbgss5.seq  - GSS (genome survey sequence) sequence entries, part 5.
+332. gbgss6.seq  - GSS (genome survey sequence) sequence entries, part 6.
+333. gbgss7.seq  - GSS (genome survey sequence) sequence entries, part 7.
+334. gbgss8.seq  - GSS (genome survey sequence) sequence entries, part 8.
+335. gbgss9.seq  - GSS (genome survey sequence) sequence entries, part 9.
+336. gbgss10.seq - GSS (genome survey sequence) sequence entries, part 10.
+337. gbgss11.seq - GSS (genome survey sequence) sequence entries, part 11.
+338. gbgss12.seq - GSS (genome survey sequence) sequence entries, part 12.
+339. gbgss13.seq - GSS (genome survey sequence) sequence entries, part 13.
+340. gbgss14.seq - GSS (genome survey sequence) sequence entries, part 14.
+341. gbgss15.seq - GSS (genome survey sequence) sequence entries, part 15.
+342. gbgss16.seq - GSS (genome survey sequence) sequence entries, part 16.
+343. gbgss17.seq - GSS (genome survey sequence) sequence entries, part 17.
+344. gbgss18.seq - GSS (genome survey sequence) sequence entries, part 18.
+345. gbgss19.seq - GSS (genome survey sequence) sequence entries, part 19.
+346. gbgss20.seq - GSS (genome survey sequence) sequence entries, part 20.
+347. gbgss21.seq - GSS (genome survey sequence) sequence entries, part 21.
+348. gbgss22.seq - GSS (genome survey sequence) sequence entries, part 22.
+349. gbgss23.seq - GSS (genome survey sequence) sequence entries, part 23.
+350. gbgss24.seq - GSS (genome survey sequence) sequence entries, part 24.
+351. gbgss25.seq - GSS (genome survey sequence) sequence entries, part 25.
+352. gbgss26.seq - GSS (genome survey sequence) sequence entries, part 26.
+353. gbgss27.seq - GSS (genome survey sequence) sequence entries, part 27.
+354. gbgss28.seq - GSS (genome survey sequence) sequence entries, part 28.
+355. gbgss29.seq - GSS (genome survey sequence) sequence entries, part 29.
+356. gbgss30.seq - GSS (genome survey sequence) sequence entries, part 30.
+357. gbgss31.seq - GSS (genome survey sequence) sequence entries, part 31.
+358. gbgss32.seq - GSS (genome survey sequence) sequence entries, part 32.
+359. gbgss33.seq - GSS (genome survey sequence) sequence entries, part 33.
+360. gbgss34.seq - GSS (genome survey sequence) sequence entries, part 34.
+361. gbgss35.seq - GSS (genome survey sequence) sequence entries, part 35.
+362. gbgss36.seq - GSS (genome survey sequence) sequence entries, part 36.
+363. gbgss37.seq - GSS (genome survey sequence) sequence entries, part 37.
+364. gbgss38.seq - GSS (genome survey sequence) sequence entries, part 38.
+365. gbgss39.seq - GSS (genome survey sequence) sequence entries, part 39.
+366. gbgss40.seq - GSS (genome survey sequence) sequence entries, part 40.
+367. gbgss41.seq - GSS (genome survey sequence) sequence entries, part 41.
+368. gbgss42.seq - GSS (genome survey sequence) sequence entries, part 42.
+369. gbgss43.seq - GSS (genome survey sequence) sequence entries, part 43.
+370. gbgss44.seq - GSS (genome survey sequence) sequence entries, part 44.
+371. gbgss45.seq - GSS (genome survey sequence) sequence entries, part 45.
+372. gbgss46.seq - GSS (genome survey sequence) sequence entries, part 46.
+373. gbgss47.seq - GSS (genome survey sequence) sequence entries, part 47.
+374. gbgss48.seq - GSS (genome survey sequence) sequence entries, part 48.
+375. gbgss49.seq - GSS (genome survey sequence) sequence entries, part 49.
+376. gbgss50.seq - GSS (genome survey sequence) sequence entries, part 50.
+377. gbgss51.seq - GSS (genome survey sequence) sequence entries, part 51.
+378. gbgss52.seq - GSS (genome survey sequence) sequence entries, part 52.
+379. gbgss53.seq - GSS (genome survey sequence) sequence entries, part 53.
+380. gbgss54.seq - GSS (genome survey sequence) sequence entries, part 54.
+381. gbgss55.seq - GSS (genome survey sequence) sequence entries, part 55.
+382. gbgss56.seq - GSS (genome survey sequence) sequence entries, part 56.
+383. gbgss57.seq - GSS (genome survey sequence) sequence entries, part 57.
+384. gbgss58.seq - GSS (genome survey sequence) sequence entries, part 58.
+385. gbgss59.seq - GSS (genome survey sequence) sequence entries, part 59.
+386. gbgss60.seq - GSS (genome survey sequence) sequence entries, part 60.
+387. gbgss61.seq - GSS (genome survey sequence) sequence entries, part 61.
+388. gbgss62.seq - GSS (genome survey sequence) sequence entries, part 62.
+389. gbgss63.seq - GSS (genome survey sequence) sequence entries, part 63.
+390. gbhtg1.seq  - HTGS (high throughput genomic sequencing) sequence entries, part 1.
+391. gbhtg2.seq  - HTGS (high throughput genomic sequencing) sequence entries, part 2.
+392. gbhtg3.seq  - HTGS (high throughput genomic sequencing) sequence entries, part 3.
+393. gbhtg4.seq  - HTGS (high throughput genomic sequencing) sequence entries, part 4.
+394. gbhtg5.seq  - HTGS (high throughput genomic sequencing) sequence entries, part 5.
+395. gbhtg6.seq  - HTGS (high throughput genomic sequencing) sequence entries, part 6.
+396. gbhtg7.seq  - HTGS (high throughput genomic sequencing) sequence entries, part 7.
+397. gbhtg8.seq  - HTGS (high throughput genomic sequencing) sequence entries, part 8.
+398. gbhtg9.seq  - HTGS (high throughput genomic sequencing) sequence entries, part 9.
+399. gbhtg10.seq - HTGS (high throughput genomic sequencing) sequence entries, part 10.
+400. gbhtg11.seq - HTGS (high throughput genomic sequencing) sequence entries, part 11.
+401. gbhtg12.seq - HTGS (high throughput genomic sequencing) sequence entries, part 12.
+402. gbhtg13.seq - HTGS (high throughput genomic sequencing) sequence entries, part 13.
+403. gbhtg14.seq - HTGS (high throughput genomic sequencing) sequence entries, part 14.
+404. gbhtg15.seq - HTGS (high throughput genomic sequencing) sequence entries, part 15.
+405. gbhtg16.seq - HTGS (high throughput genomic sequencing) sequence entries, part 16.
+406. gbhtg17.seq - HTGS (high throughput genomic sequencing) sequence entries, part 17.
+407. gbhtg18.seq - HTGS (high throughput genomic sequencing) sequence entries, part 18.
+408. gbhtg19.seq - HTGS (high throughput genomic sequencing) sequence entries, part 19.
+409. gbhtg20.seq - HTGS (high throughput genomic sequencing) sequence entries, part 20.
+410. gbhtg21.seq - HTGS (high throughput genomic sequencing) sequence entries, part 21.
+411. gbhtg22.seq - HTGS (high throughput genomic sequencing) sequence entries, part 22.
+412. gbhtg23.seq - HTGS (high throughput genomic sequencing) sequence entries, part 23.
+413. gbhtg24.seq - HTGS (high throughput genomic sequencing) sequence entries, part 24.
+414. gbhtg25.seq - HTGS (high throughput genomic sequencing) sequence entries, part 25.
+415. gbhtg26.seq - HTGS (high throughput genomic sequencing) sequence entries, part 26.
+416. gbhtg27.seq - HTGS (high throughput genomic sequencing) sequence entries, part 27.
+417. gbhtg28.seq - HTGS (high throughput genomic sequencing) sequence entries, part 28.
+418. gbhtg29.seq - HTGS (high throughput genomic sequencing) sequence entries, part 29.
+419. gbhtg30.seq - HTGS (high throughput genomic sequencing) sequence entries, part 30.
+420. gbhtg31.seq - HTGS (high throughput genomic sequencing) sequence entries, part 31.
+421. gbhtg32.seq - HTGS (high throughput genomic sequencing) sequence entries, part 32.
+422. gbhtg33.seq - HTGS (high throughput genomic sequencing) sequence entries, part 33.
+423. gbhtg34.seq - HTGS (high throughput genomic sequencing) sequence entries, part 34.
+424. gbhtg35.seq - HTGS (high throughput genomic sequencing) sequence entries, part 35.
+425. gbhtg36.seq - HTGS (high throughput genomic sequencing) sequence entries, part 36.
+426. gbhtg37.seq - HTGS (high throughput genomic sequencing) sequence entries, part 37.
+427. gbhtg38.seq - HTGS (high throughput genomic sequencing) sequence entries, part 38.
+428. gbhtg39.seq - HTGS (high throughput genomic sequencing) sequence entries, part 39.
+429. gbhtg40.seq - HTGS (high throughput genomic sequencing) sequence entries, part 40.
+430. gbhtg41.seq - HTGS (high throughput genomic sequencing) sequence entries, part 41.
+431. gbhtg42.seq - HTGS (high throughput genomic sequencing) sequence entries, part 42.
+432. gbhtg43.seq - HTGS (high throughput genomic sequencing) sequence entries, part 43.
+433. gbhtg44.seq - HTGS (high throughput genomic sequencing) sequence entries, part 44.
+434. gbhtg45.seq - HTGS (high throughput genomic sequencing) sequence entries, part 45.
+435. gbhtg46.seq - HTGS (high throughput genomic sequencing) sequence entries, part 46.
+436. gbhtg47.seq - HTGS (high throughput genomic sequencing) sequence entries, part 47.
+437. gbhtg48.seq - HTGS (high throughput genomic sequencing) sequence entries, part 48.
+438. gbhtg49.seq - HTGS (high throughput genomic sequencing) sequence entries, part 49.
+439. gbhtg50.seq - HTGS (high throughput genomic sequencing) sequence entries, part 50.
+440. gbhtg51.seq - HTGS (high throughput genomic sequencing) sequence entries, part 51.
+441. gbhtg52.seq - HTGS (high throughput genomic sequencing) sequence entries, part 52.
+442. gbhtg53.seq - HTGS (high throughput genomic sequencing) sequence entries, part 53.
+443. gbhtg54.seq - HTGS (high throughput genomic sequencing) sequence entries, part 54.
+444. gbhtg55.seq - HTGS (high throughput genomic sequencing) sequence entries, part 55.
+445. gbhtg56.seq - HTGS (high throughput genomic sequencing) sequence entries, part 56.
+446. gbhtg57.seq - HTGS (high throughput genomic sequencing) sequence entries, part 57.
+447. gbhtc1.seq	 - HTC (high throughput cDNA sequencing) entries, part 1.
+448. gbhtc2.seq	 - HTC (high throughput cDNA sequencing) entries, part 2.
+449. gbhtc3.seq	 - HTC (high throughput cDNA sequencing) entries, part 3.
+
+  Three Supplemental files provide the accession numbers of GenBank entries
+that are new, updated, or deleted since the previous release:
+
+a.  gbchg.txt	- Entries updated since the previous release.
+b.  gbdel.txt	- Entries deleted since the previous release.
+c.  gbnew.txt	- Entries new since the previous release.
+
+  An experimental file called gbcon.seq provides an alternative representation
+for complex sequences, such as "segmented sets" and complete-genomes that have
+been split into pieces. The GenBank README describes the experimental CON
+division of GenBank in more detail:
+
+	ftp://ftp.ncbi.nih.gov/genbank/README.genbank
+
+2.2.5 File Sizes
+
+  Uncompressed, the Release 133.0 flatfiles require roughly 94.33 GB (sequence
+files only) or 107.07 GB (including the 'short directory' and 'index' files).
+The following table contains the approximate sizes of the individual files in
+this release.  Since minor changes to some of the files might have occurred
+after these release notes were written, these sizes should not be used to
+determine file integrity; they are provided as an aid to planning only.
+
+File Size      File Name
+
+ 729063968     gbacc.idx
+ 502265875     gbaut1.idx
+ 501503933     gbaut10.idx
+ 501489761     gbaut11.idx
+ 505671078     gbaut12.idx
+ 516521192     gbaut13.idx
+ 504423074     gbaut14.idx
+ 511905025     gbaut15.idx
+ 501827134     gbaut16.idx
+ 506962319     gbaut17.idx
+ 459196711     gbaut18.idx
+ 500012393     gbaut2.idx
+ 504522507     gbaut3.idx
+ 516903974     gbaut4.idx
+ 514663509     gbaut5.idx
+ 505091071     gbaut6.idx
+ 500083130     gbaut7.idx
+ 500034204     gbaut8.idx
+ 529808973     gbaut9.idx
+ 250008897     gbbct1.seq
+ 250000679     gbbct2.seq
+ 250367557     gbbct3.seq
+ 250026652     gbbct4.seq
+ 250005433     gbbct5.seq
+ 128435234     gbbct6.seq
+   1954012     gbchg.txt
+    313833     gbdel.txt
+ 230687688     gbest1.seq
+ 230688999     gbest10.seq
+ 230689470     gbest100.seq
+ 230689391     gbest101.seq
+ 230689273     gbest102.seq
+ 230689008     gbest103.seq
+ 230689710     gbest104.seq
+ 230688510     gbest105.seq
+ 230689148     gbest106.seq
+ 230687855     gbest107.seq
+ 230689348     gbest108.seq
+ 230691072     gbest109.seq
+ 230687854     gbest11.seq
+ 230688197     gbest110.seq
+ 230689388     gbest111.seq
+ 230690390     gbest112.seq
+ 230688682     gbest113.seq
+ 230689993     gbest114.seq
+ 230690611     gbest115.seq
+ 230688742     gbest116.seq
+ 230687584     gbest117.seq
+ 230687811     gbest118.seq
+ 230689803     gbest119.seq
+ 230689601     gbest12.seq
+ 230688335     gbest120.seq
+ 230688709     gbest121.seq
+ 230689693     gbest122.seq
+ 230688953     gbest123.seq
+ 230689190     gbest124.seq
+ 230688951     gbest125.seq
+ 230687785     gbest126.seq
+ 230689527     gbest127.seq
+ 230688807     gbest128.seq
+ 230689739     gbest129.seq
+ 230687861     gbest13.seq
+ 230688465     gbest130.seq
+ 230690530     gbest131.seq
+ 230688491     gbest132.seq
+ 230688317     gbest133.seq
+ 230689672     gbest134.seq
+ 230689590     gbest135.seq
+ 230688478     gbest136.seq
+ 230688223     gbest137.seq
+ 230690482     gbest138.seq
+ 230690139     gbest139.seq
+ 230687867     gbest14.seq
+ 230689541     gbest140.seq
+ 230688661     gbest141.seq
+ 230687631     gbest142.seq
+ 230689282     gbest143.seq
+ 230689007     gbest144.seq
+ 230687676     gbest145.seq
+ 230692318     gbest146.seq
+ 230689646     gbest147.seq
+ 230688820     gbest148.seq
+ 230690162     gbest149.seq
+ 230687708     gbest15.seq
+ 230689355     gbest150.seq
+ 230689888     gbest151.seq
+ 230689873     gbest152.seq
+ 230690306     gbest153.seq
+ 230687874     gbest154.seq
+ 230690602     gbest155.seq
+ 230688767     gbest156.seq
+ 230688892     gbest157.seq
+ 230689732     gbest158.seq
+ 230689493     gbest159.seq
+ 230687480     gbest16.seq
+ 230694518     gbest160.seq
+ 230687830     gbest161.seq
+ 230688865     gbest162.seq
+ 230689027     gbest163.seq
+ 230687777     gbest164.seq
+ 230689231     gbest165.seq
+ 230688944     gbest166.seq
+ 230688866     gbest167.seq
+ 230689418     gbest168.seq
+ 230689661     gbest169.seq
+ 230688694     gbest17.seq
+ 230688687     gbest170.seq
+ 230689463     gbest171.seq
+ 230688474     gbest172.seq
+ 230689490     gbest173.seq
+ 230687808     gbest174.seq
+ 230687992     gbest175.seq
+ 230688684     gbest176.seq
+ 230689652     gbest177.seq
+ 230690825     gbest178.seq
+ 230689087     gbest179.seq
+ 230689477     gbest18.seq
+ 230690381     gbest180.seq
+ 230689659     gbest181.seq
+ 230690066     gbest182.seq
+ 230688606     gbest183.seq
+ 230689483     gbest184.seq
+ 230688577     gbest185.seq
+ 230689321     gbest186.seq
+ 230689094     gbest187.seq
+ 230688740     gbest188.seq
+ 166704146     gbest189.seq
+ 230689351     gbest19.seq
+ 163151684     gbest190.seq
+ 167375148     gbest191.seq
+ 172134552     gbest192.seq
+ 170860362     gbest193.seq
+ 166619818     gbest194.seq
+ 166514436     gbest195.seq
+ 166408389     gbest196.seq
+ 167104595     gbest197.seq
+ 167450525     gbest198.seq
+ 166974019     gbest199.seq
+ 230690037     gbest2.seq
+ 230688393     gbest20.seq
+ 174274473     gbest200.seq
+ 162982949     gbest201.seq
+ 173127622     gbest202.seq
+ 163873046     gbest203.seq
+ 164747197     gbest204.seq
+ 169607771     gbest205.seq
+ 171933736     gbest206.seq
+ 168597639     gbest207.seq
+ 166620886     gbest208.seq
+ 167137712     gbest209.seq
+ 230691374     gbest21.seq
+ 167253197     gbest210.seq
+ 168239573     gbest211.seq
+ 167085304     gbest212.seq
+ 166535785     gbest213.seq
+ 176538728     gbest214.seq
+ 181779763     gbest215.seq
+ 177274776     gbest216.seq
+ 194122855     gbest217.seq
+ 230688542     gbest218.seq
+ 230687910     gbest219.seq
+ 230689091     gbest22.seq
+ 230690008     gbest220.seq
+ 230688799     gbest221.seq
+ 230688568     gbest222.seq
+ 230689135     gbest223.seq
+ 230689385     gbest224.seq
+ 230688453     gbest225.seq
+ 230688017     gbest226.seq
+ 230687758     gbest227.seq
+ 230688889     gbest228.seq
+ 230689865     gbest229.seq
+ 230687783     gbest23.seq
+ 230689205     gbest230.seq
+ 230690142     gbest231.seq
+ 230687885     gbest232.seq
+ 227443835     gbest233.seq
+ 230689017     gbest234.seq
+ 118538965     gbest235.seq
+ 230689292     gbest24.seq
+ 230690112     gbest25.seq
+ 230690594     gbest26.seq
+ 230687556     gbest27.seq
+ 230689345     gbest28.seq
+ 230689877     gbest29.seq
+ 230688556     gbest3.seq
+ 230688166     gbest30.seq
+ 230688174     gbest31.seq
+ 230688457     gbest32.seq
+ 230688108     gbest33.seq
+ 230687970     gbest34.seq
+ 230687635     gbest35.seq
+ 211054287     gbest36.seq
+ 210079554     gbest37.seq
+ 210664900     gbest38.seq
+ 217981580     gbest39.seq
+ 230689798     gbest4.seq
+ 216550231     gbest40.seq
+ 216342030     gbest41.seq
+ 217283558     gbest42.seq
+ 230687911     gbest43.seq
+ 230689536     gbest44.seq
+ 221834636     gbest45.seq
+ 230689696     gbest46.seq
+ 230687802     gbest47.seq
+ 230687760     gbest48.seq
+ 230689313     gbest49.seq
+ 165267638     gbest5.seq
+ 230690123     gbest50.seq
+ 230689502     gbest51.seq
+ 230689047     gbest52.seq
+ 230688012     gbest53.seq
+ 230689817     gbest54.seq
+ 230690661     gbest55.seq
+ 230688056     gbest56.seq
+ 230689186     gbest57.seq
+ 230687916     gbest58.seq
+ 230687464     gbest59.seq
+ 180014575     gbest6.seq
+ 230690475     gbest60.seq
+ 230689386     gbest61.seq
+ 209862458     gbest62.seq
+ 209376586     gbest63.seq
+ 208935191     gbest64.seq
+ 209219447     gbest65.seq
+ 210511396     gbest66.seq
+ 209974961     gbest67.seq
+ 208802147     gbest68.seq
+ 209485067     gbest69.seq
+ 230687546     gbest7.seq
+ 210666005     gbest70.seq
+ 206520828     gbest71.seq
+ 206847410     gbest72.seq
+ 208276982     gbest73.seq
+ 208696492     gbest74.seq
+ 215665447     gbest75.seq
+ 230690130     gbest76.seq
+ 230689783     gbest77.seq
+ 230687473     gbest78.seq
+ 227513684     gbest79.seq
+ 230689515     gbest8.seq
+ 217362692     gbest80.seq
+ 219203234     gbest81.seq
+ 230687684     gbest82.seq
+ 230689130     gbest83.seq
+ 230688750     gbest84.seq
+ 230690568     gbest85.seq
+ 230688307     gbest86.seq
+ 230688975     gbest87.seq
+ 230688447     gbest88.seq
+ 230690211     gbest89.seq
+ 230687748     gbest9.seq
+ 230689603     gbest90.seq
+ 230687503     gbest91.seq
+ 230691964     gbest92.seq
+ 230690331     gbest93.seq
+ 230687572     gbest94.seq
+ 230687976     gbest95.seq
+ 230688808     gbest96.seq
+ 230690865     gbest97.seq
+ 230690710     gbest98.seq
+ 230689195     gbest99.seq
+  27852020     gbgen.idx
+ 209717500     gbgss1.seq
+ 209716794     gbgss10.seq
+ 209718369     gbgss11.seq
+ 209719058     gbgss12.seq
+ 209717684     gbgss13.seq
+ 209718195     gbgss14.seq
+ 209718460     gbgss15.seq
+ 209719508     gbgss16.seq
+ 209717619     gbgss17.seq
+ 209718699     gbgss18.seq
+ 209715982     gbgss19.seq
+ 209717920     gbgss2.seq
+ 209718113     gbgss20.seq
+ 209719545     gbgss21.seq
+ 209719231     gbgss22.seq
+ 209716350     gbgss23.seq
+ 209720092     gbgss24.seq
+ 209717151     gbgss25.seq
+ 209717784     gbgss26.seq
+ 209718015     gbgss27.seq
+ 209717394     gbgss28.seq
+ 209718013     gbgss29.seq
+ 209717432     gbgss3.seq
+ 209718476     gbgss30.seq
+ 209717160     gbgss31.seq
+ 209716069     gbgss32.seq
+ 209716912     gbgss33.seq
+ 209718075     gbgss34.seq
+ 209717155     gbgss35.seq
+ 209716093     gbgss36.seq
+ 209718669     gbgss37.seq
+ 209716177     gbgss38.seq
+ 209716587     gbgss39.seq
+ 209717295     gbgss4.seq
+ 209715922     gbgss40.seq
+ 209717142     gbgss41.seq
+ 209718051     gbgss42.seq
+ 209716739     gbgss43.seq
+ 209717788     gbgss44.seq
+ 209717661     gbgss45.seq
+ 209717795     gbgss46.seq
+ 209718859     gbgss47.seq
+ 209719251     gbgss48.seq
+ 209715955     gbgss49.seq
+ 209717368     gbgss5.seq
+ 209717878     gbgss50.seq
+ 209716430     gbgss51.seq
+ 209717961     gbgss52.seq
+ 209717000     gbgss53.seq
+  28953412     gbgss54.seq
+ 250002498     gbgss55.seq
+ 250001772     gbgss56.seq
+ 250000388     gbgss57.seq
+ 250000601     gbgss58.seq
+ 250000632     gbgss59.seq
+ 209717060     gbgss6.seq
+ 250002763     gbgss60.seq
+ 250001602     gbgss61.seq
+ 250001817     gbgss62.seq
+ 234319985     gbgss63.seq
+ 209718308     gbgss7.seq
+ 209718139     gbgss8.seq
+ 209717651     gbgss9.seq
+ 250008469     gbhtc1.seq
+ 250004233     gbhtc2.seq
+ 159495870     gbhtc3.seq
+ 250002199     gbhtg1.seq
+ 250202194     gbhtg10.seq
+ 250132762     gbhtg11.seq
+ 250128666     gbhtg12.seq
+ 250147000     gbhtg13.seq
+ 250276523     gbhtg14.seq
+ 250089994     gbhtg15.seq
+ 250037960     gbhtg16.seq
+ 250067038     gbhtg17.seq
+ 250082700     gbhtg18.seq
+ 250147277     gbhtg19.seq
+ 250104522     gbhtg2.seq
+ 250014725     gbhtg20.seq
+ 250006180     gbhtg21.seq
+ 250123662     gbhtg22.seq
+ 250082425     gbhtg23.seq
+ 250170147     gbhtg24.seq
+ 250119188     gbhtg25.seq
+ 250142454     gbhtg26.seq
+ 250004229     gbhtg27.seq
+ 250242159     gbhtg28.seq
+ 250104466     gbhtg29.seq
+ 250023951     gbhtg3.seq
+ 250045176     gbhtg30.seq
+ 250232415     gbhtg31.seq
+ 250140400     gbhtg32.seq
+ 250077912     gbhtg33.seq
+ 250241226     gbhtg34.seq
+ 250094081     gbhtg35.seq
+ 250246540     gbhtg36.seq
+ 250060783     gbhtg37.seq
+ 250205323     gbhtg38.seq
+ 250311103     gbhtg39.seq
+ 250060829     gbhtg4.seq
+ 250099351     gbhtg40.seq
+ 250181662     gbhtg41.seq
+ 250028706     gbhtg42.seq
+ 250354925     gbhtg43.seq
+ 250084441     gbhtg44.seq
+ 250263973     gbhtg45.seq
+ 250004197     gbhtg46.seq
+ 250002032     gbhtg47.seq
+ 250070034     gbhtg48.seq
+ 250125216     gbhtg49.seq
+ 250026311     gbhtg5.seq
+ 250011666     gbhtg50.seq
+ 250087427     gbhtg51.seq
+ 250026385     gbhtg52.seq
+ 250049681     gbhtg53.seq
+ 250100598     gbhtg54.seq
+ 250187898     gbhtg55.seq
+ 250077328     gbhtg56.seq
+  90081335     gbhtg57.seq
+ 250066041     gbhtg6.seq
+ 250215886     gbhtg7.seq
+ 250176755     gbhtg8.seq
+ 250227386     gbhtg9.seq
+ 250083066     gbinv1.seq
+ 250096964     gbinv2.seq
+ 250000693     gbinv3.seq
+ 250017622     gbinv4.seq
+ 216601588     gbinv5.seq
+ 559233299     gbjou.idx
+ 502549211     gbkey.idx
+ 150243349     gbmam.seq
+  39797694     gbnew.txt
+ 250000474     gbpat1.seq
+ 250000831     gbpat2.seq
+ 250137890     gbpat3.seq
+ 250003014     gbpat4.seq
+ 250003170     gbpat5.seq
+ 250000325     gbpat6.seq
+  12736517     gbpat7.seq
+  19556999     gbphg.seq
+ 250043518     gbpln1.seq
+ 250000648     gbpln2.seq
+ 250184383     gbpln3.seq
+ 250005885     gbpln4.seq
+ 250001047     gbpln5.seq
+ 250001465     gbpln6.seq
+  47594260     gbpln7.seq
+ 250041351     gbpri1.seq
+ 250047051     gbpri10.seq
+ 250174588     gbpri11.seq
+ 250097660     gbpri12.seq
+ 250001108     gbpri13.seq
+ 250002143     gbpri14.seq
+ 250070030     gbpri15.seq
+ 250198384     gbpri16.seq
+ 250003366     gbpri17.seq
+ 250098312     gbpri18.seq
+ 250108669     gbpri19.seq
+ 250191080     gbpri2.seq
+ 250008370     gbpri20.seq
+ 250042782     gbpri21.seq
+ 250067175     gbpri22.seq
+ 250003891     gbpri23.seq
+ 102620129     gbpri24.seq
+ 250143759     gbpri3.seq
+ 250108436     gbpri4.seq
+ 250028000     gbpri5.seq
+ 250280745     gbpri6.seq
+ 250056061     gbpri7.seq
+ 250216691     gbpri8.seq
+ 250206323     gbpri9.seq
+    147334     gbrel.txt
+ 250192343     gbrod1.seq
+ 250084794     gbrod2.seq
+ 250235678     gbrod3.seq
+ 250013880     gbrod4.seq
+ 250000420     gbrod5.seq
+ 101447374     gbrod6.seq
+1785538677     gbsdr.txt
+   1461004     gbsec.idx
+ 250001708     gbsts1.seq
+ 172710085     gbsts2.seq
+  34094288     gbsyn.seq
+   1417399     gbuna.seq
+ 250001373     gbvrl1.seq
+ 250001140     gbvrl2.seq
+  80136039     gbvrl3.seq
+ 250015830     gbvrt1.seq
+ 115201812     gbvrt2.seq
+
+2.2.6 Per-Division Statistics 
+
+  The following table provides a per-division breakdown of the number of
+sequence entries and the total number of bases of DNA/RNA in each sequence
+data file:
+
+Division     Entries    Bases
+
+BCT1         20909      102678263
+BCT2         8857       106684010
+BCT3         64413      87886582
+BCT4         17166      106777490
+BCT5         39191      95157045
+BCT6         20595      46419783
+EST1         68333      26365039
+EST10        76745      29941526
+EST100       71828      32887395
+EST101       70445      30012313
+EST102       66150      37311305
+EST103       69249      37063950
+EST104       68395      44346090
+EST105       73527      33098409
+EST106       75506      34919781
+EST107       74832      27279714
+EST108       73941      35762983
+EST109       73697      35569915
+EST11        75365      28764290
+EST110       69992      42352086
+EST111       80607      44516389
+EST112       77034      46494948
+EST113       69206      43346193
+EST114       67465      43009589
+EST115       74565      50174447
+EST116       70242      42772133
+EST117       75480      43579292
+EST118       73390      46267488
+EST119       72076      47859615
+EST12        77514      30859409
+EST120       74068      51620744
+EST121       79083      39372138
+EST122       76134      30964750
+EST123       79147      40507047
+EST124       78363      42581744
+EST125       76712      47610042
+EST126       60764      28087582
+EST127       74757      42122989
+EST128       68367      37229353
+EST129       67867      38861410
+EST13        77206      29188394
+EST130       71302      42291782
+EST131       73515      47651805
+EST132       66820      38870075
+EST133       73471      41676219
+EST134       69013      40180569
+EST135       60632      37420261
+EST136       88693      48005885
+EST137       93083      52892284
+EST138       71948      37670770
+EST139       72857      38604876
+EST14        78691      31973028
+EST140       95997      51092712
+EST141       103695     56605904
+EST142       93549      54238908
+EST143       69498      39870838
+EST144       66570      31714694
+EST145       62164      29403250
+EST146       57506      30282336
+EST147       62910      31147774
+EST148       53850      27207550
+EST149       80774      56103456
+EST15        73822      31221266
+EST150       68988      37254494
+EST151       73355      51659695
+EST152       70790      39959795
+EST153       61444      30687607
+EST154       64952      39968182
+EST155       68228      31162165
+EST156       63406      46797205
+EST157       70947      40042043
+EST158       68688      41495981
+EST159       68522      40839718
+EST16        75556      33225382
+EST160       62211      36273436
+EST161       66764      43105040
+EST162       68794      30390360
+EST163       76867      33307211
+EST164       69246      43264111
+EST165       74729      36902989
+EST166       66765      34940828
+EST167       71064      51435701
+EST168       68182      45551581
+EST169       68767      35025125
+EST17        83282      34236589
+EST170       69468      47372358
+EST171       69307      51545638
+EST172       69583      36587190
+EST173       70896      44365006
+EST174       70960      60306434
+EST175       64114      47110110
+EST176       63539      47027266
+EST177       63865      46419695
+EST178       65274      45874735
+EST179       67030      51643869
+EST18        80498      32259338
+EST180       63023      39914016
+EST181       64309      38317377
+EST182       59375      32898366
+EST183       74819      39787698
+EST184       84416      55179721
+EST185       69202      41504038
+EST186       104547     66007395
+EST187       107299     64796337
+EST188       108403     64203205
+EST189       27303      10067575
+EST19        78881      32363613
+EST190       27794      10578726
+EST191       27093      10046898
+EST192       26279      9589385
+EST193       26553      8973600
+EST194       27141      9910421
+EST195       27056      9772580
+EST196       26976      9707078
+EST197       26896      10507259
+EST198       26711      11766957
+EST199       26807      10982846
+EST2         75036      28805559
+EST20        74330      30142776
+EST200       25736      9443732
+EST201       27749      9305572
+EST202       26100      9001127
+EST203       27647      11257981
+EST204       27548      10725992
+EST205       26706      11201486
+EST206       26088      11710806
+EST207       26652      11184028
+EST208       26999      10880037
+EST209       26794      11414071
+EST21        73733      34275961
+EST210       26880      11447312
+EST211       26688      10955703
+EST212       26846      10634377
+EST213       27011      10549864
+EST214       25326      10019072
+EST215       24358      16138446
+EST216       25091      16603509
+EST217       51582      23878843
+EST218       95127      39811215
+EST219       70839      41390389
+EST22        75862      30433067
+EST220       81304      46575024
+EST221       63943      46216351
+EST222       66098      37385388
+EST223       70229      36187848
+EST224       101685     46641206
+EST225       79371      44178301
+EST226       65671      33970785
+EST227       76482      34071430
+EST228       92306      29968899
+EST229       69938      24887145
+EST23        77239      32321013
+EST230       73772      27737942
+EST231       74241      26168513
+EST232       78742      27134951
+EST233       73954      26554339
+EST234       69351      29496370
+EST235       41315      14463209
+EST24        75445      33738037
+EST25        72304      30715455
+EST26        76178      31658232
+EST27        76268      33171930
+EST28        103510     49521499
+EST29        70699      46219557
+EST3         73894      29981502
+EST30        82306      56263044
+EST31        91666      50506414
+EST32        97277      50215845
+EST33        93812      43645473
+EST34        93990      49082163
+EST35        100451     45108702
+EST36        60024      17289786
+EST37        59603      15776911
+EST38        60426      16206926
+EST39        59509      18234177
+EST4         74402      28251763
+EST40        43563      11907360
+EST41        43149      11862894
+EST42        43062      11390523
+EST43        83692      34977200
+EST44        95572      43492640
+EST45        89672      47075721
+EST46        84734      39578750
+EST47        107095     56564239
+EST48        93786      45491123
+EST49        76068      32418168
+EST5         48500      15380287
+EST50        68444      30193462
+EST51        71129      30821176
+EST52        72311      30266401
+EST53        83359      33681671
+EST54        74056      29176735
+EST55        64880      28102513
+EST56        70471      31036961
+EST57        76908      36569563
+EST58        73838      32330375
+EST59        75111      27277246
+EST6         55669      17851521
+EST60        79431      30225671
+EST61        74096      32935019
+EST62        40205      11461834
+EST63        40188      11292002
+EST64        40336      12660891
+EST65        40621      12295843
+EST66        40602      12462886
+EST67        40506      12941905
+EST68        40519      12576532
+EST69        40350      12103904
+EST7         74567      29348606
+EST70        40359      12336423
+EST71        41180      12272642
+EST72        41306      12384589
+EST73        41225      13109266
+EST74        41026      13015813
+EST75        43663      12487989
+EST76        43433      20114254
+EST77        40594      24563775
+EST78        42767      18443474
+EST79        44600      18735226
+EST8         76202      30681145
+EST80        49658      21334919
+EST81        48788      20995216
+EST82        69627      31621387
+EST83        72905      27836636
+EST84        74528      29301210
+EST85        75399      41588448
+EST86        78340      40961592
+EST87        76519      43608275
+EST88        77507      35337289
+EST89        74306      43365142
+EST9         77738      29969805
+EST90        72075      36685511
+EST91        73933      38294179
+EST92        72962      38729562
+EST93        75778      42124724
+EST94        70353      40531945
+EST95        69361      36349005
+EST96        73344      35497824
+EST97        72664      47395996
+EST98        72181      43985099
+EST99        71807      42807997
+GSS1         83286      35682444
+GSS10        66628      34170349
+GSS11        68874      40613150
+GSS12        62891      31915603
+GSS13        65573      34559166
+GSS14        69194      36072590
+GSS15        65572      29702574
+GSS16        64454      29759069
+GSS17        71546      41744414
+GSS18        65572      33893159
+GSS19        60258      27417835
+GSS2         83477      35629691
+GSS20        52121      27248219
+GSS21        52559      26107903
+GSS22        53721      23103306
+GSS23        57867      33370620
+GSS24        58830      30392137
+GSS25        52942      25070913
+GSS26        60543      39580044
+GSS27        64369      27373566
+GSS28        54059      22156781
+GSS29        55485      27567056
+GSS3         81443      38312715
+GSS30        66670      31556204
+GSS31        55449      31976170
+GSS32        85570      38076376
+GSS33        69642      36866420
+GSS34        67989      38936583
+GSS35        64914      41665671
+GSS36        73317      35921632
+GSS37        70020      37051488
+GSS38        71528      37974521
+GSS39        85924      56344940
+GSS4         74353      38119884
+GSS40        85999      57118206
+GSS41        80947      42000763
+GSS42        84521      50742390
+GSS43        79212      35227839
+GSS44        76365      28798680
+GSS45        74330      48365492
+GSS46        74147      52339234
+GSS47        69179      48198592
+GSS48        66236      43925435
+GSS49        66370      43660710
+GSS5         71182      38066855
+GSS50        72664      40097502
+GSS51        73011      37336501
+GSS52        82211      59029622
+GSS53        79225      65395756
+GSS54        10228      3533948
+GSS55        88062      66597557
+GSS56        84358      63376892
+GSS57        95582      37385608
+GSS58        82247      62935677
+GSS59        70619      59121013
+GSS6         70634      35405867
+GSS60        70168      58974706
+GSS61        65243      63314312
+GSS62        84103      56241726
+GSS63        99537      45753168
+GSS7         70945      35613804
+GSS8         71352      36474544
+GSS9         68975      34298841
+HTC1         27605      44414413
+HTC2         25937      58769348
+HTC3         29047      45650610
+HTG1         1328       190652500
+HTG10        1145       190377480
+HTG11        1546       186385982
+HTG12        1047       191853300
+HTG13        734        192539642
+HTG14        731        192779864
+HTG15        732        192449744
+HTG16        791        192458352
+HTG17        740        192544473
+HTG18        759        192597834
+HTG19        2055       179022636
+HTG2         2056       188399975
+HTG20        1257       186732197
+HTG21        972        190212361
+HTG22        1166       189133571
+HTG23        747        192447192
+HTG24        932        190891461
+HTG25        969        190446741
+HTG26        937        191020786
+HTG27        876        191159018
+HTG28        771        192516814
+HTG29        987        190453380
+HTG3         2617       187670821
+HTG30        847        191645917
+HTG31        974        190779344
+HTG32        1135       188692262
+HTG33        1045       189778956
+HTG34        1059       189938444
+HTG35        1109       189101582
+HTG36        1051       190204056
+HTG37        928        192159862
+HTG38        1166       189546890
+HTG39        990        191613394
+HTG4         2895       189904440
+HTG40        915        191816267
+HTG41        878        192468271
+HTG42        838        191947191
+HTG43        907        191773867
+HTG44        999        190863781
+HTG45        987        191348098
+HTG46        966        191700065
+HTG47        1046       190569359
+HTG48        1134       190226933
+HTG49        1223       189589523
+HTG5         1283       188492918
+HTG50        1162       189969384
+HTG51        1446       189022564
+HTG52        1060       193336432
+HTG53        1002       194024174
+HTG54        1141       191038940
+HTG55        1359       194222678
+HTG56        1201       192675923
+HTG57        372        65030971
+HTG6         1291       187703093
+HTG7         1242       188508008
+HTG8         1254       188098048
+HTG9         1273       188609476
+INV1         8899       175299354
+INV2         1868       165480545
+INV3         63781      87212007
+INV4         40330      105083221
+INV5         35768      92577491
+MAM          44517      51377750
+PAT1         222798     70208547
+PAT2         164817     89779309
+PAT3         143470     91004073
+PAT4         117436     112343126
+PAT5         131364     59742530
+PAT6         144124     59991209
+PAT7         13338      3054369
+PHG          2241       7457849
+PLN1         18358      141980521
+PLN2         72446      87139166
+PLN3         42872      116786186
+PLN4         35683      110795411
+PLN5         55267      80094320
+PLN6         40467      112628634
+PLN7         11076      17650439
+PRI1         13599      155620524
+PRI10        1345       173839918
+PRI11        1318       176421078
+PRI12        1579       176723848
+PRI13        11603      164263952
+PRI14        42896      117337468
+PRI15        13700      154776988
+PRI16        1590       180042900
+PRI17        1748       181169911
+PRI18        2226       187564295
+PRI19        1450       186293023
+PRI2         1422       173803916
+PRI20        28733      131822634
+PRI21        17339      154293397
+PRI22        47472      117916209
+PRI23        37035      125378837
+PRI24        28939      34220185
+PRI3         1259       182669656
+PRI4         1266       177079910
+PRI5         1138       173940204
+PRI6         1242       181412610
+PRI7         1194       174143519
+PRI8         1300       169141719
+PRI9         1274       177619083
+ROD1         6543       180396688
+ROD2         22998      157088397
+ROD3         1168       194415880
+ROD4         1221       194497124
+ROD5         33686      129372311
+ROD6         28448      33488413
+STS1         89972      35652835
+STS2         66087      30459843
+SYN          7665       13852062
+UNA          612        330831
+VRL1         74162      63822434
+VRL2         78362      61636850
+VRL3         18833      27503541
+VRT1         56005      106201853
+VRT2         35322      34526315
+
+2.2.7 Selected Per-Organism Statistics 
+
+  The following table provides the number of entries and bases of DNA/RNA for
+the twenty most sequenced organisms in Release 133.0 (chloroplast and mitochon-
+drial sequences not included):
+
+Entries      Bases   Species
+
+6360016 9392891274   Homo sapiens
+658937  5380664060   Rattus norvegicus
+4772153 5292468980   Mus musculus
+345914   691618258   Drosophila melanogaster
+167440   577585512   Oryza sativa (japonica cultivar-group)
+334671   444851980   Danio rerio
+567852   386342341   Brassica oleracea
+448420   374911466   Arabidopsis thaliana
+401998   298912387   Gallus gallus
+499168   294074230   Ciona intestinalis
+450819   222535093   Zea mays
+196555   220325190   Caenorhabditis elegans
+418028   207346955   Triticum aestivum
+189149   170126319   Tetraodon nigroviridis
+160980   169390455   Pan troglodytes
+282022   156113711   Hordeum vulgare subsp. vulgare
+318862   149038286   Glycine max
+245762   138329514   Bos taurus
+242850   137255686   Xenopus laevis
+182744   137143055   Medicago truncatula
+
+2.2.8 Growth of GenBank
+
+  The following table lists the number of bases and the number of sequence
+records in each release of GenBank, beginning with Release 3 in 1982.
+From 1982 to the present, the number of bases in GenBank has doubled
+approximately every 14 months.
+
+Release      Date     Base Pairs   Entries
+
+    3    Dec 1982         680338       606
+   14    Nov 1983        2274029      2427
+   20    May 1984        3002088      3665
+   24    Sep 1984        3323270      4135
+   25    Oct 1984        3368765      4175
+   26    Nov 1984        3689752      4393
+   32    May 1985        4211931      4954
+   36    Sep 1985        5204420      5700
+   40    Feb 1986        5925429      6642
+   42    May 1986        6765476      7416
+   44    Aug 1986        8442357      8823
+   46    Nov 1986        9615371      9978
+   48    Feb 1987       10961380     10913
+   50    May 1987       13048473     12534
+   52    Aug 1987       14855145     14020
+   53    Sep 1987       15514776     14584
+   54    Dec 1987       16752872     15465
+   55    Mar 1988       19156002     17047
+   56    Jun 1988       20795279     18226
+   57    Sep 1988       22019698     19044
+   57.1  Oct 1988       23800000     20579
+   58    Dec 1988       24690876     21248
+   59    Mar 1989       26382491     22479
+   60    Jun 1989       31808784     26317
+   61    Sep 1989       34762585     28791
+   62    Dec 1989       37183950     31229
+   63    Mar 1990       40127752     33377
+   64    Jun 1990       42495893     35100
+   65    Sep 1990       49179285     39533
+   66    Dec 1990       51306092     41057
+   67    Mar 1991       55169276     43903
+   68    Jun 1991       65868799     51418
+   69    Sep 1991       71947426     55627
+   70    Dec 1991       77337678     58952
+   71    Mar 1992       83894652     65100
+   72    Jun 1992       92160761     71280
+   73    Sep 1992      101008486     78608
+   74    Dec 1992      120242234     97084
+   75    Feb 1993      126212259    106684
+   76    Apr 1993      129968355    111911
+   77    Jun 1993      138904393    120134
+   78    Aug 1993      147215633    131328
+   79    Oct 1993      157152442    143492
+   80    Dec 1993      163802597    150744
+   81    Feb 1994      173261500    162946
+   82    Apr 1994      180589455    169896
+   83    Jun 1994      191393939    182753
+   84    Aug 1994      201815802    196703
+   85    Oct 1994      217102462    215273
+   86    Dec 1994      230485928    237775
+   87    Feb 1995      248499214    269478
+   88    Apr 1995      286094556    352414
+   89    Jun 1995      318624568    425211
+   90    Aug 1995      353713490    492483
+   91    Oct 1995      384939485    555694
+   92    Dec 1995      425860958    620765
+   93    Feb 1996      463758833    685693
+   94    Apr 1996      499127741    744295
+   95    Jun 1996      551750920    835487
+   96    Aug 1996      602072354    920588
+   97    Oct 1996      651972984    1021211
+   98    Dec 1996      730552938    1114581
+   99    Feb 1997      786898138    1192505
+   100   Apr 1997      842864309    1274747
+   101   Jun 1997      966993087    1491069
+   102   Aug 1997     1053474516    1610848
+   103   Oct 1997     1160300687    1765847
+   104   Dec 1997     1258290513    1891953
+   105   Feb 1998     1372368913    2042325
+   106   Apr 1998     1502542306    2209232
+   107   Jun 1998     1622041465    2355928
+   108   Aug 1998     1797137713    2532359
+   109   Oct 1998     2008761784    2837897
+   110   Dec 1998     2162067871    3043729
+   111   Apr 1999     2569578208    3525418
+   112   Jun 1999     2974791993    4028171
+   113   Aug 1999     3400237391    4610118
+   114   Oct 1999     3841163011    4864570
+   115   Dec 1999     4653932745    5354511
+   116   Feb 2000     5805414935    5691170
+   117   Apr 2000     7376080723    6215002
+   118   Jun 2000     8604221980    7077491
+   119   Aug 2000     9545724824    8214339
+   120   Oct 2000    10335692655    9102634
+   121   Dec 2000    11101066288    10106023
+   122   Feb 2001    11720120326    10896781
+   123   Apr 2001    12418544023    11545572
+   124   Jun 2001    12973707065    12243766
+   125   Aug 2001    13543364296    12813516
+   126   Oct 2001    14396883064    13602262
+   127   Dec 2001    15849921438    14976310
+   128   Feb 2002    17089143893    15465325
+   129   Apr 2002    19072679701    16769983
+   130   Jun 2002    20648748345    17471130
+   131   Aug 2002    22616937182    18197119
+   132   Oct 2002    26525934656    19808101
+   133   Dec 2002    28507990166    22318883
+
+3. FILE FORMATS
+
+  The flat file examples included in this section, while not always from the
+current release, are usually fairly recent.  Any differences compared to the
+actual records are the result of updates to the entries involved.
+
+3.1 File Header Information
+
+  With the exception of the index files, each of the 449 files of a
+GenBank release begins with the same header, except for the first line,
+which contains the file name, and the sixth line, which contains the
+title of the file. The first line of the file contains the file name
+in character positions 1 to 9 and the full database name (Genetic Sequence
+Data Bank) starting in column 22. The brief names of the files in this
+release are listed in section 2.2.
+
+  The second line contains the date of the current release in the form
+`day month year', beginning in position 27. The fourth line contains
+the current GenBank release number. The release number appears in
+positions 48 to 52 and consists of three numbers separated by a decimal
+point. The number to the left of the decimal is the major release
+number. The digit to the right of the decimal indicates the version of
+the major release; it is zero for the first version. The sixth line
+contains a title for the file. The eighth line lists the number of
+entries (loci), number of bases (or base pairs), and number of reports
+of sequences (equal to number of entries in this case). These numbers are
+right-justified at fixed positions. The number of entries appears in
+positions 1 to 8, the number of bases in positions 16 to 26, and the
+number of reports in positions 40 to 47. The third, fifth, seventh, and
+ninth lines are blank.
+
+1       10        20        30        40        50        60        70       79
+---------+---------+---------+---------+---------+---------+---------+---------
+GBBCT1.SEQ           Genetic Sequence Data Bank
+                          15 April 2002
+
+                NCBI-GenBank Flat File Release 133.0
+
+                        Bacterial Sequences (Part 1)
+
+   37811 loci,    97585608 bases, from    37811 reported sequences
+
+---------+---------+---------+---------+---------+---------+---------+---------
+1       10        20        30        40        50        60        70       79
+
+Example 1. Sample File Header
+
+
+3.2 Directory Files
+
+3.2.1 Short Directory File
+
+  The short directory file contains brief descriptions of all of the
+sequence entries contained in this release. These descriptions are in
+fifteen groups, one group for each of the fifteen sequence entry
+data files. The first record at the beginning of a group of entries
+contains the name of the group in uppercase characters, beginning in
+position 21. The organism groups are PRIMATE, RODENT, OTHER MAMMAL,
+OTHER VERTEBRATE, INVERTEBRATE, PLANT, BACTERIAL, STRUCTURAL RNA, VIRAL,
+PHAGE, SYNTHETIC, UNANNOTATED, EXPRESSED SEQUENCE TAG, PATENT, or
+SEQUENCE TAGGED SITE.  The second record is blank.
+
+  Each record in the short directory contains the sequence entry name
+(LOCUS) in the first 12 positions, followed by a brief definition of
+the sequence beginning in column 13. The definition is truncated (at
+the end of a word) to leave room at the right margin for at least one
+space, the sequence length, and the letters `bp'. The length of the
+sequence is printed right-justified to column 77, followed by the
+letters `bp' in columns 78 and 79. The next-to-last record for a group
+has `ZZZZZZZZZZ' in its first ten positions (where the entry name
+would normally appear). The last record is a blank line. An example of
+the short directory file format, showing the descriptions of the last
+entries in the Other Vertebrate sequence data file and the first
+entries of the Invertebrate sequence data file, is reproduced below:
+
+1       10        20        30        40        50        60        70       79
+---------+---------+---------+---------+---------+---------+---------+---------
+ZEFWNT1G3   B.rerio wnt-1 gene (exon 3) for wnt-1 protein.                266bp
+ZEFWNT1G4   B.rerio wnt-1 gene (exon 4) for wnt-1 protein.                647bp
+ZEFZF54     Zebrafish homeotic gene ZF-54.                                246bp
+ZEFZFEN     Zebrafish engrailed-like homeobox sequence.                   327bp
+ZZZZZZZZZZ
+ 
+                    INVERTEBRATE
+
+AAHAV33A    Acanthocheilonema viteae pepsin-inhibitor-like-protein       1048bp
+ACAAC01     Acanthamoeba castelani gene encoding actin I.                1571bp
+ACAACTPH    Acanthamoeba castellanii actophorin mRNA, complete cds.       671bp
+ACAMHCA     A.castellanii non-muscle myosin heavy chain gene, partial    5894bp
+---------+---------+---------+---------+---------+---------+---------+---------
+1       10        20        30        40        50        60        70       79
+Example 2. Short Directory File
+
+
+3.3 Index Files
+
+There are six files containing indices to the entries in this release:
+
+  Accession number index file (Accession and Version)
+  Secondary accession number index file
+  Keyword phrase index file
+  Author name index file
+  Journal citation index file
+  Gene name index file
+
+  The index keys (accession numbers, keywords, authors, journals, and
+gene symbols.) of an index are sorted alphabetically. All index keys
+appear in uppercase characters even though they appear in mixed case
+in the sequence entries. Following each index key, the identifiers of the
+sequence entries containing that key are listed (LOCUS name,
+division abbreviation, and primary accession number). The division
+abbreviations are:
+
+ 1. PRI - primate sequences
+ 2. ROD - rodent sequences
+ 3. MAM - other mammalian sequences
+ 4. VRT - other vertebrate sequences
+ 5. INV - invertebrate sequences
+ 6. PLN - plant, fungal, and algal sequences
+ 7. BCT - bacterial sequences
+ 8. VRL - viral sequences
+ 9. PHG - bacteriophage sequences
+10. SYN - synthetic sequences
+11. UNA - unannotated sequences
+12. EST - EST sequences (expressed sequence tags) 
+13. PAT - patent sequences
+14. STS - STS sequences (sequence tagged sites) 
+15. GSS - GSS sequences (genome survey sequences) 
+16. HTG - HTGS sequences (high throughput genomic sequences) 
+17. HTC - HTC sequences (high throughput cDNA sequences) 
+
+  A line-oriented, TAB-delimited format is utilized for the gbaut.idx,
+gbgen.idx,  gbjou.idx, gbkey.idx, and gbsec.idx indexes. Each index
+key is presented on its own line, and is followed by a
+LOCUS/Division/Accession triplet for every record containing the key:
+
+Indexed-Term 
+        LOCUS-name1 Div-code1 Accession1 
+        LOCUS-name2 Div-code2 Accession2 
+        LOCUS-name3 Div-code3 Accession3 
+        .... 
+
+  Here is an example of the format, in which TAB characters are displayed 
+as ^I, and carriage-returns/newlines as $ : 
+
+(H+,K+)-ATPASE BETA-SUBUNIT$ 
+^IRATHKATPB^IROD^IM55655$ 
+^IMUSATP4B1^IROD^IM64685$ 
+^IMUSATP4B2^IROD^IM64686$ 
+^IMUSATP4B3^IROD^IM64687$ 
+^IMUSATP4B4^IROD^IM64688$ 
+^IDOGATPASEB^IMAM^IM76486$ 
+
+When viewed by a file browser such as 'less' or 'more' : 
+
+(H+,K+)-ATPASE BETA-SUBUNIT 
+        RATHKATPB ROD M55655 
+        MUSATP4B1 ROD M64685 
+        MUSATP4B2 ROD M64686 
+        MUSATP4B3 ROD M64687 
+        MUSATP4B4 ROD M64688 
+        DOGATPASEB MAM M76486 
+
+  Note that the index keys can be distinguished from LOCUS/DIV/ACCESSION 
+by the fact that they do not start with a TAB character. So one can 
+extract just the terms via simple text-processing: 
+
+        perl -ne 'print unless /^\s+/' < gbkey.idx > terms.gbkey
+
+  The format of the primary accession number index file is slightly
+different, with each indexed key (Accession.Version) present on
+the same line as the LOCUS/Division/Accession triplet:
+
+Accession1.Version1 Locus-name1 Div-code1 Accession1 
+Accession2.Version2 Locus-name2 Div-code2 Accession2 
+.... 
+
+  Here is an example of the format, in which TAB characters are displayed 
+as ^I, and carriage-returns/newlines as $ : 
+
+AC000102.1^IAC000102^IPRI^IAC000102$ 
+AC000103.1^IAC000103^IPLN^IAC000103$ 
+AC000104.1^IF19P19^IPLN^IAC000104$ 
+AC000105.40^IAC000105^IPRI^IAC000105$ 
+AC000106.1^IF7G19^IPLN^IAC000106$ 
+AC000107.1^IAC000107^IPLN^IAC000107$ 
+AC000108.1^IAC000108^IBCT^IAC000108$ 
+AC000109.1^IHSAC000109^IPRI^IAC000109$ 
+AC000110.1^IHSAC000110^IPRI^IAC000110$ 
+
+When viewed by a file browser such as 'less' or 'more' : 
+
+AC000102.1 AC000102 PRI AC000102 
+AC000103.1 AC000103 PLN AC000103 
+AC000104.1 F19P19 PLN AC000104 
+AC000105.40 AC000105 PRI AC000105 
+AC000106.1 F7G19 PLN AC000106 
+AC000107.1 AC000107 PLN AC000107 
+AC000108.1 AC000108 BCT AC000108 
+AC000109.1 HSAC000109 PRI AC000109 
+AC000110.1 HSAC000110 PRI AC000110 
+
+3.3.1 Accession Number Index File - gbacc.idx
+
+  Accession numbers are unique six character or eight-character alphanumeric
+identifiers of GenBank database entries. The six-character accession
+number format consists of a single uppercase letter, followed by 5 digits.
+The eight-character accession number format consists of two uppercase
+letters, followed by 6 digits.  Accessions provide an unchanging identifier
+for the data with which they are associated, and we encourage you to cite
+accession numbers whenever you refer to data from GenBank.
+
+  GenBank entries can have both 'primary' and 'secondary' accessions
+associated with them (see Section 3.5.6). Only primary accessions are present
+in the gbacc.idx index.
+
+3.3.2 Keyword Phrase Index File - gbkey.idx
+
+  Keyword phrases consist of names for gene products and other
+characteristics of sequence entries.
+
+3.3.3 Author Name Index File - gbaut*.idx
+
+The author name index files list all of the author names that appear
+in the references within sequence records.
+
+3.3.4 Journal Citation Index File - gbjou.idx
+
+  The journal citation index file lists all of the citations that appear
+in the references within sequence records.. All citations are truncated
+to 80 characters.
+
+3.3.5 Gene Name Index - gbgen.idx
+
+  The /gene qualifiers of many GenBank entries contain values other than
+official gene symbols, such as the product or the standard name of the gene.
+Hence, NCBI has chosen to build an index (gbgen.idx) more like a keyword index
+for this field, using both the GenBank /gene qualifier and the 'Gene.locus'
+fields from the NCBI internal database as keys.
+
+3.4 Sequence Entry Files
+
+  GenBank releases contain one or more sequence entry data files, one
+for each "division" of GenBank.
+
+3.4.1 File Organization
+
+  Each of these files has the same format and consists of two parts:
+header information (described in section 3.1) and sequence entries for
+that division (described in the following sections).
+
+3.4.2  Entry Organization
+
+  In the second portion of a sequence entry file (containing the
+sequence entries for that division), each record (line) consists of
+two parts. The first part is found in positions 1 to 10 and may
+contain:
+
+1. A keyword, beginning in column 1 of the record (e.g., REFERENCE is
+a keyword).
+
+2. A subkeyword beginning in column 3, with columns 1 and 2 blank
+(e.g., AUTHORS is a subkeyword of REFERENCE). Or a subkeyword beginning
+in column 4, with columns 1, 2, and 3 blank (e.g., PUBMED is a
+subkeyword of REFERENCE).
+
+3. Blank characters, indicating that this record is a continuation of
+the information under the keyword or subkeyword above it.
+
+4. A code, beginning in column 6, indicating the nature of an entry
+(feature key) in the FEATURES table; these codes are described in
+Section 3.4.12.1 below.
+
+5. A number, ending in column 9 of the record. This number occurs in
+the portion of the entry describing the actual nucleotide sequence and
+designates the numbering of sequence positions.
+
+6. Two slashes (//) in positions 1 and 2, marking the end of an entry.
+
+  The second part of each sequence entry record contains the information
+appropriate to its keyword, in positions 13 to 80 for keywords and
+positions 11 to 80 for the sequence.
+
+  The following is a brief description of each entry field. Detailed
+information about each field may be found in Sections 3.4.4 to 3.4.14.
+
+LOCUS	- A short mnemonic name for the entry, chosen to suggest the
+sequence's definition. Mandatory keyword/exactly one record.
+
+DEFINITION	- A concise description of the sequence. Mandatory
+keyword/one or more records.
+
+ACCESSION	- The primary accession number is a unique, unchanging
+code assigned to each entry. (Please use this code when citing
+information from GenBank.) Mandatory keyword/one or more records.
+
+VERSION		- A compound identifier consisting of the primary
+accession number and a numeric version number associated with the
+current version of the sequence data in the record. This is followed
+by an integer key (a "GI") assigned to the sequence by NCBI.
+Mandatory keyword/exactly one record.
+
+NID		- An alternative method of presenting the NCBI GI
+identifier (described above). The NID is obsolete and was removed
+from the GenBank flatfile format in December 1999.
+
+KEYWORDS	- Short phrases describing gene products and other
+information about an entry. Mandatory keyword in all annotated
+entries/one or more records.
+
+SEGMENT	- Information on the order in which this entry appears in a
+series of discontinuous sequences from the same molecule. Optional
+keyword (only in segmented entries)/exactly one record.
+
+SOURCE	- Common name of the organism or the name most frequently used
+in the literature. Mandatory keyword in all annotated entries/one or
+more records/includes one subkeyword.
+
+   ORGANISM	- Formal scientific name of the organism (first line)
+and taxonomic classification levels (second and subsequent lines).
+Mandatory subkeyword in all annotated entries/two or more records.
+
+REFERENCE	- Citations for all articles containing data reported
+in this entry. Includes seven subkeywords and may repeat. Mandatory
+keyword/one or more records.
+
+   AUTHORS	- Lists the authors of the citation. Optional
+subkeyword/one or more records.
+
+   CONSRTM	- Lists the collective names of consortiums associated
+with the citation (eg, International Human Genome Sequencing Consortium),
+rather than individual author names. Optional subkeyword/one or more records.
+
+   TITLE	- Full title of citation. Optional subkeyword (present
+in all but unpublished citations)/one or more records.
+
+   JOURNAL	- Lists the journal name, volume, year, and page
+numbers of the citation. Mandatory subkeyword/one or more records.
+
+   MEDLINE	- Provides the Medline unique identifier for a
+citation. Optional subkeyword/one record.
+
+    PUBMED 	- Provides the PubMed unique identifier for a
+citation. Optional subkeyword/one record.
+
+   REMARK	- Specifies the relevance of a citation to an
+entry. Optional subkeyword/one or more records.
+
+COMMENT	- Cross-references to other sequence entries, comparisons to
+other collections, notes of changes in LOCUS names, and other remarks.
+Optional keyword/one or more records/may include blank records.
+
+FEATURES	- Table containing information on portions of the
+sequence that code for proteins and RNA molecules and information on
+experimentally determined sites of biological significance. Optional
+keyword/one or more records.
+
+BASE COUNT	- Summary of the number of occurrences of each base
+code in the sequence. Mandatory keyword/exactly one record.
+
+ORIGIN	- Specification of how the first base of the reported sequence
+is operationally located within the genome. Where possible, this
+includes its location within a larger genetic map. Mandatory
+keyword/exactly one record.
+
+	- The ORIGIN line is followed by sequence data (multiple records).
+
+// 	- Entry termination symbol. Mandatory at the end of an
+entry/exactly one record.
+
+3.4.3 Sample Sequence Data File
+
+  An example of a complete sequence entry file follows. (This example
+has only two entries.) Note that in this example, as throughout the
+data bank, numbers in square brackets indicate items in the REFERENCE
+list. For example, in ACARR58S, [1] refers to the paper by Mackay, et
+al.
+
+1       10        20        30        40        50        60        70       79
+---------+---------+---------+---------+---------+---------+---------+---------
+GBSMP.SEQ          Genetic Sequence Data Bank
+                         15 December 1992
+
+                 GenBank Flat File Release 74.0
+
+                     Structural RNA Sequences
+
+      2 loci,       236 bases, from     2 reported sequences
+
+LOCUS       AAURRA        118 bp ss-rRNA            RNA       16-JUN-1986
+DEFINITION  A.auricula-judae (mushroom) 5S ribosomal RNA.
+ACCESSION   K03160
+VERSION     K03160.1  GI:173593
+KEYWORDS    5S ribosomal RNA; ribosomal RNA.
+SOURCE      A.auricula-judae (mushroom) ribosomal RNA.
+  ORGANISM  Auricularia auricula-judae
+            Eukaryota; Fungi; Eumycota; Basidiomycotina; Phragmobasidiomycetes;
+            Heterobasidiomycetidae; Auriculariales; Auriculariaceae.
+REFERENCE   1  (bases 1 to 118)
+  AUTHORS   Huysmans,E., Dams,E., Vandenberghe,A. and De Wachter,R.
+  TITLE     The nucleotide sequences of the 5S rRNAs of four mushrooms and
+            their use in studying the phylogenetic position of basidiomycetes
+            among the eukaryotes
+  JOURNAL   Nucleic Acids Res. 11, 2871-2880 (1983)
+FEATURES             Location/Qualifiers
+     rRNA            1..118
+                     /note="5S ribosomal RNA"
+BASE COUNT       27 a     34 c     34 g     23 t
+ORIGIN      5' end of mature rRNA.
+        1 atccacggcc ataggactct gaaagcactg catcccgtcc gatctgcaaa gttaaccaga
+       61 gtaccgccca gttagtacca cggtggggga ccacgcggga atcctgggtg ctgtggtt
+//
+LOCUS       ABCRRAA       118 bp ss-rRNA            RNA       15-SEP-1990
+DEFINITION  Acetobacter sp. (strain MB 58) 5S ribosomal RNA, complete sequence.
+ACCESSION   M34766
+VERSION     M34766.1  GI:173603
+KEYWORDS    5S ribosomal RNA.
+SOURCE      Acetobacter sp. (strain MB 58) rRNA.
+  ORGANISM  Acetobacter sp.
+            Prokaryotae; Gracilicutes; Scotobacteria; Aerobic rods and cocci;
+            Azotobacteraceae.
+REFERENCE   1  (bases 1 to 118)
+  AUTHORS   Bulygina,E.S., Galchenko,V.F., Govorukhina,N.I., Netrusov,A.I.,
+            Nikitin,D.I., Trotsenko,Y.A. and Chumakov,K.M.
+  TITLE     Taxonomic studies of methylotrophic bacteria by 5S ribosomal RNA
+            sequencing
+  JOURNAL   J. Gen. Microbiol. 136, 441-446 (1990)
+FEATURES             Location/Qualifiers
+     rRNA            1..118
+                     /note="5S ribosomal RNA"
+BASE COUNT       27 a     40 c     32 g     17 t      2 others
+ORIGIN      
+        1 gatctggtgg ccatggcggg agcaaatcag ccgatcccat cccgaactcg gccgtcaaat
+       61 gccccagcgc ccatgatact ctgcctcaag gcacggaaaa gtcggtcgcc gccagayy
+//
+---------+---------+---------+---------+---------+---------+---------+---------
+1       10        20        30        40        50        60        70       79
+
+Example 9. Sample Sequence Data File
+
+
+3.4.4 LOCUS Format
+
+  The items of information contained in the LOCUS record are always
+found in fixed positions. The locus name (or entry name), which is
+always sixteen characters or less, begins in position 13. The locus name
+is designed to help group entries with similar sequences: the first
+three characters usually designate the organism; the fourth and fifth
+characters can be used to show other group designations, such as gene
+product; for segmented entries the last character is one of a series
+of sequential integers.
+
+  The number of bases or base pairs in the sequence ends in position 40.
+The letters `bp' are in positions 42 to 43. Positions 45 to 47 provide
+the number of strands of the sequence. Positions 48 to 53 indicate the
+type of molecule sequenced. Topology of the molecule is indicated in
+positions 56 to 63.
+
+  GenBank sequence entries are divided among many different
+'divisions'. Each entry's division is specified by a three-letter code
+in positions 65 to 67. See Section 3.3 for an explanation of division
+codes.
+
+  Positions 69 to 79 of the record contain the date the entry was
+entered or underwent any substantial revisions, such as the addition
+of newly published data, in the form dd-MMM-yyyy.
+
+The detailed format for the LOCUS line format is as follows:
+
+Positions  Contents
+---------  --------
+01-05      'LOCUS'
+06-12      spaces
+13-28      Locus name
+29-29      space
+30-40      Length of sequence, right-justified
+41-41      space
+42-43      bp
+44-44      space
+45-47      spaces, ss- (single-stranded), ds- (double-stranded), or
+           ms- (mixed-stranded)
+48-53      NA, DNA, RNA, tRNA (transfer RNA), rRNA (ribosomal RNA), 
+           mRNA (messenger RNA), uRNA (small nuclear RNA), snRNA,
+           snoRNA. Left justified.
+54-55      space
+56-63      'linear' followed by two spaces, or 'circular'
+64-64      space
+65-67      The division code (see Section 3.3)
+68-68      space
+69-79      Date, in the form dd-MMM-yyyy (e.g., 15-MAR-1991)
+
+  Although each of these data values can be found at column-specific
+positions, we encourage those who parse the contents of the LOCUS
+line to use a token-based approach. This will prevent the need for
+software changes if the spacing of the data values ever has to be
+modified.
+
+3.4.5 DEFINITION Format
+
+  The DEFINITION record gives a brief description of the sequence,
+proceeding from general to specific. It starts with the common name of
+the source organism, then gives the criteria by which this sequence is
+distinguished from the remainder of the source genome, such as the
+gene name and what it codes for, or the protein name and mRNA, or some
+description of the sequence's function (if the sequence is
+non-coding). If the sequence has a coding region, the description may
+be followed by a completeness qualifier, such as cds (complete coding
+sequence). There is no limit on the number of lines that may be part
+of the DEFINITION.  The last line must end with a period.
+
+3.4.5.1 DEFINITION Format for NLM Entries
+
+  The DEFINITION line for entries derived from journal-scanning at the NLM is
+an automatically generated descriptive summary that accompanies each DNA and
+protein sequence. It contains information derived from fields in a database 
+that summarize the most important attributes of the sequence.  The DEFINITION
+lines are designed to supplement the accession number and the sequence itself
+as a means of uniquely and completely specifying DNA and protein sequences. The
+following are examples of NLM DEFINITION lines:
+
+NADP-specific isocitrate dehydrogenase [swine, mRNA, 1 gene, 1585 nt]
+
+94 kda fiber cell beaded-filament structural protein [rats, lens, mRNA
+Partial, 1 gene, 1873 nt]
+
+inhibin alpha {promoter and exons} [mice, Genomic, 1 gene, 1102 nt, segment
+1 of 2]
+
+cefEF, cefG=acetyl coenzyme A:deacetylcephalosporin C o-acetyltransferase
+[Acremonium chrysogenum, Genomic, 2 genes, 2639 nt]
+
+myogenic factor 3, qmf3=helix-loop-helix protein [Japanese quails,
+embryo, Peptide Partial, 246 aa]
+
+
+  The first part of the definition line contains information describing
+the genes and proteins represented by the molecular sequences.  This can
+be gene locus names, protein names and descriptions that replace or augment
+actual names.  Gene and gene product are linked by "=".  Any special
+identifying terms are presented within brackets, such as: {promoter},
+{N-terminal}, {EC 2.13.2.4}, {alternatively spliced}, or {3' region}.
+
+  The second part of the definition line is delimited by square brackets, '[]',
+and provides details about the molecule type and length.  The biological
+source, i.e., genus and species or common name as cited by the author.
+Developmental stage, tissue type and strain are included if available.
+The molecule types include: Genomic, mRNA, Peptide. and Other Genomic
+Material. Genomic molecules are assumed to be partial sequence unless
+"Complete" is specified, whereas mRNA and peptide molecules are assumed
+to be complete unless "Partial" is noted.
+
+3.4.6 ACCESSION Format
+
+  This field contains a series of six-character and/or eight-character
+identifiers called 'accession numbers'. The six-character accession
+number format consists of a single uppercase letter, followed by 5 digits.
+The eight-character accession number format consists of two uppercase
+letters, followed by 6 digits. The 'primary', or first, of the accession
+numbers occupies positions 13 to 18 (6-character format) or positions
+13 to 20 (8-character format). Subsequent 'secondary' accession numbers
+(if present) are separated from the primary, and from each other, by a
+single space. In some cases, multiple lines of secondary accession
+numbers might be present, starting at position 13.
+
+  The primary accession number of a GenBank entry provides a stable identifier
+for the biological object that the entry represents. Accessions do not change
+when the underlying sequence data or associated features change.
+
+  Secondary accession numbers arise for a number of reasons. For example, a
+single accession number may initially be assigned to a sequence described in
+a publication. If it is later discovered that the sequence must be entered
+into the database as multiple entries, each entry would receive a new primary
+accession number, and the original accession number would appear as a secondary
+accession number on each of the new entries.
+
+3.4.7 VERSION Format
+
+  This line contains two types of identifiers for a GenBank database entry:
+a compound accession number and an NCBI GI identifier. 
+
+LOCUS       AF181452     1294 bp    DNA             PLN       12-OCT-1999
+DEFINITION  Hordeum vulgare dehydrin (Dhn2) gene, complete cds.
+ACCESSION   AF181452
+VERSION     AF181452.1  GI:6017929
+            ^^^^^^^^^^  ^^^^^^^^^^
+            Compound    NCBI GI
+            Accession   Identifier
+            Number
+
+  A compound accession number consists of two parts: a stable, unchanging
+primary-accession number portion (see Section 3.4.6 for a description of
+accession numbers), and a sequentially increasing numeric version number.
+The accession and version numbers are separated by a period. The initial
+version number assigned to a new sequence is one. Compound accessions are
+often referred to as "Accession.Version" .
+
+  An accession number allows one to retrieve the same biological object in the
+database, regardless of any changes that are made to the entry over time. But
+those changes can include changes to the sequence data itself, which is of
+fundamental importance to many database users. So a numeric version number is
+associated with the sequence data in every database entry. If an entry (for
+example, AF181452) undergoes two sequence changes, its compound accession
+number on the VERSION line would start as AF181452.1 . After the first sequence
+change this would become: AF181452.2 . And after the second change: AF181452.3 .
+
+  The NCBI GI identifier of the VERSION line also serves as a method for
+identifying the sequence data that has existed for a database entry over
+time. GI identifiers are numeric values of one or more digits. Since they
+are integer keys, they are less human-friendly than the Accession.Version
+system described above. Returning to our example for AF181452, it was
+initially assigned GI 6017929. If the sequence changes, a new integer GI will
+be assigned, perhaps 7345003 . And after the second sequence change, perhaps
+the GI would become 10456892 .
+
+  Why are both these methods for identifying the version of the sequence
+associated with a database entry in use? For two reasons:
+
+- Some data sources processed by NCBI for incorporation into its Entrez
+  sequence retrieval system do not version their own sequences.
+
+- GIs provide a uniform, integer identifier system for every sequence
+  NCBI has processed. Some products and systems derived from (or reliant
+  upon) NCBI products and services prefer to use these integer identifiers
+  because they can all be processed in the same manner.
+
+GenBank Releases contain only the most recent versions of all sequences
+in the database. However, older versions can be obtained via GI-based or
+Accession.Version-based queries with NCBI's web-Entrez and network-Entrez
+applications. A sequence revision history web page is also available:
+
+	  http://www.ncbi.nlm.nih.gov/htbin-post/Entrez/girevhist
+
+NOTE: All the version numbers for the compound Accession.Version identifier
+system were initialized to a value of one in February 1999, when that
+system was introduced.
+
+3.4.8 KEYWORDS Format
+
+  The KEYWORDS field does not appear in unannotated entries, but is
+required in all annotated entries. Keywords are separated by
+semicolons; a "keyword" may be a single word or a phrase consisting of
+several words. Each line in the keywords field ends in a semicolon;
+the last line ends with a period. If no keywords are included in the
+entry, the KEYWORDS record contains only a period.
+
+3.4.9 SEGMENT Format
+
+  The SEGMENT keyword is used when two (or more) entries of known
+relative orientation are separated by a short (<10 kb) stretch of DNA.
+It is limited to one line of the form `n of m', where `n' is the
+segment number of the current entry and `m' is the total number of
+segments.
+
+3.4.10 SOURCE Format
+
+  The SOURCE field consists of two parts. The first part is found after
+the SOURCE keyword and contains free-format information including an
+abbreviated form of the organism name followed by a molecule type;
+multiple lines are allowed, but the last line must end with a period.
+The second part consists of information found after the ORGANISM
+subkeyword. The formal scientific name for the source organism (genus
+and species, where appropriate) is found on the same line as ORGANISM.
+The records following the ORGANISM line list the taxonomic
+classification levels, separated by semicolons and ending with a
+period.
+
+3.4.11 REFERENCE Format
+
+  The REFERENCE field consists of five parts: the keyword REFERENCE, and
+the subkeywords AUTHORS, TITLE (optional), JOURNAL, MEDLINE (optional),
+PUBMED (optional), and REMARK (optional).
+
+  The REFERENCE line contains the number of the particular reference and
+(in parentheses) the range of bases in the sequence entry reported in
+this citation. Additional prose notes may also be found within the
+parentheses. The numbering of the references does not reflect
+publication dates or priorities.
+
+  The AUTHORS line lists the authors in the order in which they appear
+in the cited article. Last names are separated from initials by a
+comma (no space); there is no comma before the final `and'. The list
+of authors ends with a period.  The TITLE line is an optional field,
+although it appears in the majority of entries. It does not appear in
+unpublished sequence data entries that have been deposited directly
+into the GenBank data bank, the EMBL Nucleotide Sequence Data Library,
+or the DNA Data Bank of Japan. The TITLE field does not end with a
+period.
+
+  The JOURNAL line gives the appropriate literature citation for the
+sequence in the entry. The word `Unpublished' will appear after the
+JOURNAL subkeyword if the data did not appear in the scientific
+literature, but was directly deposited into the data bank. For
+published sequences the JOURNAL line gives the Thesis, Journal, or
+Book citation, including the year of publication, the specific
+citation, or In press.
+
+  The MEDLINE line provides the National Library of Medicine's Medline
+unique identifier for a citation (if known). Medline UIs are 8 digit
+numbers.
+
+  The PUBMED line provides the PubMed unique identifier for a citation
+(if known). PUBMED ids are numeric, and are record identifiers for article
+abstracts in the PubMed database :
+
+       http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed
+
+  Citations in PubMed that do not fall within Medline's scope will have only
+a PUBMED identifier. Similarly, citations that *are* in Medline's scope but
+which have not yet been assigned Medline UIs will have only a PUBMED identifier.
+If a citation is present in both the PubMed and Medline databases, both a
+MEDLINE and a PUBMED line will be present.
+
+  The REMARK line is a textual comment that specifies the relevance
+of the citation to the entry.
+
+3.4.12 FEATURES Format
+
+  GenBank releases use a feature table format designed jointly by
+GenBank, the EMBL Nucleotide Sequence Data Library, and the DNA Data
+Bank of Japan. This format is in use by all three databases. The
+most complete and accurate Feature Table documentation can be found
+on the Web at:
+
+	http://www.ncbi.nlm.nih.gov/collab/FT/index.html
+
+  Any discrepancy between the abbreviated feature table description
+of these release notes and the complete documentation on the Web
+should be resolved in favor of the version at the above URL.
+
+  The Feature Table specification is also available as a printed
+document: `The DDBJ/EMBL/GenBank Feature Table: Definition'. Contact
+GenBank at the address shown on the first page of these Release Notes
+if you would like a copy.
+
+  The feature table contains information about genes and gene products,
+as well as regions of biological significance reported in the
+sequence. The feature table contains information on regions of the
+sequence that code for proteins and RNA molecules. It also enumerates
+differences between different reports of the same sequence, and
+provides cross-references to other data collections, as described in
+more detail below.
+
+  The first line of the feature table is a header that includes the
+keyword `FEATURES' and the column header `Location/Qualifier.' Each
+feature consists of a descriptor line containing a feature key and a
+location (see sections below for details). If the location does not
+fit on this line, a continuation line may follow. If further
+information about the feature is required, one or more lines
+containing feature qualifiers may follow the descriptor line.
+
+  The feature key begins in column 6 and may be no more than 15
+characters in length. The location begins in column 22. Feature
+qualifiers begin on subsequent lines at column 22. Location,
+qualifier, and continuation lines may extend from column 22 to 80.
+
+  Feature tables are required, due to the mandatory presence of the
+source feature. The sections below provide a brief introduction to
+the feature table format.
+
+3.4.12.1 Feature Key Names
+
+  The first column of the feature descriptor line contains the feature
+key. It starts at column 6 and can continue to column 20. The list of
+valid feature keys is shown below.
+
+  Remember, the most definitive documentation for the feature table can
+be found at:
+
+	http://www.ncbi.nlm.nih.gov/collab/FT/index.html
+
+allele		Obsolete; see variation feature key
+attenuator	Sequence related to transcription termination
+C_region	Span of the C immunological feature
+CAAT_signal	`CAAT box' in eukaryotic promoters
+CDS		Sequence coding for amino acids in protein (includes
+		stop codon)
+conflict	Independent sequence determinations differ
+D-loop      	Displacement loop
+D_segment	Span of the D immunological feature
+enhancer	Cis-acting enhancer of promoter function
+exon		Region that codes for part of spliced mRNA
+gene            Region that defines a functional gene, possibly
+                including upstream (promotor, enhancer, etc)
+		and downstream control elements, and for which
+		a name has been assigned.
+GC_signal	`GC box' in eukaryotic promoters
+iDNA		Intervening DNA eliminated by recombination
+intron		Transcribed region excised by mRNA splicing
+J_region	Span of the J immunological feature
+LTR		Long terminal repeat
+mat_peptide	Mature peptide coding region (does not include stop codon)
+misc_binding	Miscellaneous binding site
+misc_difference	Miscellaneous difference feature
+misc_feature	Region of biological significance that cannot be described
+		by any other feature
+misc_recomb	Miscellaneous recombination feature
+misc_RNA	Miscellaneous transcript feature not defined by other RNA keys
+misc_signal	Miscellaneous signal
+misc_structure	Miscellaneous DNA or RNA structure
+modified_base	The indicated base is a modified nucleotide
+mRNA		Messenger RNA
+mutation 	Obsolete: see variation feature key
+N_region	Span of the N immunological feature
+old_sequence	Presented sequence revises a previous version
+polyA_signal	Signal for cleavage & polyadenylation
+polyA_site	Site at which polyadenine is added to mRNA
+precursor_RNA	Any RNA species that is not yet the mature RNA product
+prim_transcript	Primary (unprocessed) transcript
+primer		Primer binding region used with PCR
+primer_bind	Non-covalent primer binding site
+promoter	A region involved in transcription initiation
+protein_bind	Non-covalent protein binding site on DNA or RNA
+RBS		Ribosome binding site
+rep_origin	Replication origin for duplex DNA
+repeat_region	Sequence containing repeated subsequences
+repeat_unit	One repeated unit of a repeat_region
+rRNA		Ribosomal RNA
+S_region	Span of the S immunological feature
+satellite	Satellite repeated sequence
+scRNA		Small cytoplasmic RNA
+sig_peptide	Signal peptide coding region
+snRNA		Small nuclear RNA
+source		Biological source of the sequence data represented by
+		a GenBank record. Mandatory feature, one or more per record.
+		For organisms that have been incorporated within the
+		NCBI taxonomy database, an associated /db_xref="taxon:NNNN"
+		qualifier will be present (where NNNNN is the numeric
+		identifier assigned to the organism within the NCBI taxonomy
+		database).
+stem_loop	Hair-pin loop structure in DNA or RNA
+STS		Sequence Tagged Site; operationally unique sequence that
+		identifies the combination of primer spans used in a PCR assay
+TATA_signal	`TATA box' in eukaryotic promoters
+terminator	Sequence causing transcription termination
+transit_peptide	Transit peptide coding region
+transposon	Transposable element (TN)
+tRNA 		Transfer RNA
+unsure		Authors are unsure about the sequence in this region
+V_region	Span of the V immunological feature
+variation 	A related population contains stable mutation
+- (hyphen)	Placeholder
+-10_signal	`Pribnow box' in prokaryotic promoters
+-35_signal	`-35 box' in prokaryotic promoters
+3'clip		3'-most region of a precursor transcript removed in processing
+3'UTR		3' untranslated region (trailer)
+5'clip		5'-most region of a precursor transcript removed in processing
+5'UTR		5' untranslated region (leader)
+
+
+3.4.12.2 Feature Location
+
+  The second column of the feature descriptor line designates the
+location of the feature in the sequence. The location descriptor
+begins at position 22. Several conventions are used to indicate
+sequence location.
+
+  Base numbers in location descriptors refer to numbering in the entry,
+which is not necessarily the same as the numbering scheme used in the
+published report. The first base in the presented sequence is numbered
+base 1. Sequences are presented in the 5 to 3 direction.
+
+Location descriptors can be one of the following:
+
+1. A single base;
+
+2. A contiguous span of bases;
+
+3. A site between two bases;
+
+4. A single base chosen from a range of bases;
+
+5. A single base chosen from among two or more specified bases;
+
+6. A joining of sequence spans;
+
+7. A reference to an entry other than the one to which the feature
+belongs (i.e., a remote entry), followed by a location descriptor
+referring to the remote sequence;
+
+  A site between two residues, such as an endonuclease cleavage site, is
+indicated by listing the two bases separated by a carat (e.g., 23^24).
+
+  A single residue chosen from a range of residues is indicated by the
+number of the first and last bases in the range separated by a single
+period (e.g., 23.79). The symbols < and > indicate that the end point
+of the range is beyond the specified base number.
+
+  A contiguous span of bases is indicated by the number of the first and
+last bases in the range separated by two periods (e.g., 23..79). The
+symbols < and > indicate that the end point of the range is beyond the
+specified base number. Starting and ending positions can be indicated
+by base number or by one of the operators described below.
+
+  Operators are prefixes that specify what must be done to the indicated
+sequence to locate the feature. The following are the operators
+available, along with their most common format and a description.
+
+complement (location): The feature is complementary to the location
+indicated. Complementary strands are read 5 to 3.
+
+join (location, location, .. location): The indicated elements should
+be placed end to end to form one contiguous sequence.
+
+order (location, location, .. location): The elements are found in the
+specified order in the 5 to 3 direction, but nothing is implied about
+the rationality of joining them.
+
+3.4.12.3  Feature Qualifiers
+
+  Qualifiers provide additional information about features. They take
+the form of a slash (/) followed by a qualifier name and, if
+applicable, an equal sign (=) and a qualifier value. Feature
+qualifiers begin at column 22.
+
+Qualifiers convey many types of information. Their values can,
+therefore, take several forms:
+
+1. Free text;
+2. Controlled vocabulary or enumerated values;
+3. Citations or reference numbers;
+4. Sequences;
+5. Feature labels.
+
+  Text qualifier values must be enclosed in double quotation marks. The
+text can consist of any printable characters (ASCII values 32-126
+decimal). If the text string includes double quotation marks, each set
+must be `escaped' by placing a double quotation mark in front of it
+(e.g., /note="This is an example of ""escaped"" quotation marks").
+
+  Some qualifiers require values selected from a limited set of choices.
+For example, the `/direction' qualifier has only three values `left,'
+`right,' or `both.' These are called controlled vocabulary qualifier
+values. Controlled qualifier values are not case sensitive; they can
+be entered in any combination of upper- and lowercase without changing
+their meaning.
+
+  Citation or published reference numbers for the entry should be
+enclosed in square brackets ([]) to distinguish them from other
+numbers.
+
+  A literal sequence of bases (e.g., "atgcatt") should be enclosed in
+quotation marks. Literal sequences are distinguished from free text by
+context. Qualifiers that take free text as their values do not take
+literal sequences, and vice versa.
+
+  The `/label=' qualifier takes a feature label as its qualifier.
+Although feature labels are optional, they allow unambiguous
+references to the feature. The feature label identifies a feature
+within an entry; when combined with the accession number and the name
+of the data bank from which it came, it is a unique tag for that
+feature. Feature labels must be unique within an entry, but can be the
+same as a feature label in another entry. Feature labels are not case
+sensitive; they can be entered in any combination of upper-and
+lowercase without changing their meaning.
+
+The following is a partial list of feature qualifiers.
+
+/anticodon	Location of the anticodon of tRNA and the amino acid
+		for which it codes
+
+/bound_moiety	Moiety bound
+
+/citation	Reference to a citation providing the claim of or
+		evidence for a feature
+
+/codon		Specifies a codon that is different from any found in the
+		reference genetic code
+
+/codon_start	Indicates the first base of the first complete codon
+		in a CDS (as 1 or 2 or 3)
+
+/cons_splice	Identifies intron splice sites that do not conform to
+		the 5'-GT... AG-3' splice site consensus
+
+/db_xref	A database cross-reference; pointer to related information
+		in another database. A description of all cross-references
+		can be found at:
+
+		http://www.ncbi.nlm.nih.gov/collab/db_xref.html
+
+/direction	Direction of DNA replication
+
+/EC_number	Enzyme Commission number for the enzyme product of the
+		sequence
+
+/evidence	Value indicating the nature of supporting evidence
+
+/frequency	Frequency of the occurrence of a feature
+
+/function	Function attributed to a sequence
+
+/gene		Symbol of the gene corresponding to a sequence region (usable
+		with all features)
+
+/label		A label used to permanently identify a feature
+
+/map		Map position of the feature in free-format text
+
+/mod_base	Abbreviation for a modified nucleotide base
+
+/note		Any comment or additional information
+
+/number		A number indicating the order of genetic elements
+		(e.g., exons or introns) in the 5 to 3 direction
+
+/organism	Name of the organism that is the source of the
+		sequence data in the record. 
+
+/partial	Differentiates between complete regions and partial ones
+
+/phenotype	Phenotype conferred by the feature
+
+/product	Name of a product encoded by a coding region (CDS)
+		feature
+
+/pseudo		Indicates that this feature is a non-functional
+		version of the element named by the feature key
+
+/rpt_family	Type of repeated sequence; Alu or Kpn, for example
+
+/rpt_type	Organization of repeated sequence
+
+/rpt_unit	Identity of repeat unit that constitutes a repeat_region
+
+/standard_name	Accepted standard name for this feature
+
+/transl_except	Translational exception: single codon, the translation
+		of which does not conform to the reference genetic code
+
+/translation	Amino acid translation of a coding region
+
+/type		Name of a strain if different from that in the SOURCE field
+
+/usedin		Indicates that feature is used in a compound feature
+		in another entry
+
+3.4.12.4 Cross-Reference Information
+
+  One type of information in the feature table lists cross-references to
+the annual compilation of transfer RNA sequences in Nucleic Acids
+Research, which has kindly been sent to us on CD-ROM by Dr. Sprinzl.
+Each tRNA entry of the feature table contains a /note= qualifier that
+includes a reference such as `(NAR: 1234)' to identify code 1234 in
+the NAR compilation. When such a cross-reference appears in an entry
+that contains a gene coding for a transfer RNA molecule, it refers to
+the code in the tRNA gene compilation. Similar cross-references in
+entries containing mature transfer RNA sequences refer to the
+companion compilation of tRNA sequences published by D.H. Gauss and M.
+Sprinzl in Nucleic Acids Research.
+
+3.4.12.5 Feature Table Examples
+
+  In the first example a number of key names, feature locations, and
+qualifiers are illustrated, taken from different sequences. The first
+table entry is a coding region consisting of a simple span of bases
+and including a /gene qualifier. In the second table entry, an NAR
+cross-reference is given (see the previous section for a discussion of
+these cross-references). The third and fourth table entries use the
+symbols `<`and `>' to indicate that the beginning or end of the
+feature is beyond the range of the presented sequence. In the fifth
+table entry, the symbol `^' indicates that the feature is between
+bases.
+
+1       10        20        30        40        50        60        70       79
+---------+---------+---------+---------+---------+---------+---------+---------
+     CDS             5..1261
+                     /product="alpha-1-antitrypsin precursor"
+                     /map="14q32.1"
+                     /gene="PI"
+     tRNA            1..87
+                     /note="Leu-tRNA-CAA (NAR: 1057)"
+                     /anticodon=(pos:35..37,aa:Leu)
+     mRNA            1..>66
+                     /note="alpha-1-acid glycoprotein mRNA"
+     transposon      <1..267
+                     /note="insertion element IS5"
+     misc_recomb     105^106
+                     /note="B.subtilis DNA end/IS5 DNA start"
+     conflict        258
+                     /replace="t"
+                     /citation=[2]
+---------+---------+---------+---------+---------+---------+---------+---------
+1       10        20        30        40        50        60        70       79
+
+Example 10. Feature Table Entries
+
+
+The next example shows the representation for a CDS that spans more
+than one entry.
+
+1       10        20        30        40        50        60        70       79
+---------+---------+---------+---------+---------+---------+---------+---------
+LOCUS       HUMPGAMM1    3688 bp ds-DNA             PRI       15-OCT-1990
+DEFINITION  Human phosphoglycerate mutase (muscle specific isozyme) (PGAM-M)
+            gene, 5' end.
+ACCESSION   M55673 M25818 M27095
+KEYWORDS    phosphoglycerate mutase.
+SEGMENT     1 of 2
+  .
+  .
+  .
+FEATURES             Location/Qualifiers
+     CAAT_signal     1751..1755
+                     /gene="PGAM-M"
+     TATA_signal     1791..1799
+                     /gene="PGAM-M"
+     exon            1820..2274
+                     /number=1
+                     /EC_number="5.4.2.1"
+                     /gene="PGAM-M"
+     intron          2275..2377
+                     /number=1
+                     /gene="PGAM2"
+     exon            2378..2558
+                     /number=2
+                     /gene="PGAM-M"
+  .
+  .
+  .
+//
+LOCUS       HUMPGAMM2     677 bp ds-DNA             PRI       15-OCT-1990
+DEFINITION  Human phosphoglycerate mutase (muscle specific isozyme) (PGAM-M),
+            exon 3.
+ACCESSION   M55674 M25818 M27096
+KEYWORDS    phosphoglycerate mutase.
+SEGMENT     2 of 2
+  .
+  .
+  .
+FEATURES             Location/Qualifiers
+     exon            255..457
+                     /number=3
+                     /gene="PGAM-M"
+     intron          order(M55673:2559..>3688,<1..254)
+                     /number=2
+                     /gene="PGAM-M"
+     mRNA            join(M55673:1820..2274,M55673:2378..2558,255..457)
+                     /gene="PGAM-M"
+     CDS             join(M55673:1861..2274,M55673:2378..2558,255..421)
+                     /note="muscle-specific isozyme"
+                     /gene="PGAM2"
+                     /product="phosphoglycerate mutase"
+                     /codon_start=1
+                     /translation="MATHRLVMVRHGESTWNQENRFCGWFDAELSEKGTEEAKRGAKA
+                     IKDAKMEFDICYTSVLKRAIRTLWAILDGTDQMWLPVVRTWRLNERHYGGLTGLNKAE
+                     TAAKHGEEQVKIWRRSFDIPPPPMDEKHPYYNSISKERRYAGLKPGELPTCESLKDTI
+                     ARALPFWNEEIVPQIKAGKRVLIAAHGNSLRGIVKHLEGMSDQAIMELNLPTGIPIVY
+                     ELNKELKPTKPMQFLGDEETVRKAMEAVAAQGKAK"
+  .
+  .
+  .
+//
+---------+---------+---------+---------+---------+---------+---------+---------
+1       10        20        30        40        50        60        70       79
+
+Example 11. Joining Sequences
+
+
+3.4.13 ORIGIN Format
+
+  The ORIGIN record may be left blank, may appear as `Unreported.' or
+may give a local pointer to the sequence start, usually involving an
+experimentally determined restriction cleavage site or the genetic
+locus (if available). The ORIGIN record ends in a period if it
+contains data, but does not include the period if the record is left
+empty (in contrast to the KEYWORDS field which contains a period
+rather than being left blank).
+
+3.4.14 SEQUENCE Format
+
+  The nucleotide sequence for an entry is found in the records following
+the ORIGIN record. The sequence is reported in the 5 to 3 direction.
+There are sixty bases per record, listed in groups of ten bases
+followed by a blank, starting at position 11 of each record. The
+number of the first nucleotide in the record is given in columns 4 to
+9 (right justified) of the record.
+
+
+4. ALTERNATE RELEASES
+
+  NCBI is supplying sequence data in the GenBank flat file format to
+maintain compatibility with existing software which require that
+particular format.  Although we have made every effort to ensure
+that these data are presented in the traditional flat file format,
+if you encounter any problems in using these data with software which
+is based upon the flat file format, please contact us at:
+
+              info@ncbi.nlm.nih.gov
+
+  The flat file is just one of many possible report formats that can be
+generated from the richer representation supported by the ASN.1 form of the
+data.  Developers of new software tools should consider using the ASN.1 form
+directly to take advantage of those features.  Documentation and a Software
+Developer's Toolkit for ASN.1 are available through NCBI.  You may call NCBI
+at (301)496-2475, or subscribe to a developers' electronic newsgroup by
+sending your name, address, affiliation, and e-mail address to:
+
+              bits-request@ncbi.nlm.nih.gov
+
+  The Software Developer's Toolkit and PostScript documentation for UNIX,
+VMS, Ultrix, AIX, MacOS, DOS, and Microsoft Windows systems is available
+in a compressed UNIX tar file by anonymous ftp from 'ftp.ncbi.nih.gov',
+in the toolbox/ncbi_tools directory. The file is 'ncbi.tar.Z'.
+
+
+5. KNOWN PROBLEMS OF THE GENBANK DATABASE
+
+5.1 Incorrect Gene Symbols in Entries and Index
+
+  The /gene qualifier for many GenBank entries contains values other than the
+official gene symbol, such as the product or the standard name of the gene. The
+gene symbol index (gbgen.idx) is created from the data in the /gene qualifier
+and therefore may contain data other than official gene symbols.
+
+
+6. GENBANK ADMINISTRATION 
+
+  The National Center for Biotechnology Information (NCBI), National Library
+of Medicine, National Institutes of Health, is responsible for the production
+and distribution of the NIH GenBank Sequence Database.  NCBI distributes
+GenBank sequence data by anonymous FTP, e-mail servers and other
+network services.  For more information, you may contact NCBI at the
+e-mail address:  info@ncbi.nlm.nih.gov  or by phone: 301-496-2475.
+
+6.1 Registered Trademark Notice
+
+  GenBank (R) is a registered trademark of the U.S. Department of Health
+and Human Services for the Genetic Sequence Data Bank.
+
+6.2 Citing GenBank
+
+  If you have used GenBank in your research, we would appreciate it if
+you would include a reference to GenBank in all publications related
+to that research.
+
+  When citing data in GenBank, it is appropriate to give the sequence
+name, primary accession number, and the publication in which the
+sequence first appeared.  If the data are unpublished, we urge you to
+contact the group which submitted the data to GenBank to see if there
+is a recent publication or if they have determined any revisions or
+extensions of the data.
+
+  It is also appropriate to list a reference for GenBank itself.  The
+following publication, which describes the GenBank database, should
+be cited:
+
+    Benson D.A., Karsch-Mizrachi I., Lipman D.J., Ostell J., Rapp B.A., 
+    Wheeler D.L.  GenBank. Nucl. Acids Res. 28(1):15-18 (2000)
+
+  The following statement is an example of how you may cite GenBank
+data.  It cites the sequence, its primary accession number, the group
+who determined the sequence, and GenBank.  The numbers in parentheses
+refer to the GenBank citation above and to the REFERENCE in the
+GenBank sequence entry.
+
+`We scanned the GenBank (1) database for sequence similarities and
+found one sequence (2), GenBank accession number J01016, which showed
+significant similarity...'
+
+  (1) Benson, D.A. et al. Nucl. Acids Res. 28(1):15-18 (2000)
+  (2) Nellen, W. and Gallwitz, D. J. Mol. Biol. 159, 1-18 (1982)
+
+6.3 GenBank Distribution Formats and Media
+
+  Complete flat file releases of the GenBank database are available via
+NCBI's anonymous ftp server:
+
+	ftp://ftp.ncbi.nih.gov
+
+  Each release is cumulative, incorporating all previous GenBank data.
+No retrieval software is provided. GenBank distribution via CD-ROM
+ceased as of GenBank Release 106.0 (April, 1998).
+
+  Mirrors of the GenBank FTP site at the NCBI are available from the
+San Diego Supercomputer Center and the University of Indiana:
+
+	ftp://genbank.sdsc.edu/pub
+	ftp://bio-mirror.net/biomirror/genbank/
+
+6.4 Other Methods of Accessing GenBank Data
+
+  Entrez is a molecular biology database system that presents an integrated
+view of DNA and protein sequence data, 3D structure data, complete genomes,
+and associated MEDLINE entries. The system is produced by the National
+Center for Biotechnology Information (NCBI), and is available only via
+the Internet (using the Web-Entrez and Network-Entrez applications).
+
+  Accessing Entrez is easy: if you have a World Wide Web browser, such as
+Netscape or Internet-Explorer, simply point your browser to:
+
+	 http://www.ncbi.nlm.nih.gov/
+
+  The Web version of Entrez has all the capabilities of the network version,
+but with the visual style of the World Wide Web. If you prefer the "look and
+feel" of Network-Entrez, you may download Network-Entrez from the NCBI's
+FTP server:
+
+	ftp://ftp.ncbi.nih.gov/
+
+Versions are available for PC/Windows, Macintosh and several Unix variants.
+
+  For information about Network-Entrez, Web-Entrez or any other NCBI
+services, you may contact NCBI by e-mail at info@ncbi.nlm.nih.gov or by
+phone at 301-496-2475.
+
+6.5 Request for Corrections and Comments
+
+  We welcome your suggestions for improvements to GenBank. We are
+especially interested to learn of errors or inconsistencies in the
+data.  BankIt or Sequin can be used to submit revisions to previous
+submissions.  In addition, suggestions and corrections can be sent by
+electronic mail to:  update@ncbi.nlm.nih.gov.  Please be certain to
+indicate the GenBank release number (e.g., Release 133.0) and the
+primary accession number of the entry to which your comments apply; it
+is helpful if you also give the entry name and the current contents of
+any data field for which you are recommending a change.
+
+6.6  Credits and Acknowledgments
+
+Credits -
+
+GenBank Release Coordination	
+	Mark Cavanaugh
+
+GenBank Submission Coordination	
+	Ilene Mizrachi
+
+GenBank Annotation Staff
+        Lori Black, Larissa Brown, Larry Chlumsky, Karen Clark, Irene Fang,
+	Michael Fetchko, Anjanette Johnston, Pierre Ledoux, Richard McVeigh,
+	Leonie Misquitta, Ilene Mizrachi, DeAnne Olsen Cravaritis,  
+        Chris O'Sullivan, David Rasko, Leigh Riley, Gert Roosen, Susan 
+        Schafer, Suh-suh Wang, Jane Weisemann, Steven Wilhite, and 
+        Linda Yankie
+
+Data Management and Preparation
+	Vladimir Alekseyev, Serge Bazhin, Anton Butanaev, Mark Cavanaugh,
+	Hsiu-Chuan Chen, Jonathan Kans, Michael Kimelman, Jim Ostell,
+	Joel Plotkin, Karl Sirotkin, Vladimir Soussov, Elena Starchenko,
+	Hanzhen Sun, Tatiana Tatusov, Carolyn Tolstoshev, Jane Weisemann,
+	Eugene Yaschenko
+
+Database Administration
+	Helen Epting, Slava Khotomliansky, Tony Stearman
+
+User Support
+        Nancy Allmang, Medha Bhagwat, Peter Cooper, Susan Dombrowski, 
+        Renata Geer, Dawn Lipshultz, Eugenia Posey-Marcos, Scott McGinnis,
+        Vyvy Pham, Barbara Rapp, Monica Romiti, Tao Tao, Rose Marie Woodsmall, 		
+	David Wheeler 
+
+Project Direction
+	David Lipman
+
+
+Acknowledgments - 
+
+  Contractor support for GenBank production and distribution has been
+provided by Management Systems Designers, Inc., ComputerCraft Corporation,
+and The KEVRIC Company, Inc.
+
+6.7 Disclaimer
+
+  The United States Government makes no representations or warranties
+regarding the content or accuracy of the information.  The United States
+Government also makes no representations or warranties of merchantability
+or fitness for a particular purpose or that the use of the sequences will
+not infringe any patent, copyright, trademark, or other rights.  The
+United States Government accepts no responsibility for any consequence
+of the receipt or use of the information.
+
+  For additional information about GenBank releases, please contact
+NCBI by e-mail at info@ncbi.nlm.nih.gov, by phone at (301) 496-2475,
+or by mail at:
+
+  GenBank
+  National Library of Medicine
+  Bldg. 38A Rm. 8N-809
+  8600 Rockville Pike
+  Bethesda, MD 20894
+  FAX: (301) 480-9241

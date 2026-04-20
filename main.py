@@ -16,9 +16,10 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import TypedDict
 
-import requests
 from bs4 import BeautifulSoup
+import requests
 
 
 def fetch_url(url: str, timeout: int = 30) -> str:
@@ -67,19 +68,30 @@ def parse_release_number(text: str) -> str | None:
 
 def parse_release_date(text: str) -> str | None:
     """Return the release date in ISO 8601 format (``YYYY-MM-DD``), or *None*."""
-    months = {
-        "january": 1, "jan": 1,
-        "february": 2, "feb": 2,
-        "march": 3, "mar": 3,
-        "april": 4, "apr": 4,
+    months: dict[str, int] = {
+        "january": 1,
+        "jan": 1,
+        "february": 2,
+        "feb": 2,
+        "march": 3,
+        "mar": 3,
+        "april": 4,
+        "apr": 4,
         "may": 5,
-        "june": 6, "jun": 6,
-        "july": 7, "jul": 7,
-        "august": 8, "aug": 8,
-        "september": 9, "sep": 9,
-        "october": 10, "oct": 10,
-        "november": 11, "nov": 11,
-        "december": 12, "dec": 12,
+        "june": 6,
+        "jun": 6,
+        "july": 7,
+        "jul": 7,
+        "august": 8,
+        "aug": 8,
+        "september": 9,
+        "sep": 9,
+        "october": 10,
+        "oct": 10,
+        "november": 11,
+        "nov": 11,
+        "december": 12,
+        "dec": 12,
     }
     match = re.search(
         r"(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May"
@@ -150,8 +162,28 @@ def parse_num_bases(text: str) -> str | None:
     return None
 
 
-def parse_release_note(text: str) -> dict:
-    """Return a dict of parsed fields from a release-note text block."""
+class ParsedReleaseNote(TypedDict):
+    release_number: str | None
+    release_date: str | None
+    num_files: str | None
+    total_uncompressed_size: str | None
+    num_entries: str | None
+    num_bases: str | None
+
+
+class CsvRecord(TypedDict):
+    url: str
+    release_number: str
+    release_date: str
+    num_files: str
+    total_uncompressed_size: str
+    num_entries: str
+    num_bases: str
+    error: str
+
+
+def parse_release_note(text: str) -> ParsedReleaseNote:
+    """Return parsed fields from a release-note text block."""
     return {
         "release_number": parse_release_number(text),
         "release_date": parse_release_date(text),
@@ -162,7 +194,7 @@ def parse_release_note(text: str) -> dict:
     }
 
 
-CSV_FIELDS = [
+CSV_FIELDS: list[str] = [
     "url",
     "release_number",
     "release_date",
@@ -174,15 +206,23 @@ CSV_FIELDS = [
 ]
 
 
-def process_url(url: str, output_dir: Path) -> dict:
+def process_url(url: str, output_dir: Path) -> CsvRecord:
     """Fetch, archive raw text, and parse one release-note URL.
 
-    Returns a record dict suitable for writing to the CSV output.  Any
+    Returns a record dict suitable for writing to the CSV output. Any
     network or parse errors are captured in the ``error`` field so that
     the rest of the batch can continue.
     """
-    record: dict = {field: "" for field in CSV_FIELDS}
-    record["url"] = url
+    record: CsvRecord = {
+        "url": url,
+        "release_number": "",
+        "release_date": "",
+        "num_files": "",
+        "total_uncompressed_size": "",
+        "num_entries": "",
+        "num_bases": "",
+        "error": "",
+    }
     try:
         html = fetch_url(url)
         pre_text = extract_pre_block(html)
@@ -192,7 +232,12 @@ def process_url(url: str, output_dir: Path) -> dict:
             pre_text = html
         save_raw_text(pre_text, url, output_dir)
         parsed = parse_release_note(pre_text)
-        record.update({k: (v or "") for k, v in parsed.items()})
+        record["release_number"] = parsed["release_number"] or ""
+        record["release_date"] = parsed["release_date"] or ""
+        record["num_files"] = parsed["num_files"] or ""
+        record["total_uncompressed_size"] = parsed["total_uncompressed_size"] or ""
+        record["num_entries"] = parsed["num_entries"] or ""
+        record["num_bases"] = parsed["num_bases"] or ""
     except requests.exceptions.RequestException as exc:
         record["error"] = f"RequestError: {exc}"
     except Exception as exc:  # noqa: BLE001
@@ -233,7 +278,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     output_dir = Path(args.output_dir)
-    records: list[dict] = []
+    records: list[CsvRecord] = []
     for url in urls:
         print(f"Processing: {url}", file=sys.stderr)
         record = process_url(url, output_dir)

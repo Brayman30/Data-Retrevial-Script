@@ -1,24 +1,24 @@
 # GenBank Release-Notes Data Retrieval Script
 
-A Python script (managed with [`uv`](https://github.com/astral-sh/uv)) that:
+A Python script (managed with [`uv`](https://docs.astral.sh/uv/)) that:
 
 1. Reads a list of [GenBank release-note](https://www.ncbi.nlm.nih.gov/genbank/release/) URLs from a text file.
-2. Fetches each page and extracts the `<pre>` block exactly as it appears.
-3. Saves the raw `<pre>` text to disk for archival.
-4. Parses the extracted text and writes structured results to a CSV file.
+2. Fetches each page and extracts the `<pre>` block (or falls back to the full page if no `<pre>` exists).
+3. Saves the raw text to disk for archival.
+4. Parses the text and writes structured results to a CSV file.
 
 ## Output CSV columns
 
 | Column | Description |
 |---|---|
 | `url` | Source URL |
-| `release_date` | ISO 8601 date (e.g. `2024-06-15`) |
+| `release_number` | GenBank release number (e.g. `271.0`) |
+| `release_date` | ISO 8601 date (e.g. `2026-04-15`) |
 | `num_files` | Number of files in the release |
 | `total_uncompressed_size` | Total uncompressed size in bytes |
 | `num_entries` | Total number of sequence entries |
 | `num_bases` | Total number of bases |
-| `raw_file` | Path to the saved raw `<pre>` text |
-| `status` | `ok`, `partial`, `fetch_error`, or `no_pre_block` |
+| `error` | Error message (empty if successful) |
 
 ## Requirements
 
@@ -34,14 +34,11 @@ uv sync
 ## Usage
 
 ```bash
-# Use default urls.txt and write output to out/
-uv run main.py
+# Run via the console script (after uv sync)
+uv run data-retrieval urls.txt --output-dir output/ --csv output.csv
 
-# Specify a custom URL list and output directory
-uv run main.py --urls my_urls.txt --output-dir results/
-
-# Also customize the CSV path
-uv run main.py --urls my_urls.txt --output-dir results/ --csv results/stats.csv
+# Or run the module directly
+uv run python main.py urls.txt --output-dir output/ --csv output.csv
 ```
 
 ## Input format (`urls.txt`)
@@ -50,16 +47,15 @@ One URL per line; blank lines and lines starting with `#` are ignored:
 
 ```
 # GenBank release notes
-https://www.ncbi.nlm.nih.gov/genbank/release/261/
-https://www.ncbi.nlm.nih.gov/genbank/release/260/
+https://www.ncbi.nlm.nih.gov/genbank/release/current/
+https://www.ncbi.nlm.nih.gov/genbank/release/270/
 ```
 
-## Output layout
+## Output layout (default)
 
 ```
-out/
-├── raw/
-│   ├── 261_pre.txt
-│   └── 260_pre.txt
-└── results.csv
+raw_releases/
+  <sanitized_url>_<hash>.txt
+
+genbank_releases.csv
 ```
