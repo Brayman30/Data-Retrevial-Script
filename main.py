@@ -2,15 +2,16 @@
 GenBank Release Notes Archiver
 
 Reads a text file of GenBank release-note URLs (one per line), fetches each
-page, extracts the raw <pre> block, saves it to disk for archival, then parses
-the text to extract structured data and writes the results to a CSV file.
+page (or reuses a previously-downloaded raw file), extracts the raw <pre>
+block, saves it to disk for archival, then parses the text to extract
+structured data and writes the results to a CSV file.
 
 Usage:
     uv run python main.py urls.txt [--raw-dir raw] [--output results.csv]
 
 CSV columns:
-    url, release_date (ISO 8601), num_files,
-    total_uncompressed_size, num_entries, num_bases
+    url, release_date (ISO 8601), num_files, total_uncompressed_size,
+    num_entries, num_bases, error
 """
 
 import argparse
@@ -75,21 +76,23 @@ def _parse_date(text: str) -> str:
     Search *text* for a recognisable release date and return it in ISO 8601
     (YYYY-MM-DD) format.  Returns an empty string when no date is found.
     """
-    # Patterns ordered from most to least specific
     candidate_patterns = [
-        # "Release 260.0, February 15, 2023"
-        r"[Rr]elease\s+[\d.]+,\s+([A-Za-z]+\s+\d{1,2},\s+\d{4})",
-        # "release date February 15, 2023"
-        r"release\s+date\s+([A-Za-z]+\s+\d{1,2},\s+\d{4})",
-        # "Date: February 15, 2023"
-        r"[Dd]ate\s*:\s*([A-Za-z]+\s+\d{1,2},\s+\d{4})",
+        # "Release 260.0, February 15, 2023"  or  "Release 260.0 February 15, 2023"
+        r"[Rr]elease\s+[\d.]+[,\s]+([A-Za-z]+\s+\d{1,2},\s+\d{4})",
+        # "Released February 15, 2023"
+        r"[Rr]eleased\s+([A-Za-z]+\s+\d{1,2},\s+\d{4})",
+        # "release date February 15, 2023" / "Date: February 15, 2023"
+        r"(?:release\s+date|[Dd]ate\s*:)\s*([A-Za-z]+\s+\d{1,2},\s+\d{4})",
+        # Standalone date line: "February 15, 2023" (entire line is a date, allow leading/trailing whitespace)
+        r"^\s*([A-Za-z]+\s+\d{1,2},\s+\d{4})\s*$",
         # ISO date already present
         r"(\d{4}-\d{2}-\d{2})",
     ]
     date_formats = ["%B %d, %Y", "%b %d, %Y", "%Y-%m-%d"]
 
     for pattern in candidate_patterns:
-        match = re.search(pattern, text)
+        flags = re.MULTILINE if pattern.startswith("^") else 0
+        match = re.search(pattern, text, flags)
         if match:
             date_str = match.group(1).strip()
             for fmt in date_formats:
@@ -100,13 +103,73 @@ def _parse_date(text: str) -> str:
     return ""
 
 
+def _parse_table_format(text: str, result: dict) -> None:
+    """
+    Parse NCBI's tabular release-note format, filling *result* in-place.
+
+    NCBI release notes use tables whose "Total" row summarises the release:
+
+      Table 1 – Division Statistics (columns: Files  Entries  Bases)
+        Total  3,594  241,595,478  899,777,346,718
+
+      Table 2 – File Size Statistics (column: Uncompressed (bytes))
+        Total  2,345,678,901
+
+    Uses a state-machine so that each table's header establishes the column
+    context that is active for its own Total row, preventing cross-table
+    contamination from a look-back window.
+    """
+    lines = text.splitlines()
+    current_context: str | None = None  # "division_stats" | "size" | None
+
+    for line in lines:
+        stripped = line.strip()
+        lower = stripped.lower()
+
+        # A new "Table N." header resets the current table context
+        if re.match(r"Table\s+\d+", stripped):
+            current_context = None
+
+        # Detect column-header lines and set context
+        has_files = bool(re.search(r"\bfiles?\b", lower))
+        has_entries = bool(re.search(r"\b(entries|loci|sequences|records)\b", lower))
+        has_bases = bool(re.search(r"\bbases?\b", lower))
+        has_uncompressed = bool(re.search(r"\buncompressed\b", lower))
+
+        if has_files and has_entries and has_bases:
+            current_context = "division_stats"
+        elif has_uncompressed and not (has_files and has_entries and has_bases):
+            current_context = "size"
+
+        # Parse a "Total  N  [M  [O]]" summary row according to active context
+        if not re.match(r"Total\s+[\d,]", stripped, re.IGNORECASE):
+            continue
+
+        nums = [_strip_commas(n) for n in re.findall(r"[\d,]+", stripped)]
+
+        if current_context == "division_stats" and len(nums) >= 3:
+            if not result["num_files"]:
+                result["num_files"] = nums[0]
+            if not result["num_entries"]:
+                result["num_entries"] = nums[1]
+            if not result["num_bases"]:
+                result["num_bases"] = nums[2]
+        elif current_context == "size" and len(nums) >= 1:
+            if not result["total_uncompressed_size"]:
+                result["total_uncompressed_size"] = nums[0]
+
+
 def _parse_field(text: str, patterns: list[str]) -> str:
     """
     Try each regex *pattern* in order; return the first captured numeric group
     with commas stripped, or an empty string when nothing matches.
+
+    Patterns are matched with both ``re.IGNORECASE`` and ``re.MULTILINE`` so
+    that ``^``-anchored patterns (used to restrict matches to line starts) work
+    correctly across multi-line release-note text.
     """
     for pattern in patterns:
-        match = re.search(pattern, text, re.IGNORECASE)
+        match = re.search(pattern, text, re.IGNORECASE | re.MULTILINE)
         if match:
             return _strip_commas(match.group(1))
     return ""
@@ -116,40 +179,73 @@ def parse_pre_text(text: str) -> dict[str, str]:
     """
     Extract the five required fields from a GenBank release-notes <pre> block.
 
+    Handles two main formats used across NCBI releases:
+
+    1. Modern tabular format – "Total" rows in division-stats and file-size tables.
+    2. Key-value / sentence format – "Number of loci: N", "Files: N", etc.
+
     Returns a dict with keys:
         release_date, num_files, total_uncompressed_size, num_entries, num_bases
-    Values are empty strings for fields that could not be found.
+    All values are strings; empty string means the field was not found.
     """
-    release_date = _parse_date(text)
-
-    num_files = _parse_field(text, [
-        r"[Nn]umber\s+of\s+files\s*[:\-]\s*([\d,]+)",
-        r"\bfiles\s*[:\-]\s*([\d,]+)",
-    ])
-
-    total_uncompressed_size = _parse_field(text, [
-        r"[Tt]otal\s+[Uu]ncompressed\s*[:\-]\s*([\d,]+)",
-        r"[Tt]otal\s+[Uu]ncompressed\s+[Ss]ize\s*[:\-]\s*([\d,]+)",
-        r"[Uu]ncompressed\s*[:\-]\s*([\d,]+)",
-    ])
-
-    num_entries = _parse_field(text, [
-        r"[Nn]umber\s+of\s+(?:loci|entries|records|sequences)\s*[:\-]\s*([\d,]+)",
-        r"\b(?:loci|entries|records|sequences)\s*[:\-]\s*([\d,]+)",
-    ])
-
-    num_bases = _parse_field(text, [
-        r"[Nn]umber\s+of\s+bases\s*[:\-]\s*([\d,]+)",
-        r"\bbases\s*[:\-]\s*([\d,]+)",
-    ])
-
-    return {
-        "release_date": release_date,
-        "num_files": num_files,
-        "total_uncompressed_size": total_uncompressed_size,
-        "num_entries": num_entries,
-        "num_bases": num_bases,
+    result: dict[str, str] = {
+        "release_date": "",
+        "num_files": "",
+        "total_uncompressed_size": "",
+        "num_entries": "",
+        "num_bases": "",
     }
+
+    result["release_date"] = _parse_date(text)
+
+    # Pass 1 – tabular format (most modern releases)
+    _parse_table_format(text, result)
+
+    # Pass 2 – key-value / sentence fallbacks for any still-missing fields
+
+    if not result["num_files"]:
+        result["num_files"] = _parse_field(text, [
+            # "Number of (flat) files: N" or dotted variant
+            r"[Nn]umber\s+of\s+(?:flat\s+)?files\s*[.:\-\s]+\s*([\d,]+)",
+            # "Files: N" key-value
+            r"^\s*[Ff]iles?\s*[:\-]\s*([\d,]+)",
+            # "contains N (flat|sequence|...) files" in a sentence
+            r"contains\s+([\d,]+)\s+(?:\w+\s+)*files?",
+        ])
+
+    if not result["total_uncompressed_size"]:
+        result["total_uncompressed_size"] = _parse_field(text, [
+            # "Total uncompressed (file) size: N bytes"
+            r"[Tt]otal\s+uncompressed\s+(?:file\s+)?size\s*[.:\-\s]+\s*([\d,]+)",
+            # "Total uncompressed: N" / "Total Uncompressed Size: N"
+            r"[Tt]otal\s+[Uu]ncompressed\s+(?:[Ss]ize\s*)?[.:\-\s]+\s*([\d,]+)",
+            # "Uncompressed (bytes): N"  or  "Uncompressed: N"
+            r"[Uu]ncompressed\s*(?:\(bytes?\))?\s*[:\-]\s*([\d,]+)",
+            # "Total Size (bytes): N"
+            r"[Tt]otal\s+[Ss]ize\s*(?:\(bytes?\))?\s*[:\-]\s*([\d,]+)",
+        ])
+
+    if not result["num_entries"]:
+        result["num_entries"] = _parse_field(text, [
+            # "Number of loci ......  N"  or  "Number of entries: N"
+            r"[Nn]umber\s+of\s+(?:sequence\s+)?(?:loci|entries|records|sequences)\s*[.:\-\s]+\s*([\d,]+)",
+            # "Loci: N" / "Entries: N"
+            r"^\s*(?:[Ll]oci|[Ee]ntries|[Rr]ecords|[Ss]equences)\s*[:\-]\s*([\d,]+)",
+            # Dotted form without leading "Number of"
+            r"(?:[Ll]oci|[Ee]ntries|[Rr]ecords|[Ss]equences)\s*\.{2,}\s*([\d,]+)",
+        ])
+
+    if not result["num_bases"]:
+        result["num_bases"] = _parse_field(text, [
+            # "Number of bases ......  N"
+            r"[Nn]umber\s+of\s+bases\s*[.:\-\s]+\s*([\d,]+)",
+            # "Bases: N"
+            r"^\s*[Bb]ases?\s*[:\-]\s*([\d,]+)",
+            # Dotted form
+            r"[Bb]ases?\s*\.{2,}\s*([\d,]+)",
+        ])
+
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -158,35 +254,43 @@ def parse_pre_text(text: str) -> dict[str, str]:
 
 def _slug_from_url(url: str) -> str:
     """Derive a safe filename stem from a URL."""
-    # Drop trailing slash, take the last two non-empty path segments
     parts = [p for p in url.rstrip("/").split("/") if p]
     slug = "_".join(parts[-2:]) if len(parts) >= 2 else (parts[-1] if parts else "unknown")
-    # Replace any remaining characters that are unsafe in filenames
     return re.sub(r"[^\w\-.]", "_", slug)
 
 
 # ---------------------------------------------------------------------------
-# Empty row factory
+# Row factories
 # ---------------------------------------------------------------------------
 
-_EMPTY_ROW_FIELDS = ("release_date", "num_files", "total_uncompressed_size", "num_entries", "num_bases")
+_DATA_FIELDS = (
+    "release_date",
+    "num_files",
+    "total_uncompressed_size",
+    "num_entries",
+    "num_bases",
+)
 
-def _empty_row(url: str) -> dict[str, str]:
-    return {"url": url, **{k: "" for k in _EMPTY_ROW_FIELDS}}
+CSV_FIELDNAMES = ["url", *_DATA_FIELDS, "error"]
+
+
+def _make_row(url: str, parsed: dict[str, str] | None = None, error: str = "") -> dict[str, str]:
+    """Build a CSV row dict, merging parsed data with the error field."""
+    data = parsed or {k: "" for k in _DATA_FIELDS}
+    return {"url": url, **{k: data.get(k, "") for k in _DATA_FIELDS}, "error": error}
 
 
 # ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
 
-CSV_FIELDNAMES = ["url", "release_date", "num_files", "total_uncompressed_size", "num_entries", "num_bases"]
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
             "Fetch GenBank release-note pages, archive the raw <pre> block, "
-            "and write structured data to a CSV file."
+            "and write structured data to a CSV file.  If a raw file for a URL "
+            "already exists in --raw-dir, it is reused and the page is not "
+            "re-fetched."
         )
     )
     parser.add_argument(
@@ -197,7 +301,7 @@ def main() -> None:
         "--raw-dir",
         default="raw",
         metavar="DIR",
-        help="Directory where raw <pre> text files are saved (default: raw).",
+        help="Directory where raw <pre> text files are saved/read (default: raw).",
     )
     parser.add_argument(
         "--output",
@@ -227,34 +331,38 @@ def main() -> None:
     rows: list[dict[str, str]] = []
 
     for url in urls:
-        print(f"Fetching: {url}")
-
-        html = fetch_page(url)
-        if html is None:
-            print(f"  Skipping — fetch failed.", file=sys.stderr)
-            rows.append(_empty_row(url))
-            continue
-
-        pre_text = extract_pre_block(html)
-        if pre_text is None:
-            print(f"  WARNING: No <pre> block found at {url!r}", file=sys.stderr)
-            rows.append(_empty_row(url))
-            continue
-
-        # Archive the raw text
         raw_path = raw_dir / f"{_slug_from_url(url)}.txt"
-        save_raw_text(pre_text, raw_path)
-        print(f"  Archived raw text → {raw_path}")
 
-        # Parse structured fields
+        # ---- Obtain the raw <pre> text (cache-first) ----------------------
+        if raw_path.exists():
+            print(f"Using cached: {raw_path}  ({url})")
+            pre_text = raw_path.read_text(encoding="utf-8")
+        else:
+            print(f"Fetching: {url}")
+            html = fetch_page(url)
+            if html is None:
+                rows.append(_make_row(url, error="fetch_failed"))
+                continue
+
+            pre_text = extract_pre_block(html)
+            if pre_text is None:
+                print(f"  WARNING: No <pre> block found at {url!r}", file=sys.stderr)
+                rows.append(_make_row(url, error="no_pre_block"))
+                continue
+
+            save_raw_text(pre_text, raw_path)
+            print(f"  Archived raw text → {raw_path}")
+
+        # ---- Parse structured fields --------------------------------------
         parsed = parse_pre_text(pre_text)
-        rows.append({"url": url, **parsed})
-
-        missing = [k for k, v in parsed.items() if not v]
+        missing = [k for k in _DATA_FIELDS if not parsed.get(k)]
+        error_str = f"missing: {','.join(missing)}" if missing else ""
         if missing:
-            print(f"  WARNING: Could not parse: {', '.join(missing)}")
+            print(f"  WARNING: Could not parse: {', '.join(missing)}", file=sys.stderr)
 
-    # Write CSV output
+        rows.append(_make_row(url, parsed=parsed, error=error_str))
+
+    # ---- Write CSV output -------------------------------------------------
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=CSV_FIELDNAMES)
