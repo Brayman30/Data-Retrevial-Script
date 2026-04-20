@@ -18,8 +18,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import TypedDict
 
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 
 
 def fetch_url(url: str, timeout: int = 30) -> str:
