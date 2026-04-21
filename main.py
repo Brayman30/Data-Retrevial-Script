@@ -10,8 +10,8 @@ Usage:
     uv run python main.py urls.txt [--raw-dir raw] [--output results.csv]
 
 CSV columns:
-    url, release_date (ISO 8601), num_files, total_uncompressed_size,
-    num_entries, num_bases, error
+    url, release_number, release_date (ISO 8601), num_files,
+    total_uncompressed_size, num_entries, num_bases, error
 """
 
 import argparse
@@ -77,8 +77,9 @@ def _parse_date(text: str) -> str:
     (YYYY-MM-DD) format.  Returns an empty string when no date is found.
     """
     candidate_patterns = [
-        # "Release 260.0, February 15, 2023"  or  "Release 260.0 February 15, 2023"
-        r"[Rr]elease\s+[\d.]+[,\s]+([A-Za-z]+\s+\d{1,2},\s+\d{4})",
+        # "Release 260.0, February 15, 2023", "Release 260.0 February 15, 2023",
+        # or "Release 261.0 / April 15, 2024"
+        r"[Rr]elease\s+[\d.]+[,\s/]+([A-Za-z]+\s+\d{1,2},\s+\d{4})",
         # "Released February 15, 2023"
         r"[Rr]eleased\s+([A-Za-z]+\s+\d{1,2},\s+\d{4})",
         # "release date February 15, 2023" / "Date: February 15, 2023"
@@ -100,6 +101,34 @@ def _parse_date(text: str) -> str:
                     return datetime.strptime(date_str, fmt).date().isoformat()
                 except ValueError:
                     continue
+    return ""
+
+
+def _parse_release_number(text: str, url: str = "") -> str:
+    """
+    Extract the GenBank release number string from *text* (e.g. ``"261.0"``).
+
+    Tries the following in order:
+    1. ``"GenBank Release 261.0"`` – explicit version in the pre-block text.
+    2. ``"Release 261.0"`` – release header without the "GenBank" prefix.
+    3. URL path segment ``/release/261/`` → ``"261"`` as a last resort.
+
+    Returns an empty string when nothing matches.
+    """
+    for pattern in (
+        r"[Gg]en[Bb]ank\s+[Rr]elease\s+([\d]+(?:\.\d+)?)",
+        r"[Rr]elease\s+([\d]+(?:\.\d+)?)",
+    ):
+        match = re.search(pattern, text)
+        if match:
+            return match.group(1)
+
+    # Fallback: derive from the URL path (e.g. /genbank/release/261/)
+    if url:
+        url_match = re.search(r"/release/(\d+)", url)
+        if url_match:
+            return url_match.group(1)
+
     return ""
 
 
@@ -175,9 +204,9 @@ def _parse_field(text: str, patterns: list[str]) -> str:
     return ""
 
 
-def parse_pre_text(text: str) -> dict[str, str]:
+def parse_pre_text(text: str, url: str = "") -> dict[str, str]:
     """
-    Extract the five required fields from a GenBank release-notes <pre> block.
+    Extract the six required fields from a GenBank release-notes <pre> block.
 
     Handles two main formats used across NCBI releases:
 
@@ -185,10 +214,12 @@ def parse_pre_text(text: str) -> dict[str, str]:
     2. Key-value / sentence format – "Number of loci: N", "Files: N", etc.
 
     Returns a dict with keys:
-        release_date, num_files, total_uncompressed_size, num_entries, num_bases
+        release_number, release_date, num_files, total_uncompressed_size,
+        num_entries, num_bases
     All values are strings; empty string means the field was not found.
     """
     result: dict[str, str] = {
+        "release_number": "",
         "release_date": "",
         "num_files": "",
         "total_uncompressed_size": "",
@@ -196,6 +227,7 @@ def parse_pre_text(text: str) -> dict[str, str]:
         "num_bases": "",
     }
 
+    result["release_number"] = _parse_release_number(text, url)
     result["release_date"] = _parse_date(text)
 
     # Pass 1 – tabular format (most modern releases)
@@ -264,6 +296,7 @@ def _slug_from_url(url: str) -> str:
 # ---------------------------------------------------------------------------
 
 _DATA_FIELDS = (
+    "release_number",
     "release_date",
     "num_files",
     "total_uncompressed_size",
@@ -354,7 +387,7 @@ def main() -> None:
             print(f"  Archived raw text → {raw_path}")
 
         # ---- Parse structured fields --------------------------------------
-        parsed = parse_pre_text(pre_text)
+        parsed = parse_pre_text(pre_text, url)
         missing = [k for k in _DATA_FIELDS if not parsed.get(k)]
         error_str = f"missing: {','.join(missing)}" if missing else ""
         if missing:
