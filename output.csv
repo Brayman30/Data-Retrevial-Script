@@ -1,0 +1,4 @@
+url,release_number,release_date,num_files,total_uncompressed_size,num_entries,num_bases,error
+https://www.ncbi.nlm.nih.gov/genbank/release/261/,261.0,,,,,,"missing: release_date,num_files,total_uncompressed_size,num_entries,num_bases"
+https://www.ncbi.nlm.nih.gov/genbank/release/260/,260.0,,,,,,"missing: release_date,num_files,total_uncompressed_size,num_entries,num_bases"
+https://www.ncbi.nlm.nih.gov/genbank/release/259/,259.0,,,,,,"missing: release_date,num_files,total_uncompressed_size,num_entries,num_bases"
