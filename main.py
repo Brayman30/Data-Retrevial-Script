@@ -4,10 +4,11 @@ import os
 import re
 import urllib.request
 from datetime import datetime
+from typing import Dict
 from urllib.error import HTTPError, URLError
 
 
-def parse_date(date_str):
+def parse_date(date_str: str) -> str:
     """Attempt to parse common date formats into ISO 8601 (YYYY-MM-DD)."""
     date_str = date_str.strip()
 
@@ -30,25 +31,25 @@ def parse_date(date_str):
         except ValueError:
             continue
 
-    return None
+    return ""
 
 
-def clean_number(num_str):
-    """Remove commas and convert string to integer."""
+def clean_number(num_str: str) -> str:
+    """Remove commas and return string representation of the integer."""
     if not num_str:
-        return None
+        return ""
     try:
-        return int(num_str.replace(",", "").strip())
+        return str(int(num_str.replace(",", "").strip()))
     except ValueError:
-        return None
+        return ""
 
 
-def word_to_number(text):
-    """Convert written numbers like 'forty-eight' to integers."""
+def word_to_number(text: str) -> str:
+    """Convert written numbers like 'forty-eight' to string integers."""
     if not text:
-        return None
+        return ""
     if text.isdigit():
-        return int(text)
+        return text
 
     numwords = {
         "one": 1,
@@ -87,10 +88,10 @@ def word_to_number(text):
         if word in numwords:
             total += numwords[word]
 
-    return total if total > 0 else None
+    return str(total) if total > 0 else ""
 
 
-def extract_safe_filename(url):
+def extract_safe_filename(url: str) -> str:
     """Extract the last meaningful part of the URL for the filename."""
     parts = [p for p in url.split("/") if p]
     if parts:
@@ -140,7 +141,8 @@ def main():
         writer.writeheader()
 
         for url in urls:
-            row = {fn: "" for fn in fieldnames}
+            # Type hint this dictionary so the linter knows it expects strings
+            row: Dict[str, str] = {fn: "" for fn in fieldnames}
             row["url"] = url
 
             filename = extract_safe_filename(url)
@@ -258,7 +260,7 @@ def main():
                                 val *= 1024**2
                             elif unit == "KB":
                                 val *= 1024
-                            size_val = int(val)
+                            size_val = str(int(val))  # Cast to string for strict typing
 
                 row["total_uncompressed_size"] = size_val
 
@@ -279,7 +281,9 @@ def main():
                                 total_calculated_size += int(parts[0])
 
                         if total_calculated_size > 0:
-                            row["total_uncompressed_size"] = total_calculated_size
+                            row["total_uncompressed_size"] = str(
+                                total_calculated_size
+                            )  # Cast to string
 
                 # -- Number of Entries & Bases --
                 entries_match = re.search(
