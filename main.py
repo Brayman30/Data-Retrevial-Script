@@ -84,12 +84,14 @@ def _parse_date(text: str) -> str:
         r"[Rr]eleased\s+([A-Za-z]+\s+\d{1,2},\s+\d{4})",
         # "release date February 15, 2023" / "Date: February 15, 2023"
         r"(?:release\s+date|[Dd]ate\s*:)\s*([A-Za-z]+\s+\d{1,2},\s+\d{4})",
-        # Standalone date line: "February 15, 2023" (entire line is a date, allow leading/trailing whitespace)
+        # Standalone date line with comma: "February 15, 2023"
         r"^\s*([A-Za-z]+\s+\d{1,2},\s+\d{4})\s*$",
+        # Standalone date line without comma: "December 15 2023" (GBREL.TXT FTP format)
+        r"^\s+([A-Za-z]+\s+\d{1,2}\s+\d{4})\s*$",
         # ISO date already present
         r"(\d{4}-\d{2}-\d{2})",
     ]
-    date_formats = ["%B %d, %Y", "%b %d, %Y", "%Y-%m-%d"]
+    date_formats = ["%B %d, %Y", "%b %d, %Y", "%B %d %Y", "%b %d %Y", "%Y-%m-%d"]
 
     for pattern in candidate_patterns:
         flags = re.MULTILINE if pattern.startswith("^") else 0
@@ -202,6 +204,58 @@ def _parse_field(text: str, patterns: list[str]) -> str:
         if match:
             return _strip_commas(match.group(1))
     return ""
+
+
+def _parse_gbrel_format(text: str, result: dict) -> None:
+    """
+    Parse the GBREL.TXT FTP distribution format used by GenBank releases
+    259+, filling *result* in-place.
+
+    This format differs from the HTML summary pages: it contains the full
+    release document with prose descriptions, individual per-file size lines,
+    and per-division tables without a "Total" summary row.
+
+    Key patterns extracted:
+
+    - num_entries / num_bases: header sentence
+        "249,060,436 sequences,  2,570,711,588,044 bases, for traditional GenBank records"
+    - num_files: prose sentence
+        "This GenBank flat file release consists of 8832 files."
+    - total_uncompressed_size: summed from the "File Size  File Name" table
+        whose rows have the form ``<bytes>     <filename>``.
+    """
+    # num_entries and num_bases from the header summary line
+    m = re.search(
+        r"([\d,]+)\s+sequences,\s+([\d,]+)\s+bases,\s+for traditional GenBank records",
+        text,
+    )
+    if m:
+        if not result["num_entries"]:
+            result["num_entries"] = _strip_commas(m.group(1))
+        if not result["num_bases"]:
+            result["num_bases"] = _strip_commas(m.group(2))
+
+    # num_files from the prose sentence
+    m = re.search(
+        r"flat file release consists of\s+([\d,]+)\s+files",
+        text,
+        re.IGNORECASE,
+    )
+    if m and not result["num_files"]:
+        result["num_files"] = _strip_commas(m.group(1))
+
+    # total_uncompressed_size: sum every byte-count entry in the File Sizes table.
+    # The table starts after "File Size      File Name" and ends before section 2.2.6.
+    if not result["total_uncompressed_size"]:
+        m = re.search(
+            r"File Size\s+File Name\s*\n(.*?)(?=\n\d+\.\d+\.)",
+            text,
+            re.DOTALL,
+        )
+        if m:
+            sizes = [int(x) for x in re.findall(r"^\s*(\d+)\s+\w", m.group(1), re.MULTILINE)]
+            if sizes:
+                result["total_uncompressed_size"] = str(sum(sizes))
 
 
 def parse_pre_text(text: str, url: str = "") -> dict[str, str]:
