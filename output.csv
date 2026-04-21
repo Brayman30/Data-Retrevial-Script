@@ -1,4 +1,198 @@
 url,release_number,release_date,num_files,total_uncompressed_size,num_entries,num_bases,error
-https://www.ncbi.nlm.nih.gov/genbank/release/261/,261.0,,,,,,"missing: release_date,num_files,total_uncompressed_size,num_entries,num_bases"
-https://www.ncbi.nlm.nih.gov/genbank/release/260/,260.0,,,,,,"missing: release_date,num_files,total_uncompressed_size,num_entries,num_bases"
-https://www.ncbi.nlm.nih.gov/genbank/release/259/,259.0,,,,,,"missing: release_date,num_files,total_uncompressed_size,num_entries,num_bases"
+https://www.ncbi.nlm.nih.gov/genbank/release/74/,74,,,,,120242234,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/75/,75,,,,,126212259,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/76/,76,,,,,129968355,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/77/,77,,,,,138904393,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/78/,78,,,,,147215633,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/79/,79,,,,,157152442,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/80/,80,,,,,163802597,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/81/,81,,,,,173261500,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/82/,82,,,,,180589455,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/83/,83,,,,,191393939,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/84/,84,,,,,201815802,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/85/,85.0,,,,,217102462,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/86/,86.0,,,,,230485928,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/87/,87.0,,,,,248499214,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/88/,89.0,,,,,286094556,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/89/,89.0,,,,,318624568,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/90/,90.0,,,,,353713490,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/91/,91.0,,,,,384939485,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/92/,92.0,,,,,425860958,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/93/,93.0,,,,,463758833,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/94/,95.0,,,,,499127741,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/95/,97.0,,,,,551750920,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/96/,96.0,,31,,,602072354,"missing: release_date,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/97/,98.0,,30,,,651972984,"missing: release_date,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/98/,98.0,,30,,,730552938,"missing: release_date,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/99/,99,,30,,,786898138,"missing: release_date,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/100/,100,,,,,842864309,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/101/,101,,,,,966993087,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/102/,103.0,,,,,1053474516,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/103/,104.0.,,,,,1160300687,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/104/,104.0,,,,,1258290513,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/105/,105.0,,,,,1372368913,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/106/,106.0,,,,,1502542306,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/107/,107.0,,,,,1622041465,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/108/,108.0,,,,,1797137713,"missing: release_date,num_files,total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/109/,109.0,,,9422503936,,2008761784,"missing: release_date,num_files,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/110/,110.0,,,10084155392,,2162067871,"missing: release_date,num_files,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/111/,111.0,,,12163481600,,2569578208,"missing: release_date,num_files,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/112/,112.0,,,14005829632,,2974791993,"missing: release_date,num_files,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/113/,113.0,,,14005829632,,3400237391,"missing: release_date,num_files,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/114/,114.0,,,17208180736,,3841163011,"missing: release_date,num_files,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/115/,115.0,,,19835912192,,4653932745,"missing: release_date,num_files,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/116/,116.0,,108,22387097600,,5805414935,"missing: release_date,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/117/,117.0,,135,25883049984,,7376080723,"missing: release_date,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/118/,118.0,,159,29588717568,,8604221980,"missing: release_date,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/119/,119.0,,161,34813771776,,9545724824,"missing: release_date,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/120/,120.0,2000-10-15,182,38235275264,,10335692655,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/121/,121.0,2000-12-15,202,41901096960,,11096777808,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/122/,122.0,2001-02-15,213,44772098048,,11720120326,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/123/,123.0,2001-04-15,225,,,12418544023,"missing: total_uncompressed_size,num_entries"
+https://www.ncbi.nlm.nih.gov/genbank/release/124/,124.0,2001-06-15,233,49821620633,,12973707065,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/125/,125.0,2001-08-15,243,53386443489,,13543364296,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/126/,126.0,2001-10-15,257,56908316672,,14396883064,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/127/,127.0,2001-12-15,278,60948480000,,15849921438,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/128/,128.0,2002-02-15,296,63870861312,,17089143893,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/129/,129.0,2002-04-15,296,71328669368,,19072679701,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/130/,130.0,2002-06-15,333,75322988953,,20648748345,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/131/,131.0,2002-08-15,351,80337363271,,22616937182,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/132/,132.0,2002-10-15,390,89496381030,19345,26525934656,
+https://www.ncbi.nlm.nih.gov/genbank/release/133/,133.0,2002-12-15,449,101286066257,,28507990166,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/134/,134.0,2003-02-15,464,104088532418,,29358082791,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/135/,135.0,2003-04-15,481,107374182400,,31099264455,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/136/,136.0,2003-06-15,508,114890375168,,32528249295,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/137/,137.0,2003-08-15,532,114890375168,,33865022251,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/138/,138.0,2003-10-15,562,126701535232,,35599621471,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/139/,139.0,2003-12-15,570,130996502528,,36553368485,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/140/,140.0,2004-02-15,591,136365211648,,37893844733,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/141/,141.0,2004-04-15,606,140660178944,,38989342565,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/142/,142.0,2004-06-15,634,146028888064,,40325321348,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/143/,143.0,2004-08-15,658,152471339008,,41808045653,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/144/,144.0,2004-10-15,683,157840048128,,43194602655,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/145/,145.0,2004-12-15,705,164282499072,,44575745176,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/146/,146.0,2005-02-15,743,173946175488,,46849831226,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/147/,147.0,2005-04-15,769,180388626432,,48235738567,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/148/,148.0,2005-06-15,785,184683593728,,49398852122,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/149/,149.0,2005-08-15,816,192199786496,,51674486881,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/150/,150.0,2005-10-15,854,200789721088,,53655236500,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/151/,151.0,2005-12-15,890,210453397504,,56037734462,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/152/,152.0,2006-02-15,908,222264557568,,59750386305,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/153/,153.0,2006-04-15,944,230854492160,,61582143971,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/154/,154.0,2006-06-15,978,238370684928,,63412609711,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/155/,155.0,2006-08-15,1010,246960619520,,65369091950,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/156/,156.0,2006-10-15,1032,252329328640,,66925938907,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/157/,157.0,2006-12-15,1072,260919263232,,69019290705,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/158/,158.0,2007-02-15,1115,269509197824,,71292211453,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/159/,159.0,2007-04-15,1193,7261904050,,75742041056,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/160/,160.0,2007-06-15,1213,7261904050,,77248690945,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/161/,161.0,2007-08-15,1360,321048805376,,79525559650,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/162/,162.0,2007-10-15,1386,327491256320,,81563399765,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/163/,163.0,2007-12-15,1449,337154932736,,83874179730,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/164/,164.0,2008-02-15,1461,344671125504,,85759586764,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/165/,165.0,2008-04-15,1502,356482285568,,89172350468,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/166/,166.0,2008-06-15,1553,368293445632,,92008611867,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/167/,167.0,2008-08-15,1617,383325831168,,95033791652,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/168/,168.0,2008-10-15,1678,398358216704,,97381682336,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/169/,169.0,2008-12-15,1775,409095634944,,99116431942,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/170/,170.0,2009-02-15,1812,418759311360,,101467270308,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/171/,171.0,2009-04-15,1858,424128020480,,102980268709,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/172/,172.0,2009-06-15,1896,432717955072,,105277306080,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/173/,173.0,2009-08-15,1925,438086664192,,106533156756,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/174/,174.0,2009-10-15,1959,446676598784,,108560236506,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/175/,175.0,2009-12-15,1985,453119049728,,110118557163,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/176/,176.0,2010-02-15,1369,463856467968,,112326229652,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/177/,177.0,2010-04-15,1398,471372660736,,114348888771,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/178/,178.0,2010-06-15,1415,476741369856,,115624497715,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/179/,179.0,2010-08-15,1443,484257562624,,117476523128,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/180/,180.0,2010-10-15,1475,490700013568,,118551641086,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/181/,181.0,2010-12-15,1513,502511173632,,122082812719,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/182/,182.0,2011-02-15,1553,514322333696,,124277818310,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/183/,183.0,2011-04-15,1596,525059751936,,126551501141,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/184/,184.0,2011-06-15,1638,543313362944,,129178292958,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/185/,185.0,2011-08-15,1659,548682072064,,130671233801,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/186/,186.0,2011-10-15,1684,556198264832,,132067413372,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/187/,187.0,2011-12-15,1724,566935683072,,135117731375,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/188/,188.0,2012-02-15,1761,578746843136,,137384889783,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/189/,189.0,2012-04-15,1790,585189294080,,139266481398,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/190/,190.0,2012-06-15,1824,593779228672,,141343240755,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/191/,191.0,2012-08-15,1852,602369163264,,143081765233,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/192/,192.0,2012-10-15,1887,610959097856,9000,145430961262,
+https://www.ncbi.nlm.nih.gov/genbank/release/193/,193.0,2012-12-15,1936,621696516096,,148390863904,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/194/,194.0,2013-02-15,1970,630286450688,,150141354858,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/195/,195.0,2013-04-15,1861,637802643456,,151178979155,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/196/,196.0,2013-06-15,1880,644245094400,,152599230112,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/197/,197.0,2013-08-15,1905,651761287168,,154192921011,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/198/,198.0,2013-10-15,1930,658203738112,,155176494699,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/199/,199.0,2013-12-15,1948,663572447232,,156230531562,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/200/,200.0,2014-02-15,1982,671088640000,,157943793171,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/201/,201.0,2014-04-15,2009,677531090944,,159813411760,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/202/,202.0,2014-06-15,2052,689342251008,,161822845643,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/203/,203.0,2014-08-15,2093,700079669248,,165722980375,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/204/,204.0,2014-10-15,2216,730144440320,,181563676918,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/205/,205.0,2014-12-15,2251,738734374912,,184938063614,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/206/,206.0,2015-02-15,2297,751619276800,,187893826750,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/207/,207.0,2015-04-15,2333,761282953216,20145,189739230107,
+https://www.ncbi.nlm.nih.gov/genbank/release/208/,208.0,2015-06-15,2392,775241596928,,193921042946,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/209/,209.0,2015-08-15,2451,789200240640,,199823644287,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/210/,210.0,2015-10-15,2490,796716433408,,202237081559,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/211/,211.0,2015-12-15,2519,804232626176,,203939111071,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/212/,212.0,2016-02-15,2548,811748818944,,207018196067,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/213/,213.0,2016-04-15,2606,827854946304,,211423912047,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/214/,214.0,2016-06-15,2638,835371139072,,213200907819,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/215/,215.0,2016-08-15,2695,848256040960,,217971437647,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/216/,216.0,2016-10-15,2725,855772233728,,220731315250,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/217/,217.0,2016-12-15,2774,868657135616,,224973060433,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/218/,218.0,2017-02-15,2813,878320812032,142000,228719437638,
+https://www.ncbi.nlm.nih.gov/genbank/release/219/,219.0,2017-04-15,2855,881542037504,,231824951552,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/220/,220.0,2017-06-15,2887,891205713920,19381,234997362623,
+https://www.ncbi.nlm.nih.gov/genbank/release/221/,221.0,2017-08-15,2932,903016873984,,240343378258,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/222/,222.0,2017-10-15,2965,912680550400,,244914705468,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/223/,223.0,2017-12-15,3025,925565452288,2,249722163594,
+https://www.ncbi.nlm.nih.gov/genbank/release/224/,224.0,2018-02-15,3061,935229128704,,253630708098,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/225/,225.0,2018-04-15,3120,950261514240,,260189141631,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/226/,226.0,2018-06-15,3166,959925190656,,263957884539,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/227/,227.0,2018-08-15,3168,958851448832,,260806936411,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/228/,228.0,2018-10-15,3236,988916219904,,279668290132,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/229/,229.0,2018-12-15,3291,1002874863616,,285688542186,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/230/,230.0,2019-02-15,2276,1034013376512,4,303709510632,
+https://www.ncbi.nlm.nih.gov/genbank/release/231/,231.0,2019-04-15,2335,1063004405760,30,321680566570,
+https://www.ncbi.nlm.nih.gov/genbank/release/232/,232.0,2019-06-15,2367,1080184274944,,329835282370,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/233/,233.0,2019-08-15,2467,1134945107968,,366733917629,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/234/,234.0,2019-10-15,2543,1171452329984,,386197018538,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/235/,235.0,2019-12-15,2553,1176821039104,215333020,388417258009,
+https://www.ncbi.nlm.nih.gov/genbank/release/236/,236.0,2020-02-15,2601,1199369617408,216214215,399376854872,
+https://www.ncbi.nlm.nih.gov/genbank/release/237/,237.0,2020-04-15,2660,1226213163008,216531829,415770027949,
+https://www.ncbi.nlm.nih.gov/genbank/release/238/,238.0,2020-06-15,2706,1248761741312,217122233,427823258901,
+https://www.ncbi.nlm.nih.gov/genbank/release/239/,239.0,2020-08-15,3131,1568736804864,218642238,654057069549,
+https://www.ncbi.nlm.nih.gov/genbank/release/240/,240.0,2020-10-15,3238,1636382539776,219055207,698688094046,
+https://www.ncbi.nlm.nih.gov/genbank/release/241/,241.0,2020-12-15,3329,1677184729088,221467827,723003822007,
+https://www.ncbi.nlm.nih.gov/genbank/release/242/,242.0,2021-02-15,3493,1763084075008,,776291211106,missing: num_entries
+https://www.ncbi.nlm.nih.gov/genbank/release/243/,243.0,2021-04-15,3679,1852204646400,227123201,832400799511,
+https://www.ncbi.nlm.nih.gov/genbank/release/244/,244.0,2021-06-15,3806,1911260446720,227888889,866009790959,
+https://www.ncbi.nlm.nih.gov/genbank/release/245/,245.0,2021-08-15,4032,2027224563712,231982592,940513260726,
+https://www.ncbi.nlm.nih.gov/genbank/release/246/,246.0,2021-10-15,4300,2154999840768,233642893,1014763752113,
+https://www.ncbi.nlm.nih.gov/genbank/release/247/,247.0,2021-12-15,4454,2224793059328,234557297,1053275115030,
+https://www.ncbi.nlm.nih.gov/genbank/release/248/,248.0,2022-02-15,4802,2416992845824,236338284,1173984081721,
+https://www.ncbi.nlm.nih.gov/genbank/release/249/,249.0,2022-04-15,5118,2578054119424,134000,1266154890918,
+https://www.ncbi.nlm.nih.gov/genbank/release/250/,250.0,2022-06-15,5525,2775622615040,239017893,1395628631187,
+https://www.ncbi.nlm.nih.gov/genbank/release/251/,251.0,2022-08-15,5836,2923798986752,239915786,1492800704497,
+https://www.ncbi.nlm.nih.gov/genbank/release/252/,252.0,2022-10-15,6052,3022583234560,174,1562963366851,
+https://www.ncbi.nlm.nih.gov/genbank/release/253/,253.0,2022-12-15,6293,3133178642432,241015745,1635594138493,
+https://www.ncbi.nlm.nih.gov/genbank/release/254/,254.0,2023-02-15,6576,3277060046848,241830635,1731302248418,
+https://www.ncbi.nlm.nih.gov/genbank/release/255/,255.0,2023-04-15,6877,3418793967616,242554936,1826746318813,
+https://www.ncbi.nlm.nih.gov/genbank/release/256/,256.0,2023-06-15,7308,3623878656000,243560863,1966479976146,
+https://www.ncbi.nlm.nih.gov/genbank/release/257/,257.0,2023-08-15,7749,3838627020800,246119175,2112058517945,
+https://www.ncbi.nlm.nih.gov/genbank/release/258/,258.0,2023-10-15,8414,4286377361408,247777761,2433391164875,
+https://www.ncbi.nlm.nih.gov/genbank/release/259/,259.0,2023-12-15,8832,4481798373376,249060436,2570711588044,
+https://www.ncbi.nlm.nih.gov/genbank/release/260/,260.0,2024-04-15,10392,5390183956480,250803006,3213818003787,
+https://www.ncbi.nlm.nih.gov/genbank/release/261/,261.0,2024-06-15,5028,5636070834176,251094334,3387240663231,
+https://www.ncbi.nlm.nih.gov/genbank/release/262/,262.0,2024-08-15,5374,6040871501824,251998350,3675462701077,
+https://www.ncbi.nlm.nih.gov/genbank/release/263/,263.0,2024-10-15,4703,6849399095296,252347664,4250942573681,
+https://www.ncbi.nlm.nih.gov/genbank/release/264/,264.0,2024-12-15,5480,8001524072448,254365075,5085904976338,
+https://www.ncbi.nlm.nih.gov/genbank/release/265/,265.0,2025-02-15,5797,8468601765888,255669865,5415448651743,
+https://www.ncbi.nlm.nih.gov/genbank/release/266/,266.0,2025-04-15,6153,8996882743296,257038531,5794509308815,
+https://www.ncbi.nlm.nih.gov/genbank/release/267/,267.0,2025-06-15,5685,8253853401088,70163,5234752089196,
+https://www.ncbi.nlm.nih.gov/genbank/release/268/,268.0,2025-08-15,6109,8871254949888,258320620,5676067778413,
+https://www.ncbi.nlm.nih.gov/genbank/release/269/,269.0,2025-12-15,7064,10215579713536,259677058,6651459875408,
+https://www.ncbi.nlm.nih.gov/genbank/release/270/,270.0,2026-02-15,7395,10710574694400,260943419,7010340901567,
