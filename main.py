@@ -1,289 +1,398 @@
-"""Fetch and parse GenBank release notes from a list of URLs.
+"""
+GenBank Release Notes Archiver
+
+Reads a text file of GenBank release-note URLs (one per line), fetches each
+page (or reuses a previously-downloaded raw file), extracts the raw <pre>
+block, saves it to disk for archival, then parses the text to extract
+structured data and writes the results to a CSV file.
 
 Usage:
-    python main.py <urls_file> [--output-dir <dir>] [--csv <file>]
+    uv run python main.py urls.txt [--raw-dir raw] [--output results.csv]
 
-Arguments:
-    urls_file       Text file containing one GenBank release-note URL per line.
-    --output-dir    Directory to save raw <pre> block text (default: raw_releases).
-    --csv           Output CSV file path (default: genbank_releases.csv).
+CSV columns:
+    url, release_date (ISO 8601), num_files, total_uncompressed_size,
+    num_entries, num_bases, error
 """
 
 import argparse
 import csv
-import hashlib
 import re
 import sys
-import urllib.error
-import urllib.request
 from datetime import datetime
-from html.parser import HTMLParser
 from pathlib import Path
 
+import requests
+from bs4 import BeautifulSoup
 
-class PreBlockExtractor(HTMLParser):
-    """Extract the text content of the first <pre> block from an HTML page."""
-
-    def __init__(self) -> None:
-        super().__init__(convert_charrefs=True)
-        self._in_pre: bool = False
-        self._depth: int = 0
-        self._buf: list[str] = []
-        self.pre_content: str | None = None
-
-    def handle_starttag(self, tag: str, attrs) -> None:
-        if tag.lower() == "pre":
-            if not self._in_pre:
-                self._in_pre = True
-                self._depth = 1
-                self._buf = []
-            else:
-                self._depth += 1
-
-    def handle_endtag(self, tag: str) -> None:
-        if tag.lower() == "pre" and self._in_pre:
-            self._depth -= 1
-            if self._depth == 0:
-                self._in_pre = False
-                if self.pre_content is None:
-                    self.pre_content = "".join(self._buf)
-
-    def handle_data(self, data: str) -> None:
-        if self._in_pre:
-            self._buf.append(data)
+# ---------------------------------------------------------------------------
+# Networking
+# ---------------------------------------------------------------------------
 
 
-def fetch_url(url: str, timeout: int = 30) -> str:
-    """Fetch *url* and return the response body decoded as text."""
-    req = urllib.request.Request(
-        url,
-        headers={"User-Agent": "GenBankReleaseNoteParser/1.0"},
-    )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        charset = "utf-8"
-        content_type = resp.headers.get("Content-Type", "")
-        if "charset=" in content_type:
-            charset = content_type.split("charset=")[-1].strip()
-        return resp.read().decode(charset, errors="replace")
+def fetch_page(url: str, timeout: int = 30) -> str | None:
+    """Fetch *url* and return the response body as text, or None on failure."""
+    try:
+        resp = requests.get(url, timeout=timeout)
+        resp.raise_for_status()
+        return resp.text
+    except requests.RequestException as exc:
+        print(f"  WARNING: Failed to fetch {url!r}: {exc}", file=sys.stderr)
+        return None
+
+
+# ---------------------------------------------------------------------------
+# HTML extraction
+# ---------------------------------------------------------------------------
 
 
 def extract_pre_block(html: str) -> str | None:
-    """Return the content of the first ``<pre>`` block, or *None* if absent."""
-    parser = PreBlockExtractor()
-    parser.feed(html)
-    return parser.pre_content
+    """Return the text content of the first <pre> element, or None."""
+    soup = BeautifulSoup(html, "html.parser")
+    pre = soup.find("pre")
+    if pre is None:
+        return None
+    return pre.get_text()
 
 
-def save_raw_text(text: str, url: str, output_dir: Path) -> Path:
-    """Write *text* to a file inside *output_dir* named after *url*.
+# ---------------------------------------------------------------------------
+# Persistence
+# ---------------------------------------------------------------------------
 
-    A short SHA-256 hash of the full URL is appended to avoid filename
-    collisions between URLs that reduce to the same safe name.
-    """
-    url_hash = hashlib.sha256(url.encode()).hexdigest()[:8]
-    safe_name = (
-        re.sub(r"[^\w.-]", "_", url.split("//", 1)[-1]).strip("_") + f"_{url_hash}.txt"
-    )
-    output_dir.mkdir(parents=True, exist_ok=True)
-    dest = output_dir / safe_name
-    dest.write_text(text, encoding="utf-8")
-    return dest
+
+def save_raw_text(text: str, path: Path) -> None:
+    """Write *text* to *path*, creating parent directories as needed."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+# ---------------------------------------------------------------------------
+# Parsing helpers
+# ---------------------------------------------------------------------------
 
 
 def _strip_commas(value: str) -> str:
-    return value.replace(",", "")
+    """Remove comma thousands-separators from a numeric string."""
+    return value.replace(",", "").strip()
 
 
-def parse_release_number(text: str) -> str | None:
-    """Return the GenBank release number (e.g. ``'258.0'``) from *text*."""
-    match = re.search(r"GenBank\s+Release\s+(\d+(?:\.\d+)?)", text, re.IGNORECASE)
-    return match.group(1) if match else None
+def _parse_date(text: str) -> str:
+    """
+    Search *text* for a recognisable release date and return it in ISO 8601
+    (YYYY-MM-DD) format.  Returns an empty string when no date is found.
+    """
+    candidate_patterns = [
+        # "Release 260.0, February 15, 2023"  or  "Release 260.0 February 15, 2023"
+        r"[Rr]elease\s+[\d.]+[,\s]+([A-Za-z]+\s+\d{1,2},\s+\d{4})",
+        # "Released February 15, 2023"
+        r"[Rr]eleased\s+([A-Za-z]+\s+\d{1,2},\s+\d{4})",
+        # "release date February 15, 2023" / "Date: February 15, 2023"
+        r"(?:release\s+date|[Dd]ate\s*:)\s*([A-Za-z]+\s+\d{1,2},\s+\d{4})",
+        # Standalone date line: "February 15, 2023" (entire line is a date, allow leading/trailing whitespace)
+        r"^\s*([A-Za-z]+\s+\d{1,2},\s+\d{4})\s*$",
+        # ISO date already present
+        r"(\d{4}-\d{2}-\d{2})",
+    ]
+    date_formats = ["%B %d, %Y", "%b %d, %Y", "%Y-%m-%d"]
+
+    for pattern in candidate_patterns:
+        flags = re.MULTILINE if pattern.startswith("^") else 0
+        match = re.search(pattern, text, flags)
+        if match:
+            date_str = match.group(1).strip()
+            for fmt in date_formats:
+                try:
+                    return datetime.strptime(date_str, fmt).date().isoformat()
+                except ValueError:
+                    continue
+    return ""
 
 
-def parse_release_date(text: str) -> str | None:
-    """Return the release date in ISO 8601 format (``YYYY-MM-DD``), or *None*."""
-    months = {
-        "january": 1,
-        "february": 2,
-        "march": 3,
-        "april": 4,
-        "may": 5,
-        "june": 6,
-        "july": 7,
-        "august": 8,
-        "september": 9,
-        "october": 10,
-        "november": 11,
-        "december": 12,
+def _parse_table_format(text: str, result: dict) -> None:
+    """
+    Parse NCBI's tabular release-note format, filling *result* in-place.
+
+    NCBI release notes use tables whose "Total" row summarises the release:
+
+      Table 1 – Division Statistics (columns: Files  Entries  Bases)
+        Total  3,594  241,595,478  899,777,346,718
+
+      Table 2 – File Size Statistics (column: Uncompressed (bytes))
+        Total  2,345,678,901
+
+    Uses a state-machine so that each table's header establishes the column
+    context that is active for its own Total row, preventing cross-table
+    contamination from a look-back window.
+    """
+    lines = text.splitlines()
+    current_context: str | None = None  # "division_stats" | "size" | None
+
+    for line in lines:
+        stripped = line.strip()
+        lower = stripped.lower()
+
+        # A new "Table N." header resets the current table context
+        if re.match(r"Table\s+\d+", stripped):
+            current_context = None
+
+        # Detect column-header lines and set context
+        has_files = bool(re.search(r"\bfiles?\b", lower))
+        has_entries = bool(re.search(r"\b(entries|loci|sequences|records)\b", lower))
+        has_bases = bool(re.search(r"\bbases?\b", lower))
+        has_uncompressed = bool(re.search(r"\buncompressed\b", lower))
+
+        if has_files and has_entries and has_bases:
+            current_context = "division_stats"
+        elif has_uncompressed and not (has_files and has_entries and has_bases):
+            current_context = "size"
+
+        # Parse a "Total  N  [M  [O]]" summary row according to active context
+        if not re.match(r"Total\s+[\d,]", stripped, re.IGNORECASE):
+            continue
+
+        nums = [_strip_commas(n) for n in re.findall(r"[\d,]+", stripped)]
+
+        if current_context == "division_stats" and len(nums) >= 3:
+            if not result["num_files"]:
+                result["num_files"] = nums[0]
+            if not result["num_entries"]:
+                result["num_entries"] = nums[1]
+            if not result["num_bases"]:
+                result["num_bases"] = nums[2]
+        elif current_context == "size" and len(nums) >= 1:
+            if not result["total_uncompressed_size"]:
+                result["total_uncompressed_size"] = nums[0]
+
+
+def _parse_field(text: str, patterns: list[str]) -> str:
+    """
+    Try each regex *pattern* in order; return the first captured numeric group
+    with commas stripped, or an empty string when nothing matches.
+
+    Patterns are matched with both ``re.IGNORECASE`` and ``re.MULTILINE`` so
+    that ``^``-anchored patterns (used to restrict matches to line starts) work
+    correctly across multi-line release-note text.
+    """
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE | re.MULTILINE)
+        if match:
+            return _strip_commas(match.group(1))
+    return ""
+
+
+def parse_pre_text(text: str) -> dict[str, str]:
+    """
+    Extract the five required fields from a GenBank release-notes <pre> block.
+
+    Handles two main formats used across NCBI releases:
+
+    1. Modern tabular format – "Total" rows in division-stats and file-size tables.
+    2. Key-value / sentence format – "Number of loci: N", "Files: N", etc.
+
+    Returns a dict with keys:
+        release_date, num_files, total_uncompressed_size, num_entries, num_bases
+    All values are strings; empty string means the field was not found.
+    """
+    result: dict[str, str] = {
+        "release_date": "",
+        "num_files": "",
+        "total_uncompressed_size": "",
+        "num_entries": "",
+        "num_bases": "",
     }
-    match = re.search(
-        r"(January|February|March|April|May|June|July|August"
-        r"|September|October|November|December)"
-        r"\s+(\d{1,2}),?\s+(\d{4})",
-        text,
-        re.IGNORECASE,
+
+    result["release_date"] = _parse_date(text)
+
+    # Pass 1 – tabular format (most modern releases)
+    _parse_table_format(text, result)
+
+    # Pass 2 – key-value / sentence fallbacks for any still-missing fields
+
+    if not result["num_files"]:
+        result["num_files"] = _parse_field(
+            text,
+            [
+                # "Number of (flat) files: N" or dotted variant
+                r"[Nn]umber\s+of\s+(?:flat\s+)?files\s*[.:\-\s]+\s*([\d,]+)",
+                # "Files: N" key-value
+                r"^\s*[Ff]iles?\s*[:\-]\s*([\d,]+)",
+                # "contains N (flat|sequence|...) files" in a sentence
+                r"contains\s+([\d,]+)\s+(?:\w+\s+)*files?",
+            ],
+        )
+
+    if not result["total_uncompressed_size"]:
+        result["total_uncompressed_size"] = _parse_field(
+            text,
+            [
+                # "Total uncompressed (file) size: N bytes"
+                r"[Tt]otal\s+uncompressed\s+(?:file\s+)?size\s*[.:\-\s]+\s*([\d,]+)",
+                # "Total uncompressed: N" / "Total Uncompressed Size: N"
+                r"[Tt]otal\s+[Uu]ncompressed\s+(?:[Ss]ize\s*)?[.:\-\s]+\s*([\d,]+)",
+                # "Uncompressed (bytes): N"  or  "Uncompressed: N"
+                r"[Uu]ncompressed\s*(?:\(bytes?\))?\s*[:\-]\s*([\d,]+)",
+                # "Total Size (bytes): N"
+                r"[Tt]otal\s+[Ss]ize\s*(?:\(bytes?\))?\s*[:\-]\s*([\d,]+)",
+            ],
+        )
+
+    if not result["num_entries"]:
+        result["num_entries"] = _parse_field(
+            text,
+            [
+                # "Number of loci ......  N"  or  "Number of entries: N"
+                r"[Nn]umber\s+of\s+(?:sequence\s+)?(?:loci|entries|records|sequences)\s*[.:\-\s]+\s*([\d,]+)",
+                # "Loci: N" / "Entries: N"
+                r"^\s*(?:[Ll]oci|[Ee]ntries|[Rr]ecords|[Ss]equences)\s*[:\-]\s*([\d,]+)",
+                # Dotted form without leading "Number of"
+                r"(?:[Ll]oci|[Ee]ntries|[Rr]ecords|[Ss]equences)\s*\.{2,}\s*([\d,]+)",
+            ],
+        )
+
+    if not result["num_bases"]:
+        result["num_bases"] = _parse_field(
+            text,
+            [
+                # "Number of bases ......  N"
+                r"[Nn]umber\s+of\s+bases\s*[.:\-\s]+\s*([\d,]+)",
+                # "Bases: N"
+                r"^\s*[Bb]ases?\s*[:\-]\s*([\d,]+)",
+                # Dotted form
+                r"[Bb]ases?\s*\.{2,}\s*([\d,]+)",
+            ],
+        )
+
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Filesystem helpers
+# ---------------------------------------------------------------------------
+
+
+def _slug_from_url(url: str) -> str:
+    """Derive a safe filename stem from a URL."""
+    parts = [p for p in url.rstrip("/").split("/") if p]
+    slug = (
+        "_".join(parts[-2:]) if len(parts) >= 2 else (parts[-1] if parts else "unknown")
     )
-    if match:
-        month = months.get(match.group(1).lower())
-        if month:
-            try:
-                return datetime(
-                    int(match.group(3)), month, int(match.group(2))
-                ).strftime("%Y-%m-%d")
-            except ValueError:
-                pass
-    return None
+    return re.sub(r"[^\w\-.]", "_", slug)
 
 
-def parse_num_files(text: str) -> str | None:
-    """Return the total number of flat files as a plain integer string."""
-    for pattern in (
-        r"(?:total\s+)?(?:number\s+of\s+)?(?:flat\s+)?files[:\s]+([0-9,]+)",
-        r"([0-9,]+)\s+files",
-    ):
-        match = re.search(pattern, text, re.IGNORECASE)
-        if match:
-            return _strip_commas(match.group(1))
-    return None
+# ---------------------------------------------------------------------------
+# Row factories
+# ---------------------------------------------------------------------------
 
-
-def parse_total_uncompressed_size(text: str) -> str | None:
-    """Return the total uncompressed size in bytes as a plain integer string."""
-    for pattern in (
-        r"total\s+\(uncompressed\)[:\s]+([0-9,]+)",
-        r"uncompressed[:\s]+([0-9,]+)",
-        r"([0-9,]+)\s+bytes",
-    ):
-        match = re.search(pattern, text, re.IGNORECASE)
-        if match:
-            return _strip_commas(match.group(1))
-    return None
-
-
-def parse_num_entries(text: str) -> str | None:
-    """Return the total number of database entries as a plain integer string."""
-    for pattern in (
-        r"(?:total\s+)?(?:number\s+of\s+)?entries[:\s]+([0-9,]+)",
-        r"total\s+sequences[:\s]+([0-9,]+)",
-    ):
-        match = re.search(pattern, text, re.IGNORECASE)
-        if match:
-            return _strip_commas(match.group(1))
-    return None
-
-
-def parse_num_bases(text: str) -> str | None:
-    """Return the total number of bases as a plain integer string."""
-    for pattern in (
-        r"(?:total\s+)?(?:number\s+of\s+)?bases[:\s]+([0-9,]+)",
-        r"(?:total\s+)?base\s+pairs[:\s]+([0-9,]+)",
-    ):
-        match = re.search(pattern, text, re.IGNORECASE)
-        if match:
-            return _strip_commas(match.group(1))
-    return None
-
-
-def parse_release_note(text: str) -> dict:
-    """Return a dict of parsed fields from a release-note text block."""
-    return {
-        "release_number": parse_release_number(text),
-        "release_date": parse_release_date(text),
-        "num_files": parse_num_files(text),
-        "total_uncompressed_size": parse_total_uncompressed_size(text),
-        "num_entries": parse_num_entries(text),
-        "num_bases": parse_num_bases(text),
-    }
-
-
-CSV_FIELDS = [
-    "url",
-    "release_number",
+_DATA_FIELDS = (
     "release_date",
     "num_files",
     "total_uncompressed_size",
     "num_entries",
     "num_bases",
-    "error",
-]
+)
+
+CSV_FIELDNAMES = ["url", *_DATA_FIELDS, "error"]
 
 
-def process_url(url: str, output_dir: Path) -> dict:
-    """Fetch, archive raw text, and parse one release-note URL.
-
-    Returns a record dict suitable for writing to the CSV output.  Any
-    network or parse errors are captured in the ``error`` field so that
-    the rest of the batch can continue.
-    """
-    record: dict = {field: "" for field in CSV_FIELDS}
-    record["url"] = url
-    try:
-        html = fetch_url(url)
-        pre_text = extract_pre_block(html)
-        # Fall back to the full page when no <pre> block is present (e.g.
-        # plain-text URLs served without an HTML wrapper).
-        if pre_text is None:
-            pre_text = html
-        save_raw_text(pre_text, url, output_dir)
-        parsed = parse_release_note(pre_text)
-        record.update({k: (v or "") for k, v in parsed.items()})
-    except urllib.error.URLError as exc:
-        record["error"] = f"URLError: {exc.reason}"
-    except Exception as exc:  # noqa: BLE001
-        record["error"] = f"{type(exc).__name__}: {exc}"
-    return record
+def _make_row(
+    url: str, parsed: dict[str, str] | None = None, error: str = ""
+) -> dict[str, str]:
+    """Build a CSV row dict, merging parsed data with the error field."""
+    data = parsed or {k: "" for k in _DATA_FIELDS}
+    return {"url": url, **{k: data.get(k, "") for k in _DATA_FIELDS}, "error": error}
 
 
-def main(argv: list[str] | None = None) -> int:
+# ---------------------------------------------------------------------------
+# Main entry point
+# ---------------------------------------------------------------------------
+
+
+def main() -> None:
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    parser.add_argument("urls_file", help="Text file with one URL per line")
-    parser.add_argument(
-        "--output-dir",
-        default="raw_releases",
-        help="Directory to save raw <pre> text (default: raw_releases)",
+        description=(
+            "Fetch GenBank release-note pages, archive the raw <pre> block, "
+            "and write structured data to a CSV file.  If a raw file for a URL "
+            "already exists in --raw-dir, it is reused and the page is not "
+            "re-fetched."
+        )
     )
     parser.add_argument(
-        "--csv",
-        default="genbank_releases.csv",
-        help="Output CSV file (default: genbank_releases.csv)",
+        "urls_file",
+        help="Path to a text file containing one GenBank release-note URL per line.",
     )
-    args = parser.parse_args(argv)
+    parser.add_argument(
+        "--raw-dir",
+        default="raw",
+        metavar="DIR",
+        help="Directory where raw <pre> text files are saved/read (default: raw).",
+    )
+    parser.add_argument(
+        "--output",
+        default="results.csv",
+        metavar="FILE",
+        help="Output CSV file path (default: results.csv).",
+    )
+    args = parser.parse_args()
 
-    urls_file = Path(args.urls_file)
-    if not urls_file.is_file():
-        print(f"Error: URLs file not found: {urls_file}", file=sys.stderr)
-        return 1
+    urls_path = Path(args.urls_file)
+    if not urls_path.exists():
+        print(f"ERROR: URL file not found: {urls_path}", file=sys.stderr)
+        sys.exit(1)
 
     urls = [
-        line.strip()
-        for line in urls_file.read_text(encoding="utf-8").splitlines()
-        if line.strip() and not line.strip().startswith("#")
+        stripped
+        for line in urls_path.read_text(encoding="utf-8").splitlines()
+        if (stripped := line.strip()) and not stripped.startswith("#")
     ]
+
     if not urls:
-        print("No URLs found in input file.", file=sys.stderr)
-        return 1
+        print("ERROR: No URLs found in the input file.", file=sys.stderr)
+        sys.exit(1)
 
-    output_dir = Path(args.output_dir)
-    records: list[dict] = []
+    raw_dir = Path(args.raw_dir)
+    output_path = Path(args.output)
+    rows: list[dict[str, str]] = []
+
     for url in urls:
-        print(f"Processing: {url}", file=sys.stderr)
-        record = process_url(url, output_dir)
-        records.append(record)
-        if record["error"]:
-            print(f"  WARNING: {record['error']}", file=sys.stderr)
+        raw_path = raw_dir / f"{_slug_from_url(url)}.txt"
 
-    csv_path = Path(args.csv)
-    with csv_path.open("w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=CSV_FIELDS)
+        # ---- Obtain the raw <pre> text (cache-first) ----------------------
+        if raw_path.exists():
+            print(f"Using cached: {raw_path}  ({url})")
+            pre_text = raw_path.read_text(encoding="utf-8")
+        else:
+            print(f"Fetching: {url}")
+            html = fetch_page(url)
+            if html is None:
+                rows.append(_make_row(url, error="fetch_failed"))
+                continue
+
+            pre_text = extract_pre_block(html)
+            if pre_text is None:
+                print(f"  WARNING: No <pre> block found at {url!r}", file=sys.stderr)
+                rows.append(_make_row(url, error="no_pre_block"))
+                continue
+
+            save_raw_text(pre_text, raw_path)
+            print(f"  Archived raw text → {raw_path}")
+
+        # ---- Parse structured fields --------------------------------------
+        parsed = parse_pre_text(pre_text)
+        missing = [k for k in _DATA_FIELDS if not parsed.get(k)]
+        error_str = f"missing: {','.join(missing)}" if missing else ""
+        if missing:
+            print(f"  WARNING: Could not parse: {', '.join(missing)}", file=sys.stderr)
+
+        rows.append(_make_row(url, parsed=parsed, error=error_str))
+
+    # ---- Write CSV output -------------------------------------------------
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=CSV_FIELDNAMES)
         writer.writeheader()
-        writer.writerows(records)
+        writer.writerows(rows)
 
-    print(f"Wrote {len(records)} records to {csv_path}", file=sys.stderr)
-    return 0
+    print(f"\nDone. {len(rows)} record(s) written to {output_path}")
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

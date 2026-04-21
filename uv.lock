@@ -116,7 +116,7 @@ wheels = [
 [[package]]
 name = "data-retrevial-script"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },
     { name = "requests" },
@@ -124,8 +124,8 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beautifulsoup4", specifier = ">=4.12" },
-    { name = "requests", specifier = ">=2.32" },
+    { name = "beautifulsoup4", specifier = ">=4.12.3" },
+    { name = "requests", specifier = ">=2.32.3" },
 ]
 
 [[package]]
