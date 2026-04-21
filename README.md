@@ -57,6 +57,7 @@ fetch pages that have not been downloaded yet.
 | Column | Description |
 |---|---|
 | `url` | The source URL. |
+| `release_number` | GenBank release number string as it appears in the release notes (e.g. `261.0`). Falls back to the number in the URL path when not found in the text. |
 | `release_date` | Release date in ISO 8601 format (`YYYY-MM-DD`). |
 | `num_files` | Number of sequence files in the release. |
 | `total_uncompressed_size` | Total uncompressed size (bytes). |

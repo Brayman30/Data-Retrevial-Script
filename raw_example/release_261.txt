@@ -1,0 +1,2228 @@
+GBREL.TXT          Genetic Sequence Data Bank
+                         June 15 2024
+
+               NCBI-GenBank Flat File Release 261.0
+
+                    Distribution Release Notes
+
+  251094334 sequences,  3387240663231 bases, for traditional GenBank records
+ 4263077655 sequences, 28650117876455 bases, for set-based (WGS/TSA/TLS) records
+
+  This document describes the format and content of the flat files that
+comprise releases of the GenBank nucleotide sequence database. If you
+have any questions or comments about GenBank or this document, please
+contact NCBI via email at info@ncbi.nlm.nih.gov or:
+
+   GenBank
+   National Center for Biotechnology Information
+   National Library of Medicine, 38A, 8N805
+   8600 Rockville Pike
+   Bethesda, MD  20894
+   USA
+
+ GenBank releases do not include sequence records that originate from
+third-parties (TPA) or from NCBI's Reference Sequence (RefSeq) project.
+Rather, GenBank is the archival/primary resource which those other
+efforts draw upon. For information about TPA and RefSeq, please visit:
+
+	http://www.ncbi.nih.gov/Genbank/TPA.html
+	http://www.ncbi.nlm.nih.gov/RefSeq
+
+==========================================================================
+TABLE OF CONTENTS
+==========================================================================
+
+1. INTRODUCTION
+
+1.1 Release 261.0
+1.2 Cutoff Date
+1.3 Important Changes in Release 261.0
+1.4 Upcoming Changes
+1.5 Request for Direct Submission of Sequence Data
+1.6 Organization of This Document
+
+2. ORGANIZATION OF DATA FILES
+
+2.1 Overview
+2.2 Files
+     2.2.1 File Descriptions
+     2.2.5 File Sizes
+     2.2.6 Per-Division Statistics 
+     2.2.7 Selected Per-Organism Statistics 
+     2.2.8 Growth of GenBank
+
+3. FILE FORMATS
+
+3.1 File Header Information
+3.4 Sequence Entry Files
+     3.4.1 File Organization
+     3.4.2  Entry Organization
+     3.4.3 Sample Sequence Data File
+     3.4.4 LOCUS Format
+     3.4.5 DEFINITION Format
+          3.4.5.1 DEFINITION Format for NLM Entries
+     3.4.6 ACCESSION Format
+     3.4.7 VERSION Format
+     3.4.8 KEYWORDS Format
+     3.4.9 SEGMENT Format
+     3.4.10 SOURCE Format
+     3.4.11 REFERENCE Format
+     3.4.12 FEATURES Format
+          3.4.12.1 Feature Key Names
+          3.4.12.2 Feature Location
+          3.4.12.3  Feature Qualifiers
+          3.4.12.4 Cross-Reference Information
+          3.4.12.5 Feature Table Examples
+     3.4.13 ORIGIN Format
+     3.4.14 SEQUENCE Format
+     3.4.15 CONTIG Format
+
+4. ALTERNATE RELEASES
+
+5. KNOWN PROBLEMS OF THE GENBANK DATABASE
+
+5.1 Incorrect Gene Symbols in Entries
+
+6. GENBANK ADMINISTRATION 
+
+6.1 Registered Trademark Notice
+6.2 Citing GenBank
+6.3 GenBank Distribution Formats and Media
+6.4 Other Methods of Accessing GenBank Data
+6.5 Request for Corrections and Comments
+6.6 Credits and Acknowledgments
+6.7 Disclaimer
+
+==========================================================================
+
+1. INTRODUCTION
+
+1.1 Release 261.0
+
+  The National Center for Biotechnology Information (NCBI) at the National
+Library of Medicine (NLM), National Institutes of Health (NIH) is responsible
+for producing and distributing the GenBank Sequence Database.  NCBI handles
+all GenBank direct submissions and authors are advised to use the address
+below.  Submitters are encouraged to use Submission Portal or BankIt for
+sending sequence data.
+
+*****************************************************************************
+
+The address for direct submissions to GenBank is:
+
+       GenBank Submissions
+       National Center for Biotechnology Information
+       Bldg 38A, Rm. 8N-803
+       8600 Rockville Pike
+       Bethesda, MD 20894
+
+       Email:  gb-sub@ncbi.nlm.nih.gov
+
+Updates and changes to existing GenBank records:
+
+       https://www.ncbi.nlm.nih.gov/genbank/update/
+       Email: update@ncbi.nlm.nih.gov
+
+URLs for GenBank's web-based submission tools:
+
+	Submission Portal    https://submit.ncbi.nlm.nih.gov/
+	BankIt               https://www.ncbi.nlm.nih.gov/WebSub/
+
+See Section 1.5 for additional details about submitting data to GenBank.
+
+*****************************************************************************
+
+  GenBank Release 261.0 is a release of sequence data by NCBI in the GenBank
+Flatfile format. GenBank is a component of a tri-partite collaboration of
+sequence databases in the U.S., Europe, and Japan, known as the International
+Nucleotide Sequence Database Collaboration (INSDC). The collaborating databases
+are the European Nucleotide Archive (ENA) at Hinxton Hall, UK, and
+the DNA Database of Japan (DDBJ) in Mishima. Japan. Patent sequences are
+incorporated through arrangements with the U.S. Patent and Trademark Office,
+and via the collaborating international databases from other international
+patent offices. The database is converted to various output formats, including
+the GenBank Flatfile and Abstract Syntax Notation 1 (ASN.1) versions. The ASN.1
+and Flatfile forms of the data are available at NCBI's anonymous FTP server :
+
+	ftp://ftp.ncbi.nih.gov/ncbi-asn1
+	ftp://ftp.ncbi.nih.gov/genbank
+
+  GenBank releases do not contain sequence records that originate from
+unfinished Whole Genome Shotgun (WGS) genome sequencing projects,
+Transcriptome Shotgun Assembly (TSA) RNA sequencing projects, or from
+Targeted Locus Study (TLS) sequencing projects. The sequence data from
+those efforts are made available separately, on a per-project basis:
+
+        ftp://ftp.ncbi.nih.gov/genbank/wgs
+        ftp://ftp.ncbi.nih.gov/ncbi-asn1/wgs
+	
+        ftp://ftp.ncbi.nih.gov/genbank/tsa
+        ftp://ftp.ncbi.nih.gov/ncbi-asn1/tsa
+	
+        ftp://ftp.ncbi.nih.gov/genbank/tls
+        ftp://ftp.ncbi.nih.gov/ncbi-asn1/tls
+
+See the README files in those areas for more information.
+
+  Mirrors of NCBI's GenBank FTP site are sometimes available from alternate
+sites. For example:
+
+	ftp://lucid.bic.nus.edu.sg/biomirrors/genbank/
+
+  Some users who experience slow FTP transfers of large files might realize
+an improvement in transfer rates from a mirror site when the volume of traffic
+at the NCBI is high.
+
+1.2 Cutoff Date
+
+  This full release, 261.0, incorporates data processed by the INSDC databases
+as of Saturday December 16 at 11:22PM EST. For more recent data, users are
+advised to:
+
+  o Download GenBank Incremental Update (GIU) files by anonymous FTP from NCBI:
+
+	ftp://ftp.ncbi.nih.gov/ncbi-asn1/daily-nc (ASN.1 format)
+	ftp://ftp.ncbi.nih.gov/genbank/daily-nc   (flatfile format)
+
+  o Use the interactive Network-Entrez or Web-Entrez applications to query
+    the 'Entrez: Nucleotide' database (see Section 6.4 of this document).
+
+1.3 Important Changes in Release 261.0
+
+1.3.1 Organizational changes
+
+  The number of sequence data files for GenBank 261.0 has been reduced by
+about 50 percent, from 10,388 (Release 260.0) to 5,024 (Release 261.0).
+
+  Sequencing efforts such as the Darwin Tree of Life project have yielded
+a growing number of single, traditional (non-WGS) chromosomal sequence
+records that are gigabase in scale. Given our 500 megabyte target for the
+size of uncompressed sequence files, this has resulted in a growing
+number of files containing just one or two sequence records (which
+naturally can exceed the 500MB target, given the many gigabase-scale records
+that now exist). For GenBank 260.0 there were 2,753 such files.
+
+  To address this problem, the target size was tripled to 1.5 gigabytes,
+resulting in approximately half the total number of sequence files, of
+which just 1,363 contain only one or two records.
+
+  Given this reduction, the usual per-division description of sequence file
+increases is not possible. We will resume providing that information as of
+GenBank Release 262.0 .
+
+1.3.2 The /country qualifier has transitioned to /geo_loc_name
+
+  As of this June 2024 GenBank Release 262.0, the name of the "country"
+qualifier has been changed to "geo_loc_name", to reflect the fact that
+it is used for geographic features (for example: islands, oceans and seas)
+in addition to country names. For further information, please see:
+
+https://ncbiinsights.ncbi.nlm.nih.gov/2023/12/14/update-genbank-qualifier/
+
+1.4 Upcoming Changes
+
+1.4.1 New allowed values for the /geo_loc_name and /collection_date qualifiers
+
+  The INSDC will begin to mandate inclusion of /geo_loc_name (formerly /country)
+and /collection_date for sequence submissions, in alignment with its goal of
+increasing the number of sequences for which the origin of a sample can be
+precisely located in time and space. This requirement is expected to take
+effect by the end of December 2024, and further details can be found at:
+
+https://www.insdc.org/news/insdc-spatiotemporal-metadata-minimum-standards-update-03-03-2023/
+
+  Because there are valid circumstances in which location and/or the
+collection date for a sequenced sample cannot be provided, the domain
+of allowed values for these two source-feature qualifiers will be expanded
+to include a variety of "null terms". They are:
+
+    missing
+    not applicable
+    not collected
+    not provided
+    restricted access
+    missing: control sample
+    missing: sample group
+    missing: synthetic construct
+    missing: lab stock
+    missing: third party data
+    missing: data agreement established pre-2023
+    missing: endangered species
+    missing: human-identifiable
+
+  The timeframe for introducing these new values is still uncertain, but the
+earliest possible date for their appearance was June 15 2023.
+
+1.5 Request for Direct Submission of Sequence Data
+
+  A successful GenBank requires that sequence data enter the database as
+soon as possible after publication, that the annotations be as complete as
+possible, and that the sequence and annotation data be accurate. All
+three of these requirements are best met if authors of sequence data
+submit their data directly to GenBank utilizing the tools summarized below.
+
+  GenBank must rely on direct author submission of data to ensure that
+it achieves its goals of completeness, accuracy, and timeliness. General
+information for submitting to Genbank is available online:
+
+	https://www.ncbi.nlm.nih.gov/genbank/submit/
+
+  To assist researchers in entering their own sequence data, GenBank
+provides Web-based submission tools: Submission Portal and Bankit.
+
+	Submission Portal    https://submit.ncbi.nlm.nih.gov/
+	BankIt               https://www.ncbi.nlm.nih.gov/WebSub/
+
+  Submission Portal provides an efficient submission pathway for high
+frequency submission types (e.g., 16S rRNA, rRNA-ITS, metazoan COX1,
+SARS-CoV-2, etc.).
+
+  BankIt is an easy-to-use program that enables authors to enter one
+or more sequences, annotate, and submit to GenBank. BankIt provides
+a simple forms-based approach for submitting your sequence and the
+relevant associated metadata to GenBank.
+
+  Genbank also provides submission preparation tools which require uploading
+via the Submission Portal or email to gb-sub@ncbi.nlm.nih.gov when relevant:
+
+	table2asn: https://www.ncbi.nlm.nih.gov/genbank/table2asn/
+
+  table2asn is a command-line program that automates the creation of sequence
+records for submission to GenBank. It is used primarily for submission of
+complete genomes and large batches of sequences and is available by FTP
+for use on MAC, PC and Unix platforms:
+
+	https://ftp.ncbi.nlm.nih.gov/asn1-converters/by_program/table2asn/
+
+  Genome Workbench offers a rich set of integrated tools for studying
+and analyzing genetic data. The Submission Wizard allows you to prepare
+submissions of single eukaryotic and prokaryotic genomes. You can also
+use Genome Workbench to edit and visualize an ASN.1 file created by table2asn.
+
+	Genome Workbench: https://www.ncbi.nlm.nih.gov/tools/gbench/
+
+  Through the international collaboration of DNA sequence databases,
+GenBank submissions are forwarded daily for inclusion in the European
+Nucleotide Archive (ENA) and the DNA Databank of Japan (DDBJ).
+
+  AUTHORIN.  Authorin sequence submissions are no longer accepted by
+GenBank, and the Authorin application is no longer distributed by NCBI.
+
+  SEQUIN.  As of January 2021, Sequin sequence submissions are no longer
+accepted by GenBank, and the Sequin application is no longer distributed
+by NCBI.  See: https://ncbiinsights.ncbi.nlm.nih.gov/tag/sequin/
+
+  If you have questions about GenBank submissions or any of the data
+submission tools, contact NCBI at: info@ncbi.nlm.nih.gov .
+
+1.6 Organization of This Document
+
+   The second section describes the contents of GenBank releases. The third
+section illustrates the formats of the flat files.  The fourth section
+describes other versions of the data, the fifth section identifies known prob-
+lems, and the sixth contains administrative details.
+
+2. ORGANIZATION OF DATA FILES
+
+2.1 Overview
+
+  GenBank releases consist of a set of ASCII text files, most of which
+contain sequence data. A few supplemental files are also supplied,
+containing lists of new, modified, and deleted sequence records.
+The line-lengths of these files is variable.
+
+2.2 Files
+
+  This GenBank flat file release consists of 5028 files. The lists
+that follow describe each of the files included in the distribution.
+Their sizes and base pair content are also summarized.
+
+2.2.1 File Descriptions
+
+Files included in this release are:
+
+1. gbbct1.seq - Bacterial sequence entries, part 1.
+(truncated to shorten file length)
+5028. gbvrt99.seq - Other vertebrate sequence entries, part 99.
+
+  Sequences in the CON division data files (gbcon*.seq) are constructed from
+other "traditional" sequence records, and are represented in a unique way.
+CON records do not contain any sequence data; instead, they utilize a CONTIG
+linetype with a join() statement which describes how component sequences
+can be assembled to form the larger constructed sequence. Records in the CON
+division do not contribute to GenBank Release statistics (Sections 2.2.6,
+2.2.7, and 2.2.8), or to the overall release statistics presented in the header
+of these release notes. The GenBank README describes the CON division of GenBank
+in more detail:
+
+        ftp://ftp.ncbi.nih.gov/genbank/README.genbank
+
+2.2.5 File Sizes
+
+  Uncompressed, the Release 261.0 flatfiles require roughly 5249 GB,
+including the sequence files and the *.txt files.
+
+  The following table contains the approximate sizes of the
+individual files in this release.  Since minor changes to some of the files
+might have occurred after these release notes were written, these sizes should
+not be used to determine file integrity; they are provided as an aid to
+planning only.
+
+File Size      File Name
+
+1300177991     gbbct1.seq
+(truncated to shorten file)
+ 241197913     gbvrt99.seq
+
+2.2.6 Per-Division Statistics
+
+  The following table provides a per-division breakdown of the number of
+sequence entries and the total number of bases of DNA/RNA in each non-CON
+and non-WGS sequence data file.
+
+CON division records, which are constructed from other sequence records,
+are not represented here because their inclusion would essentially be a
+form of double-counting.
+
+Sequences from Whole Genome Shotgun (WGS) sequencing projects are not
+represented here because all WGS project data are made available on
+a per-project basis:
+
+   ftp://ftp.ncbi.nih.gov/ncbi-asn1/wgs
+   ftp://ftp.ncbi.nih.gov/genbank/wgs
+
+rather than being incorporated within the GenBank release distribution.
+
+Division     Entries    Bases
+
+BCT1         139664     536999694
+(truncated to shorten file)
+VRT99        18         187861254
+
+2.2.7 Selected Per-Organism Statistics 
+
+  The following table provides the number of entries and bases of DNA/RNA for
+the twenty most sequenced organisms in Release 261.0, excluding chloroplast and
+mitochondrial sequences, metagenomic sequences, Whole Genome Shotgun sequences,
+'constructed' CON-division sequences, synthetic construct sequences, uncultured
+sequences, Transcriptome Shotgun Assembly sequences, and Targeted Locus Study
+sequences:
+
+Entries        Bases   Species
+
+8849611 263280740770   Severe acute respiratory syndrome coronavirus 2
+1943950 255975379562   Triticum aestivum
+111961  205666444201   Hordeum vulgare
+1347585 126087260773   Hordeum vulgare subsp. vulgare
+520     106587373982   Hordeum bulbosum
+164      93011095388   Viscum album
+29876    92980158773   Hordeum vulgare subsp. spontaneum
+10049258 43637339408   Mus musculus
+27810338 36825525087   Homo sapiens
+175081   24021381303   Escherichia coli
+29811    21128005736   Avena sativa
+2640663  20263158983   Arabidopsis thaliana
+33665    16333452591   Klebsiella pneumoniae
+2243780  16210185539   Bos taurus
+1732296  13758456861   Danio rerio
+312035   13104402122   Arachis hypogaea
+195      11554711366   Sambucus nigra
+28766    11286173222   Vicia faba
+14812    10342955730   Triticum monococcum
+23130     9981582961   Triticum turgidum subsp. durum
+
+2.2.8 Growth of GenBank
+
+  The following table lists the number of bases and the number of sequence
+records in each release of GenBank, beginning with Release 3 in 1982.
+CON-division records are not represented in these statistics: because they
+are constructed from the non-CON records in the database, their inclusion
+here would be a form of double-counting. Also note that this table is limited
+to 'traditional', non-set-based (WGS/TSA/TLS) GenBank records.
+
+  From 1982 to the present, the number of bases in GenBank has doubled
+approximately every 18 months.
+
+Release      Date     Base Pairs   Entries
+
+    3    Dec 1982         680338       606
+   14    Nov 1983        2274029      2427
+   20    May 1984        3002088      3665
+   24    Sep 1984        3323270      4135
+   25    Oct 1984        3368765      4175
+   26    Nov 1984        3689752      4393
+   32    May 1985        4211931      4954
+   36    Sep 1985        5204420      5700
+   40    Feb 1986        5925429      6642
+   42    May 1986        6765476      7416
+   44    Aug 1986        8442357      8823
+   46    Nov 1986        9615371      9978
+   48    Feb 1987       10961380     10913
+   50    May 1987       13048473     12534
+   52    Aug 1987       14855145     14020
+   53    Sep 1987       15514776     14584
+   54    Dec 1987       16752872     15465
+   55    Mar 1988       19156002     17047
+   56    Jun 1988       20795279     18226
+   57    Sep 1988       22019698     19044
+   57.1  Oct 1988       23800000     20579
+   58    Dec 1988       24690876     21248
+   59    Mar 1989       26382491     22479
+   60    Jun 1989       31808784     26317
+   61    Sep 1989       34762585     28791
+   62    Dec 1989       37183950     31229
+   63    Mar 1990       40127752     33377
+   64    Jun 1990       42495893     35100
+   65    Sep 1990       49179285     39533
+   66    Dec 1990       51306092     41057
+   67    Mar 1991       55169276     43903
+   68    Jun 1991       65868799     51418
+   69    Sep 1991       71947426     55627
+   70    Dec 1991       77337678     58952
+   71    Mar 1992       83894652     65100
+   72    Jun 1992       92160761     71280
+   73    Sep 1992      101008486     78608
+   74    Dec 1992      120242234     97084
+   75    Feb 1993      126212259    106684
+   76    Apr 1993      129968355    111911
+   77    Jun 1993      138904393    120134
+   78    Aug 1993      147215633    131328
+   79    Oct 1993      157152442    143492
+   80    Dec 1993      163802597    150744
+   81    Feb 1994      173261500    162946
+   82    Apr 1994      180589455    169896
+   83    Jun 1994      191393939    182753
+   84    Aug 1994      201815802    196703
+   85    Oct 1994      217102462    215273
+   86    Dec 1994      230485928    237775
+   87    Feb 1995      248499214    269478
+   88    Apr 1995      286094556    352414
+   89    Jun 1995      318624568    425211
+   90    Aug 1995      353713490    492483
+   91    Oct 1995      384939485    555694
+   92    Dec 1995      425860958    620765
+   93    Feb 1996      463758833    685693
+   94    Apr 1996      499127741    744295
+   95    Jun 1996      551750920    835487
+   96    Aug 1996      602072354    920588
+   97    Oct 1996      651972984    1021211
+   98    Dec 1996      730552938    1114581
+   99    Feb 1997      786898138    1192505
+   100   Apr 1997      842864309    1274747
+   101   Jun 1997      966993087    1491069
+   102   Aug 1997     1053474516    1610848
+   103   Oct 1997     1160300687    1765847
+   104   Dec 1997     1258290513    1891953
+   105   Feb 1998     1372368913    2042325
+   106   Apr 1998     1502542306    2209232
+   107   Jun 1998     1622041465    2355928
+   108   Aug 1998     1797137713    2532359
+   109   Oct 1998     2008761784    2837897
+   110   Dec 1998     2162067871    3043729
+   111   Apr 1999     2569578208    3525418
+   112   Jun 1999     2974791993    4028171
+   113   Aug 1999     3400237391    4610118
+   114   Oct 1999     3841163011    4864570
+   115   Dec 1999     4653932745    5354511
+   116   Feb 2000     5805414935    5691170
+   117   Apr 2000     7376080723    6215002
+   118   Jun 2000     8604221980    7077491
+   119   Aug 2000     9545724824    8214339
+   120   Oct 2000    10335692655    9102634
+   121   Dec 2000    11101066288    10106023
+   122   Feb 2001    11720120326    10896781
+   123   Apr 2001    12418544023    11545572
+   124   Jun 2001    12973707065    12243766
+   125   Aug 2001    13543364296    12813516
+   126   Oct 2001    14396883064    13602262
+   127   Dec 2001    15849921438    14976310
+   128   Feb 2002    17089143893    15465325
+   129   Apr 2002    19072679701    16769983
+   130   Jun 2002    20648748345    17471130
+   131   Aug 2002    22616937182    18197119
+   132   Oct 2002    26525934656    19808101
+   133   Dec 2002    28507990166    22318883
+   134   Feb 2003    29358082791    23035823
+   135   Apr 2003    31099264455    24027936
+   136   Jun 2003    32528249295    25592865
+   137   Aug 2003    33865022251    27213748
+   138   Oct 2003    35599621471    29819397
+   139   Dec 2003    36553368485    30968418
+   140   Feb 2004    37893844733    32549400
+   141   Apr 2004    38989342565    33676218
+   142   Jun 2004    40325321348    35532003
+   143   Aug 2004    41808045653    37343937
+   144   Oct 2004    43194602655    38941263
+   145   Dec 2004    44575745176    40604319
+   146   Feb 2005    46849831226    42734478
+   147   Apr 2005    48235738567    44202133
+   148   Jun 2005    49398852122    45236251
+   149   Aug 2005    51674486881    46947388
+   150   Oct 2005    53655236500    49152445
+   151   Dec 2005    56037734462    52016762
+   152   Feb 2006    59750386305    54584635
+   153   Apr 2006    61582143971    56620500
+   154   Jun 2006    63412609711    58890345
+   155   Aug 2006    65369091950    61132599
+   156   Oct 2006    66925938907    62765195
+   157   Dec 2006    69019290705    64893747
+   158   Feb 2007    71292211453    67218344
+   159   Apr 2007    75742041056    71802595
+   160   Jun 2007    77248690945    73078143
+   161   Aug 2007    79525559650    76146236
+   162   Oct 2007    81563399765    77632813
+   163   Dec 2007    83874179730    80388382
+   164   Feb 2008    85759586764    82853685
+   165   Apr 2008    89172350468    85500730
+   166   Jun 2008    92008611867    88554578
+   167   Aug 2008    95033791652    92748599
+   168   Oct 2008    97381682336    96400790
+   169   Dec 2008    99116431942    98868465
+   170   Feb 2009   101467270308   101815678
+   171   Apr 2009   102980268709   103335421
+   172   Jun 2009   105277306080   106073709
+   173   Aug 2009   106533156756   108431692
+   174   Oct 2009   108560236506   110946879
+   175   Dec 2009   110118557163   112910950
+   176   Feb 2010   112326229652   116461672
+   177   Apr 2010   114348888771   119112251
+   178   Jun 2010   115624497715   120604423
+   179   Aug 2010   117476523128   122941883
+   180   Oct 2010   118551641086   125764384
+   181   Dec 2010   122082812719   129902276
+   182   Feb 2011   124277818310   132015054
+   183   Apr 2011   126551501141   135440924
+   184   Jun 2011   129178292958   140482268
+   185   Aug 2011   130671233801   142284608
+   186   Oct 2011   132067413372   144458648
+   187   Dec 2011   135117731375   146413798
+   188   Feb 2012   137384889783   149819246
+   189   Apr 2012   139266481398   151824421
+   190   Jun 2012   141343240755   154130210
+   191   Aug 2012   143081765233   156424033
+   192   Oct 2012   145430961262   157889737
+   193   Dec 2012   148390863904   161140325
+   194   Feb 2013   150141354858   162886727
+   195   Apr 2013   151178979155   164136731
+   196   Jun 2013   152599230112   165740164
+   197   Aug 2013   154192921011   167295840
+   198   Oct 2013   155176494699   168335396
+   199   Dec 2013   156230531562   169331407
+   200   Feb 2014   157943793171   171123749
+   201   Apr 2014   159813411760   171744486
+   202   Jun 2014   161822845643   173353076
+   203   Aug 2014   165722980375   174108750
+   204   Oct 2014   181563676918   178322253
+   205   Dec 2014   184938063614   179295769
+   206   Feb 2015   187893826750   181336445
+   207   Apr 2015   189739230107   182188746
+   208   Jun 2015   193921042946   185019352
+   209   Aug 2015   199823644287   187066846
+   210   Oct 2015   202237081559   188372017
+   211   Dec 2015   203939111071   189232925
+   212   Feb 2016   207018196067   190250235
+   213   Apr 2016   211423912047   193739511
+   214   Jun 2016   213200907819   194463572
+   215   Aug 2016   217971437647   196120831
+   216   Oct 2016   220731315250   197390691
+   217   Dec 2016   224973060433   198565475
+   218   Feb 2017   228719437638   199341377
+   219   Apr 2017   231824951552   200877884
+   220   Jun 2017   234997362623   201663568
+   221   Aug 2017   240343378258   203180606
+   222   Oct 2017   244914705468   203953682
+   223   Dec 2017   249722163594   206293625
+   224   Feb 2018   253630708098   207040555
+   225   Apr 2018   260189141631   208452303
+   226   Jun 2018   263957884539   209775348
+   227   Aug 2018   260806936411   208831050 (Section 1.3.1 of GB 227.0 release notes explains decrease)
+   228   Oct 2018   279668290132   209656636
+   229   Dec 2018   285688542186   211281415
+   230   Feb 2019   303709510632   212260377
+   231   Apr 2019   321680566570   212775414
+   232   Jun 2019   329835282370   213383758
+   233   Aug 2019   366733917629   213865349
+   234   Oct 2019   386197018538   216763706
+   235   Dec 2019   388417258009   215333020 (Section 1.3.2 of GB 235.0 release notes explains decrease)
+   236   Feb 2020   399376854872   216214215
+   237   Apr 2020   415770027949   216531829
+   238   Jun 2020   427823258901   217122233
+   239   Aug 2020   654057069549   218642238
+   240   Oct 2020   698688094046   219055207
+   241   Dec 2020   723003822007   221467827
+   242   Feb 2021   776291211106   226241476
+   243   Apr 2021   832400799511   227123201
+   244   Jun 2021   866009790959   227888889
+   245   Aug 2021   940513260726   231982592
+   246   Oct 2021  1014763752113   233642893
+   247   Dec 2021  1053275115030   234557297
+   248   Feb 2022  1173984081721   236338284
+   249   Apr 2022  1266154890918   237520318
+   250   Jun 2022  1395628631187   239017893
+   251   Aug 2022  1492800704497   239915786
+   252   Oct 2022  1562963366851   240539282
+   253   Dec 2022  1635594138493   241015745
+   254   Feb 2023  1731302248418   241830635
+   255   Apr 2023  1826746318813   242554936
+   256   Jun 2023  1966479976146   243560863
+   257   Aug 2023  2112058517945   246119175
+   258   Oct 2023  2433391164875   247777761
+   259   Dec 2023  2570711588044   249060436
+   n/a   Feb 2024  n/a             n/a         No GenBank Release delivered in Feb 2024
+   260   Apr 2024  3213818003787   250803006
+   261   Jun 2024  3387240663231   251094334
+   
+  The following table lists the number of bases and the number of sequence
+records for WGS sequences processed at GenBank, beginning with Release 129.0
+in April of 2002. Please note that WGS data are not distributed in conjunction
+with GenBank releases. Rather, per-project data files are continuously 
+available in the WGS areas of the NCBI FTP site:
+
+	  ftp://ftp.ncbi.nih.gov/ncbi-asn1/wgs
+	  ftp://ftp.ncbi.nih.gov/genbank/wgs
+
+Release      Date     Base Pairs     Entries
+
+  129    Apr 2002      692266338      172768
+  130    Jun 2002     3267608441      397502
+  131    Aug 2002     3848375582      427771
+  132    Oct 2002     3892435593      434224
+  133    Dec 2002     6702372564      597042
+  134    Feb 2003     6705740844      597345
+  135    Apr 2003     6897080355      596818
+  136    Jun 2003     6992663962      607155
+  137    Aug 2003     7144761762      593801
+  138    Oct 2003     8662242833     1683437
+  139    Dec 2003    14523454868     2547094
+  140    Feb 2004    22804145885     3188754
+  141    Apr 2004    24758556215     4112532
+  142    Jun 2004    25592758366     4353890
+  143    Aug 2004    28128611847     4427773
+  144    Oct 2004    30871590379     5285276
+  145    Dec 2004    35009256228     5410415
+  146    Feb 2005    38076300084     6111782
+  147    Apr 2005    39523208346     6685746
+  148    Jun 2005    46767232565     8711924
+  149    Aug 2005    53346605784    10276161
+  150    Oct 2005    56162807647    11169448
+  151    Dec 2005    59638900034    12088491
+  152    Feb 2006    63183065091    12465546
+  153    Apr 2006    67488612571    13573144
+  154    Jun 2006    78858635822    17733973
+  155    Aug 2006    80369977826    17960667
+  156    Oct 2006    81127502509    18500772
+  157    Dec 2006    81611376856    18540918
+  158    Feb 2007    86043478524    19421576
+  159    Apr 2007    93022691867    23446831
+  160    Jun 2007    97102606459    23718400
+  161    Aug 2007   101964323738    25384475
+  162    Oct 2007   102003045298    25354041
+  163    Dec 2007   106505691578    26177471
+  164    Feb 2008   108635736141    27439206
+  165    Apr 2008   110500961400    26931049
+  166    Jun 2008   113639291344    39163548
+  167    Aug 2008   118593509342    40214247
+  168    Oct 2008   136085973423    46108952
+  169    Dec 2008   141374971004    48394838
+  170    Feb 2009   143797800446    49036947
+  171    Apr 2009   144522542010    48948309
+  172    Jun 2009   145959997864    49063546
+  173    Aug 2009   148165117763    48443067
+  174    Oct 2009   149348923035    48119301
+  175    Dec 2009   158317168385    54076973
+  176    Feb 2010   163991858015    57134273
+  177    Apr 2010   165536009514    58361599
+  178    Jun 2010   167725292032    58592700
+  179    Aug 2010   169253846128    58994334
+  180    Oct 2010   175339059129    59397637
+  181    Dec 2010   177385297156    59608311
+  182    Feb 2011   190034462797    62349795
+  183    Apr 2011   191401393188    62715288
+  184    Jun 2011   200487078184    63735078
+  185    Aug 2011   208315831132    64997137
+  186    Oct 2011   218666368056    68330215
+  187    Dec 2011   239868309609    73729553
+  188    Feb 2012   261370512675    78656704
+  189    Apr 2012   272693351548    80905298
+  190    Jun 2012   287577367116    82076779
+  191    Aug 2012   308196411905    84020064
+  192    Oct 2012   333881846451    86480509
+  193    Dec 2012   356002922838    92767765
+  194    Feb 2013   390900990416   103101291
+  195    Apr 2013   418026593606   110509314
+  196    Jun 2013   453829752320   112488036
+  197    Aug 2013   500420412665   124812020
+  198    Oct 2013   535842167741   130203205
+  199    Dec 2013   556764321498   133818570
+  200    Feb 2014   591378698544   139725795
+  201    Apr 2014   621015432437   143446790
+  202    Jun 2014   719581958743   175779064
+  203    Aug 2014   774052098731   189080419
+  204    Oct 2014   805549167708   196049974
+  205    Dec 2014   848977922022   200301550
+  206    Feb 2015   873281414087   205465046
+  207    Apr 2015   969102906813   243779199
+  208    Jun 2015  1038937210221   258702138
+  209    Aug 2015  1163275601001   302955543
+  210    Oct 2015  1222635267498   309198943
+  211    Dec 2015  1297865618365   317122157
+  212    Feb 2016  1399865495608   333012760
+  213    Apr 2016  1452207704949   338922537
+  214    Jun 2016  1556175944648   350278081
+  215    Aug 2016  1637224970324   359796497
+  216    Oct 2016  1676238489250   363213315
+  217    Dec 2016  1817189565845   395301176
+  218    Feb 2017  1892966308635   409490397
+  219    Apr 2017  2035032639807   451840147
+  220    Jun 2017  2164683993369   487891767
+  221    Aug 2017  2242294609510   499965722
+  222    Oct 2017  2318156361999   508825331
+  223    Dec 2017  2466098053327   551063065
+  224    Feb 2018  2608532210351   564286852
+  225    Apr 2018  2784740996536   621379029
+  226    Jun 2018  2944617324086   639804105
+  227    Aug 2018  3204855013281   665309765
+  228    Oct 2018  3444172142207   722438528
+  229    Dec 2018  3656719423096   773773190
+  230    Feb 2019  4164513961679   945019312
+  231    Apr 2019  4421986382065   993732214
+  232    Jun 2019  4847677297950  1022913321
+  233    Aug 2019  5585922333160  1075272215
+  234    Oct 2019  5985250251028  1097629174
+  235    Dec 2019  6277551200690  1127023870
+  236    Feb 2020  6968991265752  1206720688
+  237    Apr 2020  7788133221338  1267547429
+  238    Jun 2020  8114046262158  1302852615
+  239    Aug 2020  8841649410652  1408122887
+  240    Oct 2020  9215815569509  1432874252
+  241    Dec 2020 11830842428018  1517995689
+  242    Feb 2021 12270717209612  1563938043
+  243    Apr 2021 12732048052023  1590670459
+  244    Jun 2021 13442974346437  1632796606
+  245    Aug 2021 13888187863722  1653427055
+  246    Oct 2021 14599101574547  1721064101
+  247    Dec 2021 14922033922302  1734664952
+  248    Feb 2022 15428122140820  1750505007
+  249    Apr 2022 16071520702170  1781374217
+  250    Jun 2022 16710373006600  1796349114
+  251    Aug 2022 17511809676629  2024099677
+  252    Oct 2022 18231960808828  2167900306
+  253    Dec 2022 19086596616569  2241439349
+  254    Feb 2023 20116642176263  2337838461
+  255    Apr 2023 20926504760221  2440470464
+  256    Jun 2023 21791125594114  2611654455
+  257    Aug 2023 22294446104543  2631493489
+  258    Oct 2023 23600199887231  2775205599
+  259    Dec 2023 24651580464335  2863228552
+  n/a    Feb 2024 n/a             n/a         No GenBank Release delivered in Feb 2024
+  260    Apr 2024 27225116587937  3333621823
+  261    Jun 2024 27900199328333  3380877515
+
+  The following table provides the number of bases and the number of sequence
+records for bulk-oriented Transcriptome Shotgun Assembly (TSA) RNA sequencing
+projects processed at GenBank, beginning with Release 190.0 in June of 2012.
+
+  TSA sequences processed prior to Release 190.0 in June of 2012 were
+handled individually, and are present in the gbtsa*.seq files of GenBank
+releases (hence, they contribute to the statistics in the first table
+of this section).
+
+  Subsequent to that date NCBI began processing TSA submissions using an
+approach that is analogous to the bulk-oriented approach used for WGS,
+assigning a TSA project code (for example: GAAA) to each TSA submission.
+
+  Note 1 : Although we provide statistics for bulk-oriented TSA submissions
+as of the dates for GenBank releases, TSA files are not distributed or updated
+in conjunction with those releases. Rather, per-project TSA data files are
+continuously available in the TSA areas of the NCBI FTP site:
+
+	  ftp://ftp.ncbi.nih.gov/ncbi-asn1/tsa
+	  ftp://ftp.ncbi.nih.gov/genbank/tsa
+
+  Note 2 : NCBI's partner institutions within the INSDC might still choose
+to treat TSA submissions as separate records, without a common TSA project
+code. In which case, they will not be included in this table.
+
+  Note 3 : Statistics for bulk-oriented TSA projects originating at the
+European Nucleotide Archive of the INSDC were not included in this table
+until the October 2016 GenBank Release.
+
+  Note 4 : This table is incomplete. Statistics for Releases 190.0 to
+200.0 will be back-filled if time allows.
+
+Release      Date     Base Pairs     Entries
+
+  201    Apr 2014    23632325832    29734989
+  202    Jun 2014    31707343431    38011942
+  203    Aug 2014    33676182560    40556905
+  204    Oct 2014    36279458440    43567759
+  205    Dec 2014    46056420903    62635617
+  206    Feb 2015    49765340047    66706014
+  207    Apr 2015    55796332435    71989588
+  208    Jun 2015    60697472570    76974601
+  209    Aug 2015    69360654413    87827013
+  210    Oct 2015    70917172944    81790031
+  211    Dec 2015    77583339176    87488539
+  212    Feb 2016    81932555094    92132318
+  213    Apr 2016    87811163676    98147566
+  214    Jun 2016    94413958919   104677061
+  215    Aug 2016   103399742586   113179607
+  216    Oct 2016   113209225762   124199597
+  217    Dec 2016   125328824508   142094337
+  218    Feb 2017   133517212104   151431485
+  219    Apr 2017   149038907599   165068542
+  220    Jun 2017   158112969073   176812130
+  221    Aug 2017   167045663417   186777106
+  222    Oct 2017   172909268535   192754804
+  223    Dec 2017   181394660188   201559502
+  224    Feb 2018   193940551226   214324264
+  225    Apr 2018   205232396043   227364990
+  226    Jun 2018   216556686631   238788334
+  227    Aug 2018   225520004678   249295386
+  228    Oct 2018   235875573598   259927414
+  229    Dec 2018   248592892188   274845473
+  230    Feb 2019   263936885705   294772430
+  231    Apr 2019   277118019688   311247136
+  232    Jun 2019   285390240861   319927264
+  233    Aug 2019   294727165179   331347807
+  234    Oct 2019   305371891408   342811151
+  235    Dec 2019   325433016129   367193844
+  236    Feb 2020   340994289065   386644871
+  237    Apr 2020   349692751528   396392280
+  238    Jun 2020   359947709062   409725050
+  239    Aug 2020   366968951160   417524567
+  240    Oct 2020   382996662270   435968379
+  241    Dec 2020   392206975386   446397378
+  242    Feb 2021   407605409948   463151000
+  243    Apr 2021   425076483459   481154920
+  244    Jun 2021   436594941165   494641358
+  245    Aug 2021   440578422611   498305045
+  246    Oct 2021   449891016597   508319391
+  247    Dec 2021   455870853358   514158576
+  248    Feb 2022   465013156502   524464601
+  249    Apr 2022   474421076448   534770586
+  250    Jun 2022   485056129761   546991572
+  251    Aug 2022   497501380386   560196830
+  252    Oct 2022   511476787957   574020080
+  253    Dec 2022   611850391049   649918843
+  254    Feb 2023   630615054587   672261981
+  255    Apr 2023   636291358227   678332682
+  256    Jun 2023   643127590034   683922756
+  257    Aug 2023   646176166908   686271945
+  258    Oct 2023   659924904311   701336089
+  259    Dec 2023   668807109326   715803123
+  n/a    Feb 2024   n/a            n/a         No GenBank Release delivered in Feb 2024
+  260    Apr 2024   689648317082   741066498
+  261    Jun 2024   695405769319   746753803
+
+  The following table provides the number of bases and the number of sequence
+records for Targeted Locus Study (TLS) sequencing projects of special marker
+genes processed at GenBank, beginning with Release 217.0 in December of 2016.
+
+  Note 1 : Although we provide statistics for bulk-oriented TLS submissions
+as of the dates for GenBank releases, TLS files are not distributed or updated
+in conjunction with those releases. Rather, per-project TLS data files are
+continuously available in the TLS areas of the NCBI FTP site:
+
+	  ftp://ftp.ncbi.nih.gov/ncbi-asn1/tls
+	  ftp://ftp.ncbi.nih.gov/genbank/tls
+
+  Note 2 : NCBI's partner institutions within the INSDC might still choose
+to treat TLS submissions as separate records, without a common TLS project
+code. In which case, they will not be included in this table.
+
+  Note 3 : This table is incomplete. Statistics for releases prior to 217.0
+will be back-filled if time allows.
+
+Release      Date     Base Pairs     Entries
+
+  217    Dec 2016      584697919     1268690
+  218    Feb 2017      636923295     1438349
+  219    Apr 2017      636923295     1438349  (unchanged)
+  220    Jun 2017      824191338     1628475
+  221    Aug 2017      824191338     1628475  (unchanged)
+  222    Oct 2017     2993818315     9479460
+  223    Dec 2017     4458042616    12695198
+  224    Feb 2018     4531966831    12819978
+  225    Apr 2018     5612769448    14782654
+  226    Jun 2018     5896511468    15393041
+  227    Aug 2018     6077824493    15822538
+  228    Oct 2018     8435112913    20752288
+  229    Dec 2018     8511829281    20924588
+  230    Feb 2019     9146836085    23259929
+  231    Apr 2019     9623321565    24240761
+  232    Jun 2019    10182427815    25530139
+  233    Aug 2019    10531800829    26363945
+  234    Oct 2019    10848455369    27460978
+  235    Dec 2019    11280596614    28227180
+  236    Feb 2020    13669678196    34037371
+  237    Apr 2020    24615270313    65521132
+  238    Jun 2020    27500635128    75063181
+  239    Aug 2020    27825059498    75682157
+  240    Oct 2020    28814798868    78177358
+  241    Dec 2020    33036509446    88039152
+  242    Feb 2021    33634122995    90130561
+  243    Apr 2021    37998534461   102395753
+  244    Jun 2021    38198113354   102662929
+  245    Aug 2021    39930167315   106995218
+  246    Oct 2021    40168874815   107569935
+  247    Dec 2021    41143480750   109379021
+  248    Feb 2022    41321107981   109809966
+  249    Apr 2022    41324192343   109820387
+  250    Jun 2022    41999358847   111142107
+  251    Aug 2022    43852280645   115103527
+  252    Oct 2022    43860512749   115123306
+  253    Dec 2022    44009657455   115552377
+  254    Feb 2023    46465508548   121067644
+  255    Apr 2023    46567924833   121186672
+  256    Jun 2023    47302831210   122798571
+  257    Aug 2023    48289699026   124421006
+  258    Oct 2023    50868407906   130654568
+  259    Dec 2023    51568356978   132355132
+  n/a    Feb 2024    n/a           n/a         No GenBank Release delivered in Feb 2024
+  260    Apr 2024    53492243256   135115766
+  261    Jun 2024    54512778803   135446337
+
+3. FILE FORMATS
+
+  The flat file examples included in this section, while not always from the
+current release, are usually fairly recent.  Any differences compared to the
+actual records are the result of updates to the entries involved.
+
+3.1 File Header Information
+
+  With the exception of the lists of new, changed, and
+deleted accession numbers, each of the files of a GenBank release begins
+with the same header, except for the first line, which contains the file
+name, and the sixth line, which contains the title of the file. The first
+line of the file contains the file name in character positions 1 to 9 and
+the full database name (Genetic Sequence Data Bank, aka 'GenBank') starting
+in column 22. The brief names of the files in this release are listed in
+Section 2.2.
+
+  The second line contains the date of the current release in the form
+`day month year', beginning in position 27. The fourth line contains
+the current GenBank release number. The release number appears in
+positions 48 to 52 and consists of three numbers separated by a decimal
+point. The number to the left of the decimal is the major release
+number. The digit to the right of the decimal indicates the version of
+the major release; it is zero for the first version. The sixth line
+contains a title for the file. The eighth line lists the number of
+entries (loci), number of bases (or base pairs), and number of reports
+of sequences (equal to number of entries in this case). These numbers are
+right-justified at fixed positions. The number of entries appears in
+positions 1 to 8, the number of bases in positions 16 to 26, and the
+number of reports in positions 40 to 47. The third, fifth, seventh, and
+ninth lines are blank.
+
+1       10        20        30        40        50        60        70       79
+---------+---------+---------+---------+---------+---------+---------+---------
+GBBCT1.SEQ          Genetic Sequence Data Bank
+                          June 15 2024
+
+                NCBI-GenBank Flat File Release 261.0
+
+                     Bacterial Sequences (Part 1)
+
+  102016 loci,   184379131 bases, from   102016 reported sequences
+---------+---------+---------+---------+---------+---------+---------+---------
+1       10        20        30        40        50        60        70       79
+
+Example 1. Sample File Header
+
+3.4 Sequence Entry Files
+
+  GenBank releases contain one or more sequence entry data files, one
+for each "division" of GenBank.
+
+3.4.1 File Organization
+
+  Each of these files has the same format and consists of two parts:
+header information (described in section 3.1) and sequence entries for
+that division (described in the following sections).
+
+3.4.2  Entry Organization
+
+  In the second portion of a sequence entry file (containing the
+sequence entries for that division), each record (line) consists of
+two parts. The first part is found in positions 1 to 10 and may
+contain:
+
+1. A keyword, beginning in column 1 of the record (e.g., REFERENCE is
+a keyword).
+
+2. A subkeyword beginning in column 3, with columns 1 and 2 blank
+(e.g., AUTHORS is a subkeyword of REFERENCE). Or a subkeyword beginning
+in column 4, with columns 1, 2, and 3 blank (e.g., PUBMED is a
+subkeyword of REFERENCE).
+
+3. Blank characters, indicating that this record is a continuation of
+the information under the keyword or subkeyword above it.
+
+4. A code, beginning in column 6, indicating the nature of an entry
+(feature key) in the FEATURES table; these codes are described in
+Section 3.4.12.1 below.
+
+5. A number, ending in column 9 of the record. This number occurs in
+the portion of the entry describing the actual nucleotide sequence and
+designates the numbering of sequence positions.
+
+6. Two slashes (//) in positions 1 and 2, marking the end of an entry.
+
+  The second part of each sequence entry record contains the information
+appropriate to its keyword, in positions 13 to 80 for keywords and
+positions 11 to 80 for the sequence.
+
+  The following is a brief description of each entry field. Detailed
+information about each field may be found in Sections 3.4.4 to 3.4.15.
+
+LOCUS	- A short mnemonic name for the entry, chosen to suggest the
+sequence's definition. Mandatory keyword/exactly one record.
+
+DEFINITION	- A concise description of the sequence. Mandatory
+keyword/one or more records.
+
+ACCESSION	- The primary accession number is a unique, unchanging
+identifier assigned to each GenBank sequence record. (Please use this
+identifier when citing information from GenBank.) Mandatory keyword/one
+or more records.
+
+VERSION		- A compound identifier consisting of the primary
+accession number and a numeric version number associated with the
+current version of the sequence data in the record. This is optionally
+followed by an integer identifier (a "GI") assigned to the sequence
+by NCBI. Mandatory keyword/exactly one record.
+
+  NOTE : Presentation of GI sequence identifiers in the GenBank
+  flatfile format was discontinued as of March 2017.
+
+NID		- An alternative method of presenting the NCBI GI
+identifier (described above).
+
+  NOTE: The NID linetype is obsolete and was removed from the
+  GenBank flatfile format in December 1999.
+
+PROJECT		- The identifier of a project (such as a Genome
+Sequencing Project) to which a GenBank sequence record belongs.
+Optional keyword/one or more records.
+
+  NOTE: The PROJECT linetype is obsolete and was removed from the
+  GenBank flatfile format after Release 171.0 in April 2009.
+
+DBLINK		- Provides cross-references to resources that
+support the existence a sequence record, such as the Project Database
+and the NCBI Trace Assembly Archive. Optional keyword/one or
+more records.
+
+KEYWORDS	- Short phrases describing gene products and other
+information about an entry. Mandatory keyword in all annotated
+entries/one or more records.
+
+SEGMENT	- Information on the order in which this entry appears in a
+series of discontinuous sequences from the same molecule. Optional
+keyword (only in segmented entries)/exactly one record.
+
+  NOTE: The SEGMENT linetype is obsolete given the conversion of
+  of all segmented sets to gapped CON-division records, completed
+  as of GenBank Release 221.0 in August 2017. No new segmented set
+  submissions will be accepted by GenBank.
+
+SOURCE	- Common name of the organism or the name most frequently used
+in the literature. Mandatory keyword in all annotated entries/one or
+more records/includes one subkeyword.
+
+   ORGANISM	- Formal scientific name of the organism (first line)
+and taxonomic classification levels (second and subsequent lines).
+Mandatory subkeyword in all annotated entries/two or more records.
+
+   In the event that the organism name exceeds 68 characters (80 - 13 + 1)
+   in length, it will be line-wrapped and continue on a second line,
+   prior to the taxonomic classification. Unfortunately, very long 
+   organism names were not anticipated when the fixed-length GenBank
+   flatfile format was defined in the 1980s. The possibility of linewraps
+   makes the job of flatfile parsers more difficult : essentially, one
+   cannot be sure that the second line is truly a classification/lineage
+   unless it consists of multiple tokens, delimited by semi-colons.
+   The long-term solution to this problem is to introduce an additional
+   subkeyword, possibly 'LINEAGE'. But because changes like this can be
+   very disruptive for customers, implementation has not yet been scheduled.
+
+REFERENCE	- Citations for all articles containing data reported
+in this entry. Includes seven subkeywords and may repeat. Mandatory
+keyword/one or more records.
+
+   AUTHORS	- Lists the authors of the citation. Optional
+subkeyword/one or more records.
+
+   CONSRTM	- Lists the collective names of consortiums associated
+with the citation (eg, International Human Genome Sequencing Consortium),
+rather than individual author names. Optional subkeyword/one or more records.
+
+   TITLE	- Full title of citation. Optional subkeyword (present
+in all but unpublished citations)/one or more records.
+
+   JOURNAL	- Lists the journal name, volume, year, and page
+numbers of the citation. Mandatory subkeyword/one or more records.
+
+   MEDLINE	- Provides the Medline unique identifier for a
+citation. Optional subkeyword/one record.
+
+   NOTE: The MEDLINE linetype is obsolete and was removed
+   from the GenBank flatfile format in April 2005.
+
+    PUBMED 	- Provides the PubMed unique identifier for a
+citation. Optional subkeyword/one record.
+
+   REMARK	- Specifies the relevance of a citation to an
+entry. Optional subkeyword/one or more records.
+
+COMMENT	- Cross-references to other sequence entries, comparisons to
+other collections, notes of changes in LOCUS names, and other remarks.
+Optional keyword/one or more records/may include blank records.
+
+FEATURES	- Table containing information on portions of the
+sequence that code for proteins and RNA molecules and information on
+experimentally determined sites of biological significance. Optional
+keyword/one or more records.
+
+BASE COUNT	- Summary of the number of occurrences of each basepair
+code (a, c, t, g, and other) in the sequence. Optional keyword/exactly
+one record. 
+
+   NOTE: The BASE COUNT linetype is obsolete and was removed
+   from the GenBank flatfile format in October 2003.
+
+CONTIG	- This linetype provides information about how individual sequence
+records can be combined to form larger-scale biological objects, such as
+chromosomes or complete genomes. Rather than presenting actual sequence
+data, a special join() statement on the CONTIG line provides the accession
+numbers and basepair ranges of the underlying records which comprise the
+object.
+
+As of August 2005, the 2L chromosome arm of Drosophila melanogaster
+(accession number AE014134) provided a good example of CONTIG use.
+
+ORIGIN	- Specification of how the first base of the reported sequence
+is operationally located within the genome. Where possible, this
+includes its location within a larger genetic map. Mandatory
+keyword/exactly one record.
+
+	- The ORIGIN line is followed by sequence data (multiple records).
+
+// 	- Entry termination symbol. Mandatory at the end of an
+entry/exactly one record.
+
+3.4.3 Sample Sequence Data File
+
+  An example of a complete sequence entry file follows. (This example
+has only two entries.) Note that in this example, as throughout the
+data bank, numbers in square brackets indicate items in the REFERENCE
+list. For example, in ACARR58S, [1] refers to the paper by Mackay, et
+al.
+
+1       10        20        30        40        50        60        70       79
+---------+---------+---------+---------+---------+---------+---------+---------
+GBSMP.SEQ          Genetic Sequence Data Bank
+                         December 15 1992
+
+                 GenBank Flat File Release 74.0
+
+                     Structural RNA Sequences
+
+      2 loci,       236 bases, from     2 reported sequences
+
+LOCUS       AAURRA        118 bp ss-rRNA            RNA       16-JUN-1986
+DEFINITION  A.auricula-judae (mushroom) 5S ribosomal RNA.
+ACCESSION   K03160
+VERSION     K03160.1
+KEYWORDS    5S ribosomal RNA; ribosomal RNA.
+SOURCE      A.auricula-judae (mushroom) ribosomal RNA.
+  ORGANISM  Auricularia auricula-judae
+            Eukaryota; Fungi; Eumycota; Basidiomycotina; Phragmobasidiomycetes;
+            Heterobasidiomycetidae; Auriculariales; Auriculariaceae.
+REFERENCE   1  (bases 1 to 118)
+  AUTHORS   Huysmans,E., Dams,E., Vandenberghe,A. and De Wachter,R.
+  TITLE     The nucleotide sequences of the 5S rRNAs of four mushrooms and
+            their use in studying the phylogenetic position of basidiomycetes
+            among the eukaryotes
+  JOURNAL   Nucleic Acids Res. 11, 2871-2880 (1983)
+FEATURES             Location/Qualifiers
+     rRNA            1..118
+                     /note="5S ribosomal RNA"
+BASE COUNT       27 a     34 c     34 g     23 t
+ORIGIN      5' end of mature rRNA.
+        1 atccacggcc ataggactct gaaagcactg catcccgtcc gatctgcaaa gttaaccaga
+       61 gtaccgccca gttagtacca cggtggggga ccacgcggga atcctgggtg ctgtggtt
+//
+LOCUS       ABCRRAA       118 bp ss-rRNA            RNA       15-SEP-1990
+DEFINITION  Acetobacter sp. (strain MB 58) 5S ribosomal RNA, complete sequence.
+ACCESSION   M34766
+VERSION     M34766.1
+KEYWORDS    5S ribosomal RNA.
+SOURCE      Acetobacter sp. (strain MB 58) rRNA.
+  ORGANISM  Acetobacter sp.
+            Prokaryotae; Gracilicutes; Scotobacteria; Aerobic rods and cocci;
+            Azotobacteraceae.
+REFERENCE   1  (bases 1 to 118)
+  AUTHORS   Bulygina,E.S., Galchenko,V.F., Govorukhina,N.I., Netrusov,A.I.,
+            Nikitin,D.I., Trotsenko,Y.A. and Chumakov,K.M.
+  TITLE     Taxonomic studies of methylotrophic bacteria by 5S ribosomal RNA
+            sequencing
+  JOURNAL   J. Gen. Microbiol. 136, 441-446 (1990)
+FEATURES             Location/Qualifiers
+     rRNA            1..118
+                     /note="5S ribosomal RNA"
+BASE COUNT       27 a     40 c     32 g     17 t      2 others
+ORIGIN      
+        1 gatctggtgg ccatggcggg agcaaatcag ccgatcccat cccgaactcg gccgtcaaat
+       61 gccccagcgc ccatgatact ctgcctcaag gcacggaaaa gtcggtcgcc gccagayy
+//
+---------+---------+---------+---------+---------+---------+---------+---------
+1       10        20        30        40        50        60        70       79
+
+Example 9. Sample Sequence Data File
+
+
+3.4.4 LOCUS Format
+
+3.4.4.1 : Important notice about parsing the LOCUS line
+
+  Users who process the data elements of the LOCUS line should use a
+token-based parsing approach rather than parsing its content based on
+fixed column positions.
+
+  Historically, the LOCUS line has had a fixed length and its elements have
+been presented at specific column positions. A complete description of the
+data fields and their typical column positions is provided in Section 3.4.4.2 .
+But with the anticipated increases in the lengths of accession numbers, and
+the advent of sequences that are gigabases long, maintaining the column
+positions will not always be possible and the overall length of the LOCUS
+line could exceed 79 characters.
+
+  Consider this LOCUS line for a typical complete bacterial genome:
+
+LOCUS       CP032762             5868661 bp    DNA     circular BCT 15-OCT-2018
+------------+--------------+-+---------+---------+---------+---------+---------
+1          13             28 30       40        50        60        70       79
+
+  Now contrast this with a hypothetical gigabase-scale WGS sequence record that
+utilizes the 6 + 2 + 7/8/9 accession format:
+
+LOCUS       AZZZAA02123456789 9999999999 bp    DNA     linear   PRI 15-OCT-2018
+------------+--------------+-+---------+---------+---------+---------+---------
+1          13             28 30       40        50        60        70       79
+
+  Here, Locus-Name/Accession-Number must occupy the space at position 29 which
+normally separates the Locus from the Sequence Length. And if the sequence
+length had been 10 Gigabases or greater, the Locus-Name and Sequence Length
+would directly abut each other:
+
+LOCUS       AZZZAA0212345678910000000000 bp    DNA     linear   PRI 15-OCT-2018
+------------+--------------+-+---------+---------+---------+---------+---------
+1          13             28 30       40        50        60        70       79
+
+  In cases like this, a space would be introduced to ensure that the two fields
+are separated, all other values would be shifted to the right, and the length of
+the LOCUS line would increase:
+
+LOCUS       AZZZAA02123456789 10000000000 bp    DNA     linear   PRI 15-OCT-2018
+------------+--------------+-+---------+---------+---------+---------+---------
+1          13             28 30       40        50        60        70       79
+
+  Because the Locus-Name/Accession-Number is left-justified and the
+Sequence-Length is right-justified, *most* GenBank records will conform to the
+historical column positions that are described below. But since there will be
+exceptions, we recommend that users parse the LOCUS line based on
+whitespace-separated tokens.
+
+3.4.4.2 : Data elements of the LOCUS line
+
+  The data elements of the LOCUS line format and their typical/historical
+column positions are as follows:
+
+Positions  Contents
+---------  --------
+01-05      'LOCUS'
+06-12      spaces
+13-28      Locus Name (usually identical to the Accession Number)
+29-29      space
+30-40      Sequence Length, right-justified
+41-41      space
+42-43      'bp'
+44-44      space
+45-47      Strandedness : spaces (if not known), ss- (single-stranded),
+           ds- (double-stranded), or ms- (mixed-stranded)
+48-53      Molecule Type: NA, DNA, RNA, tRNA (transfer RNA), rRNA (ribosomal RNA), 
+           mRNA (messenger RNA), uRNA (small nuclear RNA), cRNA (viral cRNA)
+           Left justified.
+54-55      space
+56-63      Molecule Topology : 'linear' followed by two spaces,
+           or 'circular'
+64-64      space
+65-67      Division Code
+68-68      space
+69-79      Update Date, in the form dd-MMM-yyyy (e.g., 15-MAR-1991)
+
+  These column positions are typical/nominal, not guaranteed. See Section
+3.4.4.1 for important suggestions about parsing the LOCUS line.
+
+  The Locus Name element was originally designed to help group entries with
+similar sequences: the first three characters designated the organism; the
+fourth and fifth characters could be used to show other group designations,
+such as gene product; for segmented entries (now obsolete) the last character
+could be one of a series of sequential integers. Here are two examples of
+older GenBank records that have Locus Names :
+
+LOCUS       HUMPDNRC                 273 bp    DNA     linear   PRI 04-OCT-1993
+DEFINITION  Human D9S125 polymorphic dinucleotide repeat.
+ACCESSION   L10620
+
+LOCUS       HUMPDNRG                 169 bp    DNA     linear   PRI 04-OCT-1993
+DEFINITION  Human D9S114 polymorphic dinucleotide repeat.
+ACCESSION   L10624
+
+  But in the mid-1990s, maintaining unique Locus Names in addition to unique
+Accession Numbers became unsustainable and the assignment of new Locus Names
+ceased. The overwhelming majority of sequence records now have no Locus Name,
+and their Accession Number is displayed on the LOCUS line instead. For example:
+
+LOCUS       AF035771                1357 bp    mRNA    linear   PRI 30-JUN-1998
+DEFINITION  Homo sapiens Na+/H+ exchanger regulatory factor 2 (NHERF-2) mRNA,
+            complete cds.
+ACCESSION   AF035771
+	    
+  The Division Code element of the LOCUS format is a three-letter abbreviation
+whose value can be :
+
+PRI - primate sequences
+ROD - rodent sequences
+MAM - other mammalian sequences
+VRT - other vertebrate sequences
+INV - invertebrate sequences
+PLN - plant, fungal, and algal sequences
+BCT - bacterial sequences
+VRL - viral sequences
+PHG - bacteriophage sequences
+SYN - synthetic sequences
+UNA - unannotated sequences
+EST - EST sequences (Expressed Sequence Tags) 
+PAT - patent sequences
+STS - STS sequences (Sequence Tagged Sites) 
+GSS - GSS sequences (Genome Survey Sequences) 
+HTG - HTGS sequences (High Throughput Genomic sequences) 
+HTC - HTC sequences (High Throughput cDNA sequences) 
+ENV - Environmental sampling sequences
+CON - Constructed sequences
+TSA - Transcriptome Shotgun Assembly sequences
+
+  The Molecule Type for all non-coding RNA sequences is 'RNA'. Further
+information about the specific type of non-coding RNA can be obtained from
+the full-length ncRNA feature that will be present on such sequences.
+
+3.4.5 DEFINITION Format
+
+  The DEFINITION record gives a brief description of the sequence,
+proceeding from general to specific. It starts with the common name of
+the source organism, then gives the criteria by which this sequence is
+distinguished from the remainder of the source genome, such as the
+gene name and what it codes for, or the protein name and mRNA, or some
+description of the sequence's function (if the sequence is
+non-coding). If the sequence has a coding region, the description may
+be followed by a completeness qualifier, such as cds (complete coding
+sequence). There is no limit on the number of lines that may be part
+of the DEFINITION.  The last line must end with a period.
+
+3.4.5.1 DEFINITION Format for NLM Entries
+
+  The DEFINITION line for entries derived from journal-scanning at the NLM is
+an automatically generated descriptive summary that accompanies each DNA and
+protein sequence. It contains information derived from fields in a database 
+that summarize the most important attributes of the sequence.  The DEFINITION
+lines are designed to supplement the accession number and the sequence itself
+as a means of uniquely and completely specifying DNA and protein sequences. The
+following are examples of NLM DEFINITION lines:
+
+NADP-specific isocitrate dehydrogenase [swine, mRNA, 1 gene, 1585 nt]
+
+94 kda fiber cell beaded-filament structural protein [rats, lens, mRNA
+Partial, 1 gene, 1873 nt]
+
+inhibin alpha {promoter and exons} [mice, Genomic, 1 gene, 1102 nt, segment
+1 of 2]
+
+cefEF, cefG=acetyl coenzyme A:deacetylcephalosporin C o-acetyltransferase
+[Acremonium chrysogenum, Genomic, 2 genes, 2639 nt]
+
+myogenic factor 3, qmf3=helix-loop-helix protein [Japanese quails,
+embryo, Peptide Partial, 246 aa]
+
+
+  The first part of the definition line contains information describing
+the genes and proteins represented by the molecular sequences.  This can
+be gene locus names, protein names and descriptions that replace or augment
+actual names.  Gene and gene product are linked by "=".  Any special
+identifying terms are presented within brackets, such as: {promoter},
+{N-terminal}, {EC 2.13.2.4}, {alternatively spliced}, or {3' region}.
+
+  The second part of the definition line is delimited by square brackets, '[]',
+and provides details about the molecule type and length.  The biological
+source, i.e., genus and species or common name as cited by the author.
+Developmental stage, tissue type and strain are included if available.
+The molecule types include: Genomic, mRNA, Peptide. and Other Genomic
+Material. Genomic molecules are assumed to be partial sequence unless
+"Complete" is specified, whereas mRNA and peptide molecules are assumed
+to be complete unless "Partial" is noted.
+
+3.4.6 ACCESSION Format
+
+  This field contains a series of six-character and/or eight-character
+identifiers called 'accession numbers'. The six-character accession
+number format consists of a single uppercase letter, followed by 5 digits.
+The eight-character accession number format consists of two uppercase
+letters, followed by 6 digits. The 'primary', or first, of the accession
+numbers occupies positions 13 to 18 (6-character format) or positions
+13 to 20 (8-character format). Subsequent 'secondary' accession numbers
+(if present) are separated from the primary, and from each other, by a
+single space. In some cases, multiple lines of secondary accession
+numbers might be present, starting at position 13.
+
+  The primary accession number of a GenBank entry provides a stable identifier
+for the biological object that the entry represents. Accessions do not change
+when the underlying sequence data or associated features change.
+
+  Secondary accession numbers arise for a number of reasons. For example, a
+single accession number may initially be assigned to a sequence described in
+a publication. If it is later discovered that the sequence must be entered
+into the database as multiple entries, each entry would receive a new primary
+accession number, and the original accession number would appear as a secondary
+accession number on each of the new entries. In the event that a large number
+of continuous secondary accession numbers exist, a range can be employed:
+
+	SecAccession1-SecAccession2
+
+In such cases, the alphabetic prefix letters of the initial and terminal 
+accession numbers within the range *MUST* be identical. For example:
+
+	AE000111-AE000510O
+        ^^       ^^
+
+Additionally, the value of the numeric portion of the initial secondary
+within the range must be less than the value of the numeric portion of the
+terminal secondary.
+
+3.4.7.1 VERSION Format
+
+  This line contains a compound identifier consisting of the accession
+number plus the sequential version number of the associated sequence.
+
+LOCUS       AF181452     1294 bp    DNA             PLN       12-OCT-1999
+DEFINITION  Hordeum vulgare dehydrin (Dhn2) gene, complete cds.
+ACCESSION   AF181452
+VERSION     AF181452.1
+            ^^^^^^^^^^
+            Compound  
+            Accession.Version
+            Number
+
+  A compound Accession.Version consists of two parts: a stable, unchanging
+primary-accession number portion (see Section 3.4.6 for a description of
+accession numbers), and a sequentially increasing numeric version number.
+The accession and version numbers are separated by a period. The initial
+version number assigned to a new sequence is one.
+
+  An accession number allows one to retrieve the same biological object in the
+database, regardless of any changes that are made to the entry over time. But
+those changes can include changes to the sequence data itself, which is of
+fundamental importance to many database users. So a numeric version number is
+associated with the sequence data in every database entry. If an entry (for
+example, AF181452) undergoes two sequence changes, its compound accession
+number on the VERSION line would start as AF181452.1 . After the first sequence
+change this would become: AF181452.2 . And after the second change: AF181452.3 .
+
+  Numeric NCBI "GI" sequence identifiers also used to be included on the
+VERSION line, but that practice was discontinued in March of 2017.
+
+  GenBank Releases contain only the most recent versions of all sequences
+in the database. However, older versions can be obtained via
+Accession.Version-based queries with NCBI's web-Entrez and network-Entrez
+applications. A sequence 'revision history' resource is also available,
+within Entrez:Nucleotide. For example:
+
+   http://www.ncbi.nlm.nih.gov/nuccore/AF123456.1?report=girevhist
+
+NOTE: All the version numbers for the compound Accession.Version identifier
+system were initialized to a value of one (".1") in February 1999, when the
+system was first introduced.
+
+3.4.7.2 DBLINK Format
+
+  This line contains cross-references to other underlying resources that
+support the existence of a GenBank sequence record. For example:
+
+LOCUS       ANHA01000001             503 bp    DNA     linear   BCT 23-NOV-2012
+DEFINITION  Campylobacter coli BIGS0016 3011, whole genome shotgun sequence.
+ACCESSION   ANHA01000001 ANHA01000000
+VERSION     ANHA01000001.1
+DBLINK      BioProject: PRJNA177352
+            BioSample: SAMN01795900
+
+  A DBLINK cross-reference consists of two data fields delimited by a colon.
+The first field provides the cross-reference type ("BioProject"), while the
+second contains the actual cross-reference identifier ("PRJNA177352").
+
+  The second field can consist of multiple comma-separated identifiers,
+if a sequence record has multiple DBLINK cross-references of a given type.
+For example:
+
+DBLINK      BioProject:PRJNA174162,PRJNA999998,PRJNA999999
+
+  And, as in this example, there can be multiple distinct types of DBLINK
+cross-references. Each new type will start on a new line, with the first
+colon-delimited token being the name of the cross-referenced resource.
+
+  As of April 2013, the supported DBLINK cross-reference types are "Project"
+(predecessor of BioProject), "BioProject", "BioSample", "Trace Assembly Archive",
+"Sequence Read Archive", and "Assembly".
+
+  DBLINK cross-references of type 'BioProject' are BioProject Accession
+Number identifiers within the Entrez:BioProject resource at the NCBI:
+
+	http://www.ncbi.nlm.nih.gov/bioproject
+
+  At the above URL, a search for PRJNA177352 would provide information about the
+Campylobacter coli sequencing project (underway or completed), the center(s)
+performing the sequencing and annotation, information about the organism, etc.
+For a more detailed overview of NCBI's BioProject resource:
+
+	http://www.ncbi.nlm.nih.gov/books/NBK54016/
+
+  DBLINK cross-references of type 'Assembly' are AssemblyID identifiers within
+the Assembly resource at NCBI:
+
+	http://www.ncbi.nlm.nih.gov/assembly
+
+  At the above URL, a search for GCA_000321225.1 would provide assembly details
+and statistics for the Odobenus rosmarus divergens (Pacific walrus) genome assembly
+submitted by the center(s) that performed the assembly. For a more detailed overview
+of NCBI's Assembly resource:
+
+   http://www.ncbi.nlm.nih.gov/assembly/help/
+
+3.4.8 KEYWORDS Format
+
+  The KEYWORDS field does not appear in unannotated entries, but is
+required in all annotated entries. Keywords are separated by
+semicolons; a "keyword" may be a single word or a phrase consisting of
+several words. Each line in the keywords field ends in a semicolon;
+the last line ends with a period. If no keywords are included in the
+entry, the KEYWORDS record contains only a period.
+
+3.4.9 SEGMENT Format
+
+  NOTE: The SEGMENT linetype is obsolete given the conversion of
+  of all segmented sets to gapped CON-division records, completed
+  as of GenBank Release 221.0 in August 2017. No new segmented set
+  submissions will be accepted by GenBank.
+
+  The SEGMENT keyword is used when two (or more) entries of known
+relative orientation are separated by a short (<10 kb) stretch of DNA.
+It is limited to one line of the form `n of m', where `n' is the
+segment number of the current entry and `m' is the total number of
+segments.
+
+3.4.10 SOURCE Format
+
+  The SOURCE field consists of two parts. The first part is found after
+the SOURCE keyword and contains free-format information including an
+abbreviated form of the organism name followed by a molecule type;
+multiple lines are allowed, but the last line must end with a period.
+The second part consists of information found after the ORGANISM
+subkeyword. The formal scientific name for the source organism (genus
+and species, where appropriate) is found on the same line as ORGANISM.
+The records following the ORGANISM line list the taxonomic
+classification levels, separated by semicolons and ending with a
+period.
+
+3.4.11 REFERENCE Format
+
+  The REFERENCE field consists of five parts: the keyword REFERENCE, and
+the subkeywords AUTHORS, TITLE (optional), JOURNAL, MEDLINE (optional),
+PUBMED (optional), and REMARK (optional).
+
+  The REFERENCE line contains the number of the particular reference and
+(in parentheses) the range of bases in the sequence entry reported in
+this citation. Additional prose notes may also be found within the
+parentheses. The numbering of the references does not reflect
+publication dates or priorities.
+
+  The AUTHORS line lists the authors in the order in which they appear
+in the cited article. Last names are separated from initials by a
+comma (no space); there is no comma before the final `and'. The list
+of authors ends with a period.  The TITLE line is an optional field,
+although it appears in the majority of entries. It does not appear in
+unpublished sequence data entries that have been deposited directly
+into the GenBank data bank, the European Nucleotide Archive,
+or the DNA Data Bank of Japan. The TITLE field does not end with a
+period.
+
+  The JOURNAL line gives the appropriate literature citation for the
+sequence in the entry. The word `Unpublished' will appear after the
+JOURNAL subkeyword if the data did not appear in the scientific
+literature, but was directly deposited into the data bank. For
+published sequences the JOURNAL line gives the Thesis, Journal, or
+Book citation, including the year of publication, the specific
+citation, or In press.
+
+  For Book citations, the JOURNAL line is specially-formatted, and
+includes:
+
+	editor name(s)
+	book title
+	page number(s)
+	publisher-name/publisher-location
+	year
+
+For example:
+
+LOCUS       AY277550                1440 bp    DNA     linear   BCT 17-JUN-2003
+DEFINITION  Stenotrophomonas maltophilia strain CSC13-6 16S ribosomal RNA gene,
+            partial sequence.
+ACCESSION   AY277550
+....
+REFERENCE   1  (bases 1 to 1440)
+  AUTHORS   Gonzalez,J.M., Laiz,L. and Saiz-Jimenez,C.
+  TITLE     Classifying bacterial isolates from hypogean environments:
+            Application of a novel fluorimetric method dor the estimation of
+            G+C mol% content in microorganisms by thermal denaturation
+            temperature
+  JOURNAL   (in) Saiz-Jimenez,C. (Ed.);
+            MOLECULAR BIOLOGY AND CULTURAL HERITAGE: 47-54;
+            A.A. Balkema, The Netherlands (2003)
+
+  The presence of "(in)" signals the fact that the reference is for a book
+rather than a journal article. A semi-colon signals the end of the editor
+names. The next semi-colon signals the end of the page numbers, and the
+colon that immediately *precedes* the page numbers signals the end of the
+book title. The publisher name and location are a free-form text string.
+Finally, the year appears at the very end of the JOURNAL line, enclosed in
+parentheses.
+
+  The MEDLINE line provides the National Library of Medicine's Medline
+unique identifier for a citation (if known). Medline UIs are 8 digit
+numbers.
+
+  The PUBMED line provides the PubMed unique identifier for a citation
+(if known). PUBMED ids are numeric, and are record identifiers for article
+abstracts in the PubMed database :
+
+       http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed
+
+  Citations in PubMed that do not fall within Medline's scope will have only
+a PUBMED identifier. Similarly, citations that *are* in Medline's scope but
+which have not yet been assigned Medline UIs will have only a PUBMED identifier.
+If a citation is present in both the PubMed and Medline databases, both a
+MEDLINE and a PUBMED line will be present.
+
+  The REMARK line is a textual comment that specifies the relevance
+of the citation to the entry.
+
+3.4.12 FEATURES Format
+
+  GenBank releases use a feature table format designed jointly by GenBank,
+the European Nucleotide Archive, and the DNA Data Bank of Japan. This format
+is in use by all three databases. The most complete and accurate Feature
+Table documentation can be found on the Web at:
+
+	http://www.insdc.org/documents/feature-table
+
+  The feature table contains information about genes and gene products,
+as well as regions of biological significance reported in the
+sequence. The feature table contains information on regions of the
+sequence that code for proteins and RNA molecules. It also enumerates
+differences between different reports of the same sequence, and
+provides cross-references to other data collections, as described in
+more detail below.
+
+  The first line of the feature table is a header that includes the
+keyword `FEATURES' and the column header `Location/Qualifiers.' Each
+feature consists of a descriptor line containing a feature key and a
+location (see sections below for details). If the location does not
+fit on this line, a continuation line may follow. If further
+information about the feature is required, one or more lines
+containing feature qualifiers may follow the descriptor line.
+
+  The feature key begins in column 6 and may be no more than 15
+characters in length. The location begins in column 22. Feature
+qualifiers begin on subsequent lines at column 22. Location,
+qualifier, and continuation lines may extend from column 22 to 80.
+
+  Feature tables are required, due to the mandatory presence of the
+source feature. The sections below provide a brief introduction to
+the feature table format.
+
+3.4.12.1 Feature Key Names
+
+  The first column of the feature descriptor line contains the feature
+key. It starts at column 6 and can continue to column 20. The list of
+valid feature keys is available at:
+
+	http://www.insdc.org/documents/feature-table#7.2
+
+3.4.12.2 Feature Location
+
+  The second column of the feature descriptor line designates the
+location of the feature in the sequence. The location descriptor
+begins at position 22. Several conventions are used to indicate
+sequence location.
+
+  Base numbers in location descriptors refer to numbering in the entry,
+which is not necessarily the same as the numbering scheme used in the
+published report. The first base in the presented sequence is numbered
+base 1. Sequences are presented in the 5' to 3' direction.
+
+Location descriptors can be one of the following:
+
+1. A single base;
+
+2. A contiguous span of bases;
+
+3. A site between two bases;
+
+4. A single base chosen from a range of bases;
+
+5. A single base chosen from among two or more specified bases;
+
+6. A joining of sequence spans;
+
+7. A reference to an entry other than the one to which the feature
+belongs (i.e., a remote entry), followed by a location descriptor
+referring to the remote sequence;
+
+  A site between two residues, such as an endonuclease cleavage site, is
+indicated by listing the two bases separated by a carat (e.g., 23^24).
+
+  A single residue chosen from a range of residues is indicated by the
+number of the first and last bases in the range separated by a single
+period (e.g., 23.79). The symbols < and > indicate that the end point
+of the range is beyond the specified base number.
+
+  A contiguous span of bases is indicated by the number of the first and
+last bases in the range separated by two periods (e.g., 23..79). The
+symbols < and > indicate that the end point of the range is beyond the
+specified base number. Starting and ending positions can be indicated
+by base number or by one of the operators described below.
+
+  Operators are prefixes that specify what must be done to the indicated
+sequence to locate the feature. The following are the operators
+available, along with their most common format and a description.
+
+complement (location): The feature is complementary to the location
+indicated. Complementary strands are read 5' to 3'.
+
+join (location, location, .. location): The indicated elements should
+be placed end to end to form one contiguous sequence.
+
+order (location, location, .. location): The elements are found in the
+specified order in the 5 to 3 direction, but nothing is implied about
+the rationality of joining them.
+
+3.4.12.3  Feature Qualifiers
+
+  Qualifiers provide additional information about features. They take
+the form of a slash (/) followed by a qualifier name and, if
+applicable, an equal sign (=) and a qualifier value. Feature
+qualifiers begin at column 22.
+
+  The list of valid feature keys is available at:
+
+	http://www.insdc.org/documents/feature-table#7.3
+
+Qualifiers convey many types of information. Their values can,
+therefore, take several forms:
+
+1. Free text;
+2. Controlled vocabulary or enumerated values;
+3. Citations or reference numbers;
+4. Sequences;
+
+  Text qualifier values must be enclosed in double quotation marks. The
+text can consist of any printable characters (ASCII values 32-126
+decimal). If the text string includes double quotation marks, each set
+must be `escaped' by placing a double quotation mark in front of it
+(e.g., /note="This is an example of ""escaped"" quotation marks").
+
+  Some qualifiers require values selected from a limited set of choices.
+For example, as of June 2022 the `/exception' qualifier has only four
+allowed values: 'RNA editing', 'reasons given in citation', 'rearrangement
+required for product', and 'annotated by transcript or proteomic data'.
+These are known as controlled vocabulary qualifier values. Controlled
+qualifier values are case sensitive.
+
+  Citation or published reference numbers for the entry should be
+enclosed in square brackets ([]) to distinguish them from other
+numbers.
+
+  A literal sequence of bases (e.g., "atgcatt") should be enclosed in
+quotation marks. Literal sequences are distinguished from free text by
+context. Qualifiers that take free text as their values do not take
+literal sequences, and vice versa.
+
+3.4.12.4 Cross-Reference Information
+
+  One type of information in the feature table lists cross-references to
+the annual compilation of transfer RNA sequences in Nucleic Acids
+Research, which has kindly been sent to us on CD-ROM by Dr. Sprinzl.
+Each tRNA entry of the feature table contains a /note= qualifier that
+includes a reference such as `(NAR: 1234)' to identify code 1234 in
+the NAR compilation. When such a cross-reference appears in an entry
+that contains a gene coding for a transfer RNA molecule, it refers to
+the code in the tRNA gene compilation. Similar cross-references in
+entries containing mature transfer RNA sequences refer to the
+companion compilation of tRNA sequences published by D.H. Gauss and M.
+Sprinzl in Nucleic Acids Research.
+
+3.4.12.5 Feature Table Examples
+
+  In the first example a number of key names, feature locations, and
+qualifiers are illustrated, taken from different sequences. The first
+table entry is a coding region consisting of a simple span of bases
+and including a /gene qualifier. In the second table entry, an NAR
+cross-reference is given (see the previous section for a discussion of
+these cross-references). The third and fourth table entries use the
+symbols `<`and `>' to indicate that the beginning or end of the
+feature is beyond the range of the presented sequence. In the fifth
+table entry, the symbol `^' indicates that the feature is between
+bases.
+
+1       10        20        30        40        50        60        70       79
+---------+---------+---------+---------+---------+---------+---------+---------
+     CDS             5..1261
+                     /product="alpha-1-antitrypsin precursor"
+                     /map="14q32.1"
+                     /gene="PI"
+     tRNA            1..87
+                     /note="Leu-tRNA-CAA (NAR: 1057)"
+                     /anticodon=(pos:35..37,aa:Leu)
+     mRNA            1..>66
+                     /note="alpha-1-acid glycoprotein mRNA"
+     transposon      <1..267
+                     /note="insertion element IS5"
+     misc_recomb     105^106
+                     /note="B.subtilis DNA end/IS5 DNA start"
+     conflict        258
+                     /replace="t"
+                     /citation=[2]
+---------+---------+---------+---------+---------+---------+---------+---------
+1       10        20        30        40        50        60        70       79
+
+Example 10. Feature Table Entries
+
+
+The next example shows the representation for a CDS annotated on a scaffold/
+CON-division entry built from contigs of the LQNL01 WGS project:
+
+1       10        20        30        40        50        60        70       79
+---------+---------+---------+---------+---------+---------+---------+---------
+LOCUS       KZ271580              141308 bp    DNA     linear   CON 17-AUG-2017
+DEFINITION  Onchocerca flexuosa isolate Red Deer unplaced genomic scaffold
+            O_flexuosa-1.0_Cont1703, whole genome shotgun sequence.
+ACCESSION   KZ271580 LQNL01000000
+VERSION     KZ271580.1
+DBLINK      BioProject: PRJNA230512
+            BioSample: SAMN04226856
+KEYWORDS    WGS; HIGH_QUALITY_DRAFT.
+...
+     mRNA            complement(join(<1..1557,1914..2102,2273..2312))
+                     /locus_tag="X798_08235"
+                     /product="hypothetical protein"
+     CDS             complement(join(<1..1557,1914..2102,2273..2312))
+                     /locus_tag="X798_08235"
+                     /codon_start=1
+                     /product="hypothetical protein"
+                     /protein_id="OZC04795.1"
+                     /db_xref="GI:1233056989"
+                     /translation="MPKKQKSKIPESSGESAHSPIWSVTRRQRTELSPRRDDEIGSTQ
+                     SFSSRTVTTTERVQMIPLPVTFDAPVDVLTPTGRNERFLATTKITSESYSLPVIGGIT
+                     ISGAPLYTGLYIVPKTTKTRNVRTMMTTTTTTTYSAIEINDNEEELKVETEEKTVPQS
+                     TRITLDFPMDYEVVDFEDLLAASPAEEKEHLYVVVGKKDSPTRTTDAADYVVKMIDID
+                     LPSSESKDSPSIERISDAEIEGLMTEIEEGYSDRHDYDAYEGTIASTSRSNEIDQEPI
+                     HRYVTVYHNGISSEKLSPEVERISKEVSTVVAKLSGAYKRASIEGEHIIYTDTKTGQT
+                     LQKGTQSENRQIGESPRRLKSTYTVRFSDPFRIEADDYPWTQQENQSEIIFQKEKKDQ
+                     IGTLDEWQKEKDQQTQINQKGAKIIEEIRQKKPVNAGKLITGLFKKGETYLDYPATET
+                     YKGPVDSTYRILDVESEPIEQLVSVYHNGRSDEFVPIEEKKPSIDVGEVFTDAAQALG
+                     AKITGLFKRGPAHLDYPTSGPYDGPLASTSLALDVEGEPLQQHVNVYHSGRSDEPMIK
+                     IVEIPTEIPVEEVLEEKPIVTAKIITGLF"
+CONTIG      join(LQNL01005322.1:1..30605,gap(100),LQNL01005323.1:1..85586,
+            gap(100),LQNL01005324.1:1..24917)
+//
+---------+---------+---------+---------+---------+---------+---------+---------
+1       10        20        30        40        50        60        70       79
+
+Example 11. Scaffold/CON-division join() sequence
+
+
+3.4.13 ORIGIN Format
+
+  The ORIGIN record may be left blank, may appear as `Unreported.' or
+may give a local pointer to the sequence start, usually involving an
+experimentally determined restriction cleavage site or the genetic
+locus (if available). The ORIGIN record ends in a period if it
+contains data, but does not include the period if the record is left
+empty (in contrast to the KEYWORDS field which contains a period
+rather than being left blank).
+
+3.4.14 SEQUENCE Format
+
+  The nucleotide sequence for an entry is found in the records following
+the ORIGIN record. The sequence is reported in the 5' to 3' direction.
+There are sixty bases per record, listed in groups of ten bases
+followed by a blank, starting at position 11 of each record. The
+number of the first nucleotide in the record is given in columns 4 to
+9 (right justified) of the record.
+
+3.4.15 CONTIG Format
+
+  As an alternative to SEQUENCE, a CONTIG record can be present
+following the ORIGIN record. A join() statement utilizing a syntax
+similar to that of feature locations (see the Feature Table specification
+mentioned in Section 3.4.12) provides the accession numbers and basepair
+ranges of other GenBank sequences which contribute to a large-scale
+biological object, such as a chromosome or complete genome. Here is
+an example of the use of CONTIG :
+
+CONTIG      join(AE003590.3:1..305900,AE003589.4:61..306076,
+            AE003588.3:61..308447,AE003587.4:61..314549,AE003586.3:61..306696,
+            AE003585.5:61..343161,AE003584.5:61..346734,AE003583.3:101..303641,
+
+            [ lines removed for brevity ]
+
+            AE003782.4:61..298116,AE003783.3:16..111706,AE002603.3:61..143856)
+
+However, the CONTIG join() statement can also utilize a special operator
+which is *not* part of the syntax for feature locations:
+
+	gap()     : Gap of unknown length.
+
+	gap(X)    : Gap with an estimated integer length of X bases.
+
+	            To be represented as a run of n's of length X
+	            in the sequence that can be constructed from
+	            the CONTIG line join() statement .
+
+	gap(unkX) : Gap of unknown length, which is to be represented
+	            as an integer number (X) of n's in the sequence that
+	            can be constructed from the CONTIG line join()
+	            statement.
+
+	            The value of this gap operator consists of the 
+	            literal characters 'unk', followed by an integer.
+
+Here is an example of a CONTIG line join() that utilizes the gap() operator:
+
+CONTIG      join(complement(AADE01002756.1:1..10234),gap(1206),
+            AADE01006160.1:1..1963,gap(323),AADE01002525.1:1..11915,gap(1633),
+            AADE01005641.1:1..2377)
+
+The first and last elements of the join() statement may be a gap() operator.
+But if so, then those gaps should represent telomeres, centromeres, etc.
+
+Consecutive gap() operators are illegal.
+
+
+4. ALTERNATE RELEASES
+
+  NCBI is supplying sequence data in the GenBank flat file format to
+maintain compatibility with existing software which require that
+particular format.  Although we have made every effort to ensure
+that these data are presented in the traditional flat file format,
+if you encounter any problems in using these data with software which
+is based upon the flat file format, please contact us at:
+
+              info@ncbi.nlm.nih.gov
+
+  The flat file is just one of many possible report formats that can be
+generated from the richer representation supported by the ASN.1 form of the
+data.  Developers of new software tools should consider using the ASN.1 form
+directly to take advantage of those features.  Documentation and a Software
+Developer's Toolkit for ASN.1 are available through NCBI.
+
+  The Software Developer's Toolkit and PostScript documentation for Linux,
+MacOS and Microsoft Windows systems is available in a compressed UNIX tar
+file by anonymous ftp from 'ftp.ncbi.nih.gov', in the toolbox/ncbi_tools++
+directory. The file is 'ncbi_cxx--18_0_0.tar.gz'.
+
+
+5. KNOWN PROBLEMS OF THE GENBANK DATABASE
+
+5.1 Incorrect Gene Symbols in Entries and Index
+
+  The /gene qualifier for many GenBank entries contains values other than the
+official gene symbol, such as the product or the standard name of the gene.
+
+
+6. GENBANK ADMINISTRATION 
+
+  The National Center for Biotechnology Information (NCBI), National Library
+of Medicine, National Institutes of Health, is responsible for the production
+and distribution of the NIH GenBank Sequence Database.  NCBI distributes
+GenBank sequence data by anonymous FTP, e-mail servers and other
+network services.  For more information, you may contact NCBI at the
+e-mail address: info@ncbi.nlm.nih.gov .
+
+6.1 Registered Trademark Notice
+
+  GenBank (R) is a registered trademark of the U.S. Department of Health
+and Human Services for the Genetic Sequence Data Bank.
+
+6.2 Citing GenBank
+
+  If you have used GenBank in your research, we would appreciate it if
+you would include a reference to GenBank in all publications related
+to that research.
+
+  When citing data in GenBank, it is appropriate to give the sequence
+name, primary accession number, and the publication in which the
+sequence first appeared.  If the data are unpublished, we urge you to
+contact the group which submitted the data to GenBank to see if there
+is a recent publication or if they have determined any revisions or
+extensions of the data.
+
+  It is also appropriate to list a reference for GenBank itself.  The
+following publication, which describes the GenBank database, should
+be cited:
+
+   Sayers EW, Cavanaugh M, Clark K, Pruitt KD, Sherry ST, Yankie L,
+   Karsch-Mizrachi I, "GenBank 2024 update", Nucleic Acids Research,
+   Volume 52, Issue D1, January 2024, pp. D134-D137.
+
+   PMID:  37889039
+   PMCID: PMC10767886
+   DOI:   10.1093/nar/gkad903
+
+  The following statement is an example of how one might cite GenBank
+data.  It cites the sequence, its primary accession number, the group
+who determined the sequence, and GenBank.  The numbers in parentheses
+refer to the GenBank citation above and to the REFERENCE in the
+GenBank sequence entry.
+
+`We scanned the GenBank (1) database for sequence similarities and
+found one sequence (2), GenBank accession number V00002, which showed
+significant similarity...'
+
+  (1) Sayers, EW. et al, Nucleic Acids Res. 52(D1):D134-D137 (2024)
+  (2) Nellen, W. and Gallwitz, D. J. Mol. Biol. 159, 1-18 (1982)
+
+6.3 GenBank Distribution Formats and Media
+
+  Complete flat file releases of the GenBank database are available via
+NCBI's anonymous ftp server:
+
+	ftp://ftp.ncbi.nih.gov
+
+  Each release is cumulative, incorporating all previous GenBank data.
+No retrieval software is provided. GenBank distribution via CD-ROM
+ ceased as of GenBank Release 106.0 (April, 1998).
+
+6.4 Other Methods of Accessing GenBank Data
+
+  Entrez is a molecular biology database system that presents an integrated
+view of DNA and protein sequence data, 3D structure data, complete genomes,
+and associated PubMed articles. The system is produced by the National
+Center for Biotechnology Information (NCBI), and is available only via
+the Internet (using the Web-Entrez and Network-Entrez applications).
+
+  Accessing Entrez is easy: Simply direct your web browser of choice to:
+
+	 http://www.ncbi.nlm.nih.gov/
+
+  The Web version of Entrez has all the capabilities of the network version,
+but with the visual style of the World Wide Web. If you prefer the "look and
+feel" of Network-Entrez, you may download Network-Entrez from the NCBI's
+FTP server:
+
+	ftp://ftp.ncbi.nih.gov/
+
+Versions are available for PC/Windows, Macintosh and several Unix variants.
+
+  For information about Network-Entrez, Web-Entrez or any other NCBI
+services, you may contact NCBI by e-mail at info@ncbi.nlm.nih.gov .
+
+6.5 Request for Corrections and Comments
+
+  We welcome your suggestions for improvements to GenBank. We are
+especially interested to learn of errors or inconsistencies in the
+data.  BankIt or Genome Workbench can be used to submit revisions to
+previous submissions.  In addition, suggestions and corrections can
+be sent by electronic mail to:  update@ncbi.nlm.nih.gov.  Please be
+certain to indicate the primary accession number of the entry to which
+your comments apply; it is helpful if you also give the entry name and
+the current contents of any data field for which you are recommending
+a change.
+
+6.6  Credits and Acknowledgments
+
+Credits -
+
+GenBank Release Coordination	
+	Mark Cavanaugh
+
+GenBank Submission Coordination	
+	Ilene Mizrachi
+
+GenBank Annotation Staff
+	Michael Baxter, Shelby Bidwell, Lori Black, Larissa Brown,
+	Vincent Calhoun, Andreina Castillo Siri, Larry Chlumsky, Karen Clark,
+	Scott Durkin, Michel Eschenbrenner, Michael Fetchko, Linda Frisse,
+	Andrea Gocke, Anjanette Johnston, Erica Lam,
+	Mark Landree, Jason Lowry, Richard McVeigh, Ilene Mizrachi,
+	DeAnne Olsen Cravaritis, Leigh Riley, Susan Schafer, Augustus Tilley,
+	Beverly Underwood, and Linda Yankie
+
+Data Management and Preparation
+	Serge Bazhin, Evgueni Belyi, Colleen Bollin, Mark Cavanaugh, Yoon Choi,
+	Sergey Dikunov, Ilya Dondoshansky, Justin Foley, Viatcheslav Gorelenkov,
+	Sergiy Gotvyanskyy, Eugene Gribov, Sergei Kalashnikov, Jonathan Kans,
+	Leonid Khotomliansky, Michael Kimelman, Dmitri Kishchukov, Michael Kornbluh,
+	Alex Kotliarov, Frank Ludwig, Vasuki Palanigobu, Anton Perkov,
+	Andriy Petrow, Sergey Petrunin, Dmitrii Saprykin, Wenyao Shi, Denis Sinyakov,
+	Thomas Smith, Vladimir Soussov, Vitaly Stakhovsky, Elena Starchenko,
+	Hanzhen Sun, Andrei Vereshchagin, Jewen Xiao, Liwei Zhou
+
+Database Administration
+	Viatcheslav Khotomliansky, Igor Lozitskiy, Craig Oakley, Yevgeniy Semenov,
+	Benjamin Slade, Constantin Vasilyev
+
+Customer Support
+	David Brodsky, Hanguan Liu, Cooper Park, Monica Romiti, Eric Sayers,
+	Majda Valjavec-Gratian
+
+Project Direction/Leadership
+	Steve Sherry      : Acting Director, NLM
+	Kim Pruitt        : Acting Director, NCBI
+	Valerie Schneider : Acting Branch Chief, NCBI/IEB
+	Eugene Yaschenko  : Chief Technology Officer, NCBI/IRB
+
+Acknowledgments - 
+
+  Contractor support for GenBank production and distribution has been
+provided by Management Systems Designers, Inc., ComputerCraft Corporation,
+and The KEVRIC Company, Inc.
+
+6.7 Disclaimer
+
+  The United States Government makes no representations or warranties
+regarding the content or accuracy of the information.  The United States
+Government also makes no representations or warranties of merchantability
+or fitness for a particular purpose or that the use of the sequences will
+not infringe any patent, copyright, trademark, or other rights.  The
+United States Government accepts no responsibility for any consequence
+of the receipt or use of the information.
+
+  For additional information about GenBank releases, please contact
+NCBI by e-mail at info@ncbi.nlm.nih.gov, or by mail at:
+
+  GenBank
+  National Library of Medicine
+  Bldg. 38A Rm. 8N-809
+  8600 Rockville Pike
+  Bethesda, MD 20894

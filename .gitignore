@@ -7,10 +7,6 @@ __pycache__/
 .venv/
 .uv/
 
-# Output files (generated at runtime)
-raw/
-results.csv
-
 # Distribution / packaging
 dist/
 *.egg-info/
