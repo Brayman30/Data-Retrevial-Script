@@ -5,16 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "data-retrevial-script"
 version = "0.1.0"
-description = "Fetch and parse GenBank release notes into structured CSV output"
+description = "Fetch GenBank release-note pages, archive raw pre-block text, and export structured CSV data."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "bs4>=0.0.2",
-    "requests>=2.32",
+    "requests>=2.32.3",
+    "beautifulsoup4>=4.12.3",
 ]
 
 [project.scripts]
-data-retrieval = "main:main"
-
-[tool.setuptools]
-py-modules = ["main"]
+genbank-fetch = "main:main"
